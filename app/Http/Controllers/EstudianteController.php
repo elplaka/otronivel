@@ -114,6 +114,8 @@ class EstudianteController extends Controller
         $request->session()->forget('f4');
         $request->session()->forget('fin');
 
+        $request->session()->put('f1', true);
+
         return redirect()->route('estudiantes.formulario1');
     }
      /**
@@ -123,14 +125,19 @@ class EstudianteController extends Controller
      */
     public function formulario1(Request $request)
     {
-        $request->session()->put('f1', true);
         $request->session()->put('f2', false);
         $request->session()->put('f3', false);
         $request->session()->put('f4', false);
         $request->session()->put('fin', false);
 
-        $estudiante = $request->session()->get('estudiante');
-        return view('estudiantes/formulario1',compact('estudiante'));
+        $f1 = $request->session()->get('f1');
+
+        if ($f1)
+        {
+            $estudiante = $request->session()->get('estudiante');
+            return view('estudiantes/formulario1',compact('estudiante'));
+        }
+        else return view('estudiantes/operacion_invalida');
     }
   
     /**  
