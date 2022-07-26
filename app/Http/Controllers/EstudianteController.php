@@ -74,7 +74,7 @@ class EstudianteController extends Controller
         {
             $rfc = $nomArchivo;
             rename('img/tmp/' . $archivo, 'img/curps/' . 'CU_' . $rfc . '.pdf');
-            return $bandera;
+            return $rfc;
         }
         else
         {
