@@ -362,6 +362,7 @@ class EstudianteController extends Controller
             // }
             if ($errorCurp || $errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia) return redirect()->back()->with('message', $message);
 
+            $request->session()->put('f1', false);
             $request->session()->put('f2', true);
             return redirect()->route('estudiantes.formulario2');
         }
@@ -428,6 +429,7 @@ class EstudianteController extends Controller
 
                 if ($errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia) return redirect()->back()->with('message', $message);
 
+                $request->session()->put('f1', false);
                 $request->session()->put('f2', true);
                 return redirect()->route('estudiantes.formulario2');                  
             }

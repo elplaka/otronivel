@@ -1,6 +1,27 @@
 @extends('layouts.main')
 
 @section('content')
+<?php 
+    $nomActa = substr($estudiante->img_acta_nac,0,strlen($estudiante->img_acta_nac)-3);
+    $extActa = strtoupper(substr(strrchr($estudiante->img_acta_nac, "."), 1));
+    $archivoActa = $nomActa . $extActa;
+
+    $nomComprobante = substr($estudiante->img_comprobante_dom,0,strlen($estudiante->img_comprobante_dom)-3);
+    $extComprobante = strtoupper(substr(strrchr($estudiante->img_comprobante_dom, "."), 1));
+    $archivoComprobante = $nomComprobante . $extComprobante;
+
+    $nomIdentificacion = substr($estudiante->img_identificacion,0,strlen($estudiante->img_identificacion)-3);
+    $extIdentificacion = strtoupper(substr(strrchr($estudiante->img_identificacion, "."), 1));
+    $archivoIdentificacion = $nomIdentificacion . $extIdentificacion;
+
+    $nomKardex = substr($estudiante->img_kardex,0,strlen($estudiante->img_kardex)-3);
+    $extKardex = strtoupper(substr(strrchr($estudiante->img_kardex, "."), 1));
+    $archivoKardex = $nomKardex . $extKardex;
+
+    $nomConstancia = substr($estudiante->img_constancia,0,strlen($estudiante->img_constancia)-3);
+    $extConstancia = strtoupper(substr(strrchr($estudiante->img_constancia, "."), 1));
+    $archivoConstancia = $nomConstancia . $extConstancia;
+?>
     <div class="container">
         <div class="card-body">
             <div class="row justify-content-center">
@@ -272,7 +293,7 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Acta de Nacimiento') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/actas/" . $estudiante->img_acta_nac }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_acta_nac" style="cursor:pointer"  title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="{{ "/img/actas/" . $archivoActa }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_acta_nac" style="cursor:pointer"  title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                 <div id="archivo_acta_nac" style="font-size:13px" required></div>
                                             </div>
@@ -284,7 +305,7 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Comprobante Domicilio') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/comprobantes/" . $estudiante->img_comprobante_dom }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_comprobante_dom" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="{{ "/img/comprobantes/" . $archivoComprobante }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_comprobante_dom" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                 <div id="archivo_comprobante_dom" style="font-size:13px" required></div> 
                                             </div>
@@ -296,7 +317,7 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Identificación Oficial') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/identificaciones/" . $estudiante->img_identificacion }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_identificacion" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="{{ "/img/identificaciones/" . $archivoIdentificacion }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_identificacion" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                 <div id="archivo_identificacion" style="font-size:13px" required></div>
                                             </div>
@@ -308,7 +329,7 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Kardex') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/kardex/" . $estudiante->img_kardex }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_kardex" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="{{ "/img/kardex/" . $archivoKardex }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_kardex" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                  <div id="archivo_kardex" style="font-size:13px" required></div>
                                             </div>
@@ -320,7 +341,7 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Constancia de Estudios') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/constancias/" . $estudiante->img_constancia }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_constancia" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="{{ "/img/constancias/" . $archivoConstancia }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_constancia" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                  <div id="archivo_constancia" style="font-size:13px" required>
                                                 </div>
