@@ -174,7 +174,7 @@
                                             <div class="row mb-3">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('CURP') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>ARCHIVO EN PDF</b> <br> El formulario aceptará el archivo PDF de formato reciente descargado en la página del Gobierno Federal <i>https://www.gob.mx/curp/</i> que no pese más de 2MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="form_control" id="sel_archivo_curp">Selecciona archivo<small>< 2M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-success" id="sel_archivo_curp">Selecciona archivo<small><2M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_curp" style="font-size:13px" required>{{$estudiante->img_curp ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <input class='file' type="file" style="display: none " class="form-control" name="img_curp" id="img_curp" accept=".pdf, .PDF" required>
@@ -184,7 +184,7 @@
                                             <div class="row mb-3">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('Acta de Nacimiento') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>ACTA CON FORMATO RECIENTE</b> <br> El acta de nacimiento se recomienda que sea de formato reciente y que esté en formato PDF que no pese más de 2MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="form_control" id="sel_archivo_acta_nac">Selecciona archivo <small>< 2M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-success" id="sel_archivo_acta_nac">Selecciona archivo<small><2M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_acta_nac" style="font-size:13px">{{$estudiante->img_acta_nac ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <input class='file' type="file" style="display: none" class="form-control" name="img_acta_nac" id="img_acta_nac" accept="application/pdf" required>
@@ -197,7 +197,7 @@
                                                     - Recibo de JUMAPAC o<br>
                                                     - Recibo de TELMEX<br> En formato PDF que no pese más de 2MB."><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label> 
                                                 <div class="col-md-5">
-                                                    <button type="button" class="form_control" id="sel_archivo_comprobante_dom">Selecciona archivo <small>< 2M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-success" id="sel_archivo_comprobante_dom">Selecciona archivo<small><2M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_comprobante_dom" style="font-size:13px">{{$estudiante->img_comprobante_dom ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <input class='file' type="file" style="display: none" class="form-control" name="img_comprobante_dom" id="img_comprobante_dom" accept="application/pdf" required>
@@ -207,7 +207,7 @@
                                             <div class="row mb-3">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('Identificación Oficial') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>INE O ESCOLAR</b> <br> Si no tienes la credencial del INE entonces subirás una credencial escolar en formato PDF que no pese más de 2MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="form_control" id="sel_archivo_identificacion">Selecciona archivo <small>< 2M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-success" id="sel_archivo_identificacion">Selecciona archivo<small><2M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_identificacion" style="font-size:13px">{{$estudiante->img_identificacion ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <input class='file' type="file" style="display: none" class="form-control" name="img_identificacion" id="img_identificacion" accept="application/pdf" required>
@@ -217,7 +217,7 @@
                                             <div class="row mb-3">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('Kárdex') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE CALIFICACIONES O FICHA DE INSCRIPCIÓN</b> <br> Si apenas vas a entrar al Nivel Superior subirás la ficha de inscripción en formato PDF que no pese más de 2MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="form_control" id="sel_archivo_kardex">Selecciona archivo <small>< 2M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-success" id="sel_archivo_kardex">Selecciona archivo<small><2M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_kardex" style="font-size:13px">{{$estudiante->img_kardex ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <input class='file' type="file" style="display: none" class="form-control" name="img_kardex" id="img_kardex" accept="application/pdf" required>
@@ -229,7 +229,7 @@
                                                 <div class="col-md-5 alert alert-danger text-justify" style="padding:5px; margin:0"> <small> <i> Este archivo lo subirás una vez que solicites dicha constancia al inicio del Ciclo Escolar 2022-2023. </i> </small>
                                                 </div>
                                                 {{-- <div class="col-md-5">
-                                                    <button type="button" class="form_control" id="sel_archivo_constancia">Selecciona archivo <small>< 2M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-success" id="sel_archivo_constancia">Selecciona archivo<small><2M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_constancia" style="font-size:13px">{{$estudiante->img_constancia ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <input class='file' type="file" style="display: none" class="form-control" name="img_constancia" id="img_constancia" accept="application/pdf" required> --}}
