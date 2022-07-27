@@ -742,16 +742,30 @@ class EstudianteController extends Controller
 
     public function index(Request $request)
     {
-        $estudiantes = Estudiante::all();
-        $searchR = "";
+        $status = StatusEstudiante::all();
+        $escuelas = Escuela::where('cve_escuela', '!=', 999)->orderBy('escuela_abreviatura')->get();
 
-        if ($request->has('search'))
-        {
-            $estudiantes = Estudiante::where('nombre','like',"%{$request->search}%")->orWhere('primer_apellido', 'like',"%{$request->search}%")->orWhere('segundo_apellido', 'like',"%{$request->search}%")->get(); 
-            $searchR = mb_strtoupper($request->search); 
-        } 
+        // dd($escuelas);
 
-        return view('estudiantes.index', compact('estudiantes', 'searchR'));
+        $statusR = $request->selStatus;
+        $searchR = mb_strtoupper($request->search);
+        $cve_escuelaR = $request->selEscuela;
+
+        $estudiantes = Estudiante::where(function($query) use($request){
+            if (isset($request->selStatus))
+            {
+                $statusR = $request->selStatus;
+                $query->whereIn('cve_status', $statusR); 
+            }
+            if (isset($request->search))
+            {
+                $query->where('nombre','like',"%{$request->search}%")->orWhere('primer_apellido', 'like',"%{$request->search}%")->orWhere('segundo_apellido', 'like',"%{$request->search}%"); 
+            } 
+         });
+
+        $estudiantes = $estudiantes->get();
+
+        return view('estudiantes.index', compact('estudiantes', 'searchR', 'status', 'statusR', 'escuelas', 'cve_escuelaR'));
     }
 
     public function edit($id)

@@ -17,6 +17,12 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
+    {{-- Multiple Select --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" /> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
+
+
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -96,8 +102,29 @@
             $('#archivo_constancia').html(filename);
             });
         });
+
+        $('.search_select_box select').selectpicker();
 });
 </script>
+
+<style>
+    .search_select_box
+    {
+        max-width: 400px;
+    }
+
+    .search_select_box select
+    {
+        width: 100%;
+    }
+
+    .search_select_box button
+    {
+        background-color: #ffffff;
+        border-color: #cccccc;
+    }
+    
+</style>
 
 <body id="page-top">
 
@@ -299,8 +326,9 @@
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('js/sb-admin.min.js') }}"></script>
 
-
-
+    <!-- Multiple Select -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"> </script>
 </body>
 
 </html>

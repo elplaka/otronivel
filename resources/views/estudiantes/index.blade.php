@@ -3,6 +3,26 @@
 <?php
     $usertype = auth()->user()->usertype;
     $i = 1;
+
+    function encuentraStatus($status, $statusR)
+    {
+        if (!isset($statusR)) return false;  //Si son TODOS los status
+        foreach ($statusR as $statR)  //Recorre todos los status
+        {
+            if ($status == $statR) return true;  //Si el status es igual al del request
+        }
+        return false;
+    }
+
+    function encuentraEscuela($cve_escuela, $cve_escuelaR)
+    {
+        if (!isset($cve_escuelaR)) return false;
+        foreach ($cve_escuelaR as $cve_escR)
+        {
+            if ($cve_escuela == $cve_escR) return true;
+        }
+        return false;
+    }
 ?>
 @section('content')
     <!-- Page Heading -->
@@ -24,19 +44,45 @@
                 @endif 
             </div>
             <div class="card-header mt-0">
-                <div class="row">
+                <div class="row mb-0">
                     <div class="col">
-                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <div class="d-sm-flex align-items-center justify-content-between mb-0">
                             <h1 class="h3 mt-2 mb-0 text-gray-800"><b>
                             Estudiantes</b></h1>
                         </div>
                         <form method="GET" action="{{ route('estudiantes.index') }}">
-                            <div class="form-row align-items-center">
-                                <div class="col-md-3">
-                                    <input type="search" name="search" class="form-control mb-2" id="inlineFormInput" value="{{ old('search', $searchR) }}">
+                            <div class="row">
+                                 <div class="col-md-3">
+                                    <label class="col-md-6 col-form-label text-md-left"> &nbsp </label>
+                                    <div>
+                                        <input type="search" name="search" class="form-control mb-2" id="inlineFormInput" value="{{ old('search', $searchR) }}" placeholder="Nombre o Apellidos" autofocus>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn btn-primary mb-2"> Buscar </button>
+                                    <label class="col-md-4 col-form-label text-md-left"> <b> Estatus </b> </label>
+                                    <div class="search_select_box">
+                                        <select name="selStatus[]" id="selStatus" data-style="btn-selectpicker" title="-- TODOS --" class="selectpicker" data-style-base="form-control"  autofocus multiple>
+                                            @foreach ($status as $stat)
+                                                <option value="{{ $stat->cve_status }}" {{ encuentraStatus($stat->cve_status, $statusR) ? 'selected' : '' }}>{{ $stat->descripcion }} </li>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- <div class="col-md-3">
+                                    <label class="col-md-4 col-form-label text-md-left"> <b> Escuela </b> </label>
+                                    <div class="search_select_box">
+                                        <select name="selEscuela[]" id="selEscuela" data-style="btn-selectpicker" data-live-search="true" title="-- TODAS --" class="selectpicker" data-size="8" autofocus multiple>
+                                            @foreach ($escuelas as $escuela)
+                                                <option value="{{ $escuela->cve_escuela }}" {{ encuentraEscuela($escuela->cve_escuela, $cve_escuelaR) ? 'selected' : '' }}>{{ $escuela->escuela_abreviatura }} </li>
+                                            @endforeach
+                                            <option value="999">OTRA</option>
+                                        </select>
+                                    </div>
+                                </div> --}}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary"> Buscar </button>
                                 </div>
                             </div>
                         </form>
