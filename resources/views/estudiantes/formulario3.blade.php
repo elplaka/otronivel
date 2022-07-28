@@ -103,7 +103,7 @@
                                                 <label for="carrera" class="col-md-4 col-form-label text-md-right">{{ __('Carrera*') }}</label>
                                                 <div class="col-md-8">
                                                     <input id="carrera" name="carrera" type="text" class="form-control @error('carrera') is-invalid @enderror" name="carrera" value="{{ old('carrera', $estudiante->carrera) }}" autocomplete="carrera" max="30" required>
-                                                    @error('nombre')
+                                                    @error('carrera')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>

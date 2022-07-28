@@ -25,7 +25,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> --}}
 </head>
 
 <script>
@@ -124,6 +124,26 @@
         border-color: #cccccc;
     }
     
+    .bootstrap-select .form-control:focus {
+        outline: 0px none #fff !important;
+    }
+
+    .bootstrap-select .form-control > div.filter-option:focus {
+        outline: 0px none #fff !important;
+    }
+
+    .bootstrap-select .form-control > div.filter-option > div.filter-option-inner:focus {
+        outline: 0px none #fff !important;
+    }
+
+    .bootstrap-select .form-control > div.filter-option > div.filter-option-inner > div.filter-option-inner-inner:focus {
+        outline: 0px none #fff !important;
+    }
+
+    .w-5
+    {
+        display: none;
+    }
 </style>
 
 <body id="page-top">
@@ -321,7 +341,7 @@
     <script src="{{ asset('js/jquery.js') }}"></script>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="{{ mix('js/app.js') }}"></script>
+    {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('js/sb-admin.min.js') }}"></script>

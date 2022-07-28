@@ -744,12 +744,13 @@ class EstudianteController extends Controller
     {
         $status = StatusEstudiante::all();
         $escuelas = Escuela::where('cve_escuela', '!=', 999)->orderBy('escuela_abreviatura')->get();
+        $ciudades = Ciudad::all();
 
-        // dd($escuelas);
-
-        $statusR = $request->selStatus;
         $searchR = mb_strtoupper($request->search);
+        $statusR = $request->selStatus;
         $cve_escuelaR = $request->selEscuela;
+        $cve_ciudadR = $request->selCiudad;
+        $carreraR = mb_strtoupper($request->searchCarrera);
 
         $estudiantes = Estudiante::where(function($query) use($request){
             if (isset($request->selStatus))
@@ -757,15 +758,35 @@ class EstudianteController extends Controller
                 $statusR = $request->selStatus;
                 $query->whereIn('cve_status', $statusR); 
             }
+            if (isset($request->selEscuela))
+            {
+                $cve_escuelaR = $request->selEscuela;
+                $query->whereIn('cve_escuela', $cve_escuelaR); 
+            }
             if (isset($request->search))
             {
                 $query->where('nombre','like',"%{$request->search}%")->orWhere('primer_apellido', 'like',"%{$request->search}%")->orWhere('segundo_apellido', 'like',"%{$request->search}%"); 
-            } 
+            }
+            if (isset($request->selCiudad))
+            {
+                if (strlen($request->selCiudad) > 0)
+                {
+                    $cve_ciudadR = $request->selCiudad;
+                    $query->where('cve_ciudad_escuela', $cve_ciudadR); 
+                }
+            }
+            if (isset($request->searchCarrera))
+            {
+                $query->where('carrera','like',"%{$request->searchCarrera}%"); 
+            }
          });
 
-        $estudiantes = $estudiantes->get();
 
-        return view('estudiantes.index', compact('estudiantes', 'searchR', 'status', 'statusR', 'escuelas', 'cve_escuelaR'));
+        //dd($estudiantes->get());
+        $estudiantes = $estudiantes->paginate(25)->withQueryString();
+        //dd($estudiantes);
+
+        return view('estudiantes.index', compact('estudiantes', 'searchR', 'status', 'statusR', 'escuelas', 'cve_escuelaR', 'ciudades', 'cve_ciudadR', 'carreraR'));
     }
 
     public function edit($id)
