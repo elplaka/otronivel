@@ -69,12 +69,13 @@ Route::get('/estudiantes/edit_status/{id}', [EstudianteController::class, 'edit_
 Route::post('/estudiantes/update_status/{id}', [EstudianteController::class, 'update_status'])->name('estudiantes.update_status');
 Route::get('/estudiantes/edit_se/{id}', [EstudianteController::class, 'edit_socioeconomicos'])->name('estudiantes.edit_se');
 Route::post('/estudiantes/censar/{id}', [EstudianteController::class, 'censar'])->name('estudiantes.censar');
+Route::get('/estudiantes/reporte_pdf/', [EstudianteController::class, 'pdf'])->name('estudiantes.pdf');
 
 Route::resource('usuarios', UsuarioController::class);
 
-Route::get('/estudiantes', function () {
-    dd('dioses');
-})->middleware(ChecaTipoUsuario::class);
+// Route::get('/estudiantes', function () {
+//     dd('dioses');
+// })->middleware(ChecaTipoUsuario::class);
 
 
 

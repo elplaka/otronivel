@@ -23,9 +23,96 @@
         }
         return false;
     }
+
+    function encuentraLocalidad($cve_localidad, $cve_localidadR)
+    {
+        if (!isset($cve_localidadR)) return false;
+        foreach ($cve_localidadR as $cve_locR)
+        {
+            if ($cve_localidad == $cve_locR) return true;
+        }
+        return false;
+    }
+
+    function encuentraTurno($cve_turno, $cve_turnoR)
+    {
+        if (!isset($cve_turnoR)) return false;
+        foreach ($cve_turnoR as $cve_turR)
+        {
+            if ($cve_turno == $cve_turR) return true;
+        }
+        return false;
+    }
+
+    function encuentraAno($ano, $anoR)
+    {
+        if (!isset($anoR)) return false;
+        foreach ($anoR as $anR)
+        {
+            if ($ano == $anR) return true;
+        }
+        return false;
+    }
+
+    function encuentraPromedio($promedio, $promedioR)
+    {
+        if (!isset($promedioR)) return false;
+        foreach ($promedioR as $promR)
+        {
+            if ($promedio == $promR) return true;
+        }
+        return false;
+    }
 ?>
 @section('content')
     <!-- Page Heading -->
+    <script language="JavaScript" type="text/javascript">
+        $(document).ready(function () {
+            $('#btnImprimir').click(function(){
+             $("#exampleModal").modal("show");
+            });
+         });
+     </script>
+
+      <script language="JavaScript" type="text/javascript">
+        $(document).ready(function(){
+            $('#btnAceptar').click(function(){
+                var databack = $("#exampleModal #recipient-name").val().trim();   //Nombre del Reporte
+                $('#tituloReporte').val(databack);
+
+                //Abre el formulario con el PDF
+                var f = document.getElementById("formReport");
+                
+                f.action = "{{ route('estudiantes.pdf') }}";
+            
+                f.submit();   
+
+                $('#exampleModal').modal('hide');    //Cierra la ventana modal
+            });
+        });    
+    </script>
+    {{-- ***********************************  Ventana MODAL  ************************************************* --}}
+    <div class="modal fade" id="exampleModal" name="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><b> <i class="fas fa-print"></i> Opciones del Reporte</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> &times; </button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label"> <b> Título del Reporte </b></label>
+                        <input type="text" value="Reporte de Estudiantes" class="form-control" id="recipient-name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                        <button type="button" id="btnAceptar" type="submit" class="btn btn-danger btn-sm action-complete-task">Generar</button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
     <div class="container-fluid">
         <div class="card mx-auto">
             <?php  
@@ -51,89 +138,147 @@
                             Estudiantes</b></h1>
                         </div>
                         <div class="card mt-3">
-                            <div class="card-header" style="padding:2px;">
-                               <b> &nbsp; :: Parámetros de Búsqueda </b>
-                               {{-- <a data-toggle="collapse" href="#collapseExample" aria-controls="collapseExample" style="color:#888888"><i class="fas fa-angle-double-down"></i></a>  --}}
+                            <div class="card-header bg-info" style="color:#ffffff;padding:2px;font-size:15px">
+                               &nbsp; <i class="fas fa-search"></i> &nbsp; Parámetros de Búsqueda  &nbsp; <a data-toggle="collapse" href="#collapseExample" aria-controls="collapseExample" style="color:#ffffff"><i class="fas fa-angle-double-down"></i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fas fa-database"></i> &nbsp; Total de estudiantes registrados: <b> {{ $totEstudiantes }} </b> 
                             </div>
-                        {{-- <div class="collapse" id="collapseExample"> --}}
-                            <div class="card-body" style="padding-top:0px">    
-                                <form method="GET" action="{{ route('estudiantes.index') }}">
-                                    <div class="row mb-3">
-                                        <div class="col-md-2">
-                                            <label class="col-form-label text-md-left"> &nbsp </label>
-                                            <div>
-                                                <input type="search" name="search" class="form-control mb-2" id="inlineFormInput" value="{{ old('search', $searchR) }}" placeholder="Nombre/Apellidos" autofocus>
+                            <div class="collapse" id="collapseExample">
+                                <div class="card-body" style="padding-top:5px">    
+                                    <form method="GET" action="{{ route('estudiantes.index') }}">
+                                        <div class="row mb-1">
+                                            <div class="col-md-4"> {{-- INFORMACIÓN PERSONAL --}}
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Nombre/Apellidos </b> </label>
+                                                <div>
+                                                    <input type="search" name="search" class="form-control mb-2" id="inlineFormInput" value="{{ old('search', $searchR) }}" style="font-size:12px" autofocus>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Lugar Origen </b> </label>
+                                                <div class="search_select_box">
+                                                    <select name="selLocalidadO[]" id="selLocalidadO" data-style="btn-selectpicker" data-live-search="true" title="-- TODOS --" class="form-control selectpicker" data-style-base="form-control" data-size="8" autofocus multiple>
+                                                        @foreach ($localidades as $localidad)
+                                                            <option value="{{ $localidad->cve_localidad }}" {{ encuentraLocalidad($localidad->cve_localidad, $cve_localidadOR) ? 'selected' : '' }}>{{ $localidad->localidad }} </li>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">  
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Estatus </b> </label>
+                                                <div class="search_select_box">
+                                                    <select name="selStatus[]" id="selStatus" data-style="btn-selectpicker" title="-- TODOS --" class="form-control selectpicker" data-style-base="form-control" autofocus multiple>
+                                                        @foreach ($status as $stat)
+                                                            <?php
+                                                                switch ($stat->cve_status)
+                                                                {
+                                                                    case 1:   //RECIBIDO
+                                                                        $color = "#9944d9"; 
+                                                                        break;
+                                                                    case 2:  //REVISADO
+                                                                        $color = "#0071bc";
+                                                                        break; 
+                                                                    case 3: //CENSADO
+                                                                        $color = "#7dc3f5";
+                                                                        break; 
+                                                                    case 4: //RECHAZADO
+                                                                        $color = "#ff0000";
+                                                                        break;
+                                                                    case 5: //PENDIENTE
+                                                                        $color = "#ffe26e";
+                                                                        break; 
+                                                                    case 6: //ACEPTADO
+                                                                        $color = "#00ff00";
+                                                                        break;               
+                                                                }
+                                                            ?>
+                                                            <option style="background: {{ $color }}; color: #ffffff; font-weight: bold" value="{{ $stat->cve_status }}" {{ encuentraStatus($stat->cve_status, $statusR) ? 'selected' : '' }}>{{ $stat->descripcion }} </li>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Información Socioeconómica </b> </label>
+                                                <div class="search_select_box">
+                                                    <select name="selSocioeconomica" id="selSocioeconomica" data-style="btn-selectpicker" class="form-control selectpicker" data-style-base="form-control" autofocus>
+                                                        <option value="" selected> -- TODOS -- </option>
+                                                        <option value=1 {{ $socioeconomicaR == 1 ? 'selected' : '' }}> SIN OBSERVACIONES </option>
+                                                        <option value=2 {{ $socioeconomicaR == 2 ? 'selected' : '' }}> CON OBSERVACIONES </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <label class="col-form-label text-md-left"> <b> &nbsp; Estatus </b> </label>
-                                            <div class="search_select_box">
-                                                <select name="selStatus[]" id="selStatus" data-style="btn-selectpicker" title="-- TODOS --" class="form-control selectpicker" data-style-base="form-control"  autofocus multiple>
-                                                    @foreach ($status as $stat)
-                                                        <?php
-                                                            switch ($stat->cve_status)
-                                                            {
-                                                                case 1:   //RECIBIDO
-                                                                    $color = "#9944d9"; 
-                                                                    break;
-                                                                case 2:  //REVISADO
-                                                                    $color = "#0071bc";
-                                                                    break; 
-                                                                case 3: //CENSADO
-                                                                    $color = "#7dc3f5";
-                                                                    break; 
-                                                                case 4: //RECHAZADO
-                                                                    $color = "#ff0000";
-                                                                    break;
-                                                                case 5: //PENDIENTE
-                                                                    $color = "#ffe26e";
-                                                                    break; 
-                                                                case 6: //ACEPTADO
-                                                                    $color = "#00ff00";
-                                                                    break;               
-                                                            }
-                                                        ?>
-                                                        <option style="background: {{ $color }}; color: #ffffff; font-weight: bold" value="{{ $stat->cve_status }}" {{ encuentraStatus($stat->cve_status, $statusR) ? 'selected' : '' }}>{{ $stat->descripcion }} </li>
-                                                    @endforeach
-                                                </select>
+                                        <div class="row mb-3">  {{-- INFORMACIÓN ESCOLAR --}}
+                                            <div class="col-md-2">
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Escuela </b> </label>
+                                                <div class="search_select_box">
+                                                    <select name="selEscuela[]" id="selEscuela" data-style="btn-selectpicker" data-live-search="true" title="-- TODAS --" class="form-control selectpicker" data-style-base="form-control" data-size="8" autofocus multiple>
+                                                        @foreach ($escuelas as $escuela)
+                                                            <option value="{{ $escuela->cve_escuela }}" {{ encuentraEscuela($escuela->cve_escuela, $cve_escuelaR) ? 'selected' : '' }}>{{ $escuela->escuela_abreviatura }} </li>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Ciudad Escuela </b> </label>
+                                                <div class="search_select_box">
+                                                    <select name="selCiudad" id="selCiudad" data-style="btn-selectpicker" title="-- TODAS --" class="form-control selectpicker" data-style-base="form-control" autofocus>
+                                                        <option value="" selected> -- TODAS -- </option>
+                                                        @foreach ($ciudades as $ciudad)
+                                                            <option value="{{ $ciudad->cve_ciudad }}" {{ $ciudad->cve_ciudad == $cve_ciudadR ? 'selected' : '' }}>{{ $ciudad->ciudad }} </li>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Carrera </b> </label>
+                                                <div>
+                                                    <input type="search" name="searchCarrera" class="form-control mb-2" id="inlineFormInput" value="{{ old('searchCarrera', $carreraR) }}" style="font-size:12px" autofocus>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Turno Escuela </b> </label>
+                                                <div class="search_select_box">
+                                                    <select name="selTurno[]" id="selTurno" data-style="btn-selectpicker" title="-- TODOS --" class="form-control selectpicker" data-style-base="form-control" autofocus multiple>
+                                                        @foreach ($turnos as $turno)
+                                                            <option value="{{ $turno->cve_turno }}" {{ encuentraTurno($turno->cve_turno, $cve_turnoR) ? 'selected' : '' }}>{{ $turno->turno }} </li>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Año Escolar </b> </label>
+                                                <div class="search_select_box">
+                                                    <select name="selAnoEscolar[]" id="selAnoEscolar" data-style="btn-selectpicker" title="-- TODOS --" class="form-control selectpicker" data-style-base="form-control" autofocus multiple>
+                                                        <option value=1 {{ encuentraAno(1, $ano_escolarR) ? 'selected' : '' }}> PRIMERO </option>
+                                                        <option value=2 {{ encuentraAno(2, $ano_escolarR) ? 'selected' : '' }}> SEGUNDO </option>
+                                                        <option value=3 {{ encuentraAno(3, $ano_escolarR) ? 'selected' : '' }}> TERCERO </option>
+                                                        <option value=4 {{ encuentraAno(4, $ano_escolarR) ? 'selected' : '' }}> CUARTO </option>
+                                                        <option value=5 {{ encuentraAno(5, $ano_escolarR) ? 'selected' : '' }}> QUINTO </option>
+                                                        <option value=6 {{ encuentraAno(6, $ano_escolarR) ? 'selected' : '' }}> SEXTO </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Promedio </b> </label>
+                                                <div class="search_select_box">
+                                                    <select name="selPromedio[]" id="selPromedio" data-style="btn-selectpicker" title="-- TODOS --" class="form-control selectpicker" data-style-base="form-control" autofocus multiple>
+                                                        <option value=1 {{ encuentraPromedio(1, $promedioR) ? 'selected' : '' }}> 9 - 10 </option>
+                                                        <option value=2 {{ encuentraPromedio(2, $promedioR) ? 'selected' : '' }}> 8 - 9 </option>
+                                                        <option value=3 {{ encuentraPromedio(3, $promedioR) ? 'selected' : '' }}> 7 - 8 </option>
+                                                        <option value=4 {{ encuentraPromedio(4, $promedioR) ? 'selected' : '' }}> 6 - 7 </option>
+                                                        <option value=5 {{ encuentraPromedio(5, $promedioR) ? 'selected' : '' }}> 5 - 6 </option>
+                                                        <option value=6 {{ encuentraPromedio(6, $promedioR) ? 'selected' : '' }}> < 5 </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <label class="col-form-label text-md-left"> <b> &nbsp; Escuela </b> </label>
-                                            <div class="search_select_box">
-                                                <select name="selEscuela[]" id="selEscuela" data-style="btn-selectpicker" data-live-search="true" title="-- TODAS --" class="form-control selectpicker" data-style-base="form-control" data-size="8" autofocus multiple>
-                                                    @foreach ($escuelas as $escuela)
-                                                        <option value="{{ $escuela->cve_escuela }}" {{ encuentraEscuela($escuela->cve_escuela, $cve_escuelaR) ? 'selected' : '' }}>{{ $escuela->escuela_abreviatura }} </li>
-                                                    @endforeach
-                                                </select>
+                                        <div class="row mb-0">
+                                            <div class="col-md-1">
+                                                <button type="submit" class="btn btn-info btn-sm"> Buscar </button>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <label class="col-form-label text-md-left"> <b> &nbsp; Ciudad Escuela </b> </label>
-                                            <div class="search_select_box">
-                                                <select name="selCiudad" id="selCiudad" data-style="btn-selectpicker" title="-- TODAS --" class="form-control selectpicker" data-style-base="form-control" autofocus>
-                                                    <option value="" selected> -- TODAS -- </option>
-                                                    @foreach ($ciudades as $ciudad)
-                                                        <option value="{{ $ciudad->cve_ciudad }}" {{ $ciudad->cve_ciudad == $cve_ciudadR ? 'selected' : '' }}>{{ $ciudad->ciudad }} </li>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label class="col-form-label text-md-left"> <b> &nbsp; Carrera </b> </label>
-                                            <div>
-                                                <input type="search" name="searchCarrera" class="form-control mb-2" id="inlineFormInput" value="{{ old('searchCarrera', $carreraR) }}" autofocus>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <button type="submit" class="btn btn-info"> Buscar </button>
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
-                        {{-- </div> --}}
+                        </div>
                     </div>
                 </div>            
             </div>
@@ -156,7 +301,7 @@
                                     elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
                                     else $ciudadEscuela = "NULL";
 
-                                    switch ($estudiante->cve_status)
+                                    switch ($estudiante->cve_status)  // Se colorea el borde izquierdo de la celda de acuerdo al status del estudiante
                                     {
                                         case 1:   //RECIBIDO
                                             $color = "#9944d9"; 
@@ -178,7 +323,7 @@
                                             break;               
                                     }
                                 ?>
-                                <tr title={{ $estudiante->status->descripcion }}>
+                                <tr title={{ $estudiante->status->descripcion }} style="font-size:15px">
                                     <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
                                     <td style="vertical-align:middle">{{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
@@ -192,11 +337,20 @@
                     </table>
                 </div>
                 <div>
-                    <label class="col-form-label text-md-left">
-                        {{ $estudiantes->links('pagination::bootstrap-5') }}
+                    <label class="col-form-label float-left">
+                        {{ $estudiantes->links('pagination::bootstrap-5') }} 
                     </label>
+                    <form method="GET" id="formReport" action="{{ route('estudiantes.pdf') }}">
+                        <input id="tituloReporte" name="tituloReporte" type="hidden"  value="" class="form-control">
+                        @if (Auth::user()->usertype == 1)  
+                            <div class="float-right">
+                                <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> PDF </b> </button>
+                            </div>
+                        @endif
+                    </form>
                 </div>
-            </div>
+             </div>
+
         </div>
     </div>
 @endsection

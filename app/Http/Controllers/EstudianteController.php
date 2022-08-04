@@ -745,12 +745,21 @@ class EstudianteController extends Controller
         $status = StatusEstudiante::all();
         $escuelas = Escuela::where('cve_escuela', '!=', 999)->orderBy('escuela_abreviatura')->get();
         $ciudades = Ciudad::all();
+        $localidades = Localidad::orderBy('localidad')->get();
+        $turnos = Turno::all();
 
         $searchR = mb_strtoupper($request->search);
         $statusR = $request->selStatus;
         $cve_escuelaR = $request->selEscuela;
         $cve_ciudadR = $request->selCiudad;
         $carreraR = mb_strtoupper($request->searchCarrera);
+        $cve_localidadOR = $request->selLocalidadO;
+        $cve_turnoR = $request->selTurno;
+        $ano_escolarR = $request->selAnoEscolar;
+        $promedioR = $request->selPromedio;
+        $socioeconomicaR = $request->selSocioeconomica;
+
+        $totEstudiantes = Estudiante::count();
 
         $estudiantes = Estudiante::where(function($query) use($request){
             if (isset($request->selStatus))
@@ -762,6 +771,21 @@ class EstudianteController extends Controller
             {
                 $cve_escuelaR = $request->selEscuela;
                 $query->whereIn('cve_escuela', $cve_escuelaR); 
+            }
+            if (isset($request->selLocalidadO))
+            {
+                $cve_localidadOR = $request->selLocalidadO;
+                $query->whereIn('cve_localidad_origen', $cve_localidadOR); 
+            }
+            if (isset($request->selTurno))
+            {
+                $cve_turnoR = $request->selTurno;
+                $query->whereIn('cve_turno_escuela', $cve_turnoR); 
+            }
+            if (isset($request->selAnoEscolar))
+            {
+                $ano_escolarR = $request->selAnoEscolar;
+                $query->whereIn('ano_escolar', $ano_escolarR); 
             }
             if (isset($request->search))
             {
@@ -780,13 +804,66 @@ class EstudianteController extends Controller
                 $query->where('carrera','like',"%{$request->searchCarrera}%"); 
             }
          });
+         if (isset($request->selPromedio))
+         {
+            $estudiantes = $estudiantes->where(function($query) use($request){
+                $promedioR = $request->selPromedio;
+                foreach($promedioR as $promR)
+                {
+                    switch ($promR)
+                    {
+                        case 1:
+                            $query->whereBetween('promedio', [9, 10]);
+                            break;
+                        case 2:
+                            $query->orwhereBetween('promedio', [8, 9]);
+                            break;
+                        case 3:
+                            $query->orwhereBetween('promedio', [7, 8]);
+                            break;
+                        case 4:
+                            $query->orwhereBetween('promedio', [6, 7]);
+                            break;
+                        case 5:
+                            $query->orwhereBetween('promedio', [5, 6]);
+                            break;
+                        case 6:
+                            $query->orwhereBetween('promedio', '<', 6);
+                            break;
+                    }
+                }
+            });
+        }
+        if (isset($request->selSocioeconomica))
+        {
+            if ($socioeconomicaR == 1)
+            {
+                $estudiantes->leftjoin('datos_socioeconomicos', function ($join)
+                {
+                    $join->on('estudiantes.id', 'datos_socioeconomicos.id_estudiante');
+                })->whereRaw('TRIM(datos_socioeconomicos.observaciones) IS NULL');
+            }
+            elseif ($socioeconomicaR == 2)
+            {
+                $estudiantes->leftjoin('datos_socioeconomicos', function ($join)
+                {
+                    $join->on('estudiantes.id', 'datos_socioeconomicos.id_estudiante');
+                })->whereRaw('datos_socioeconomicos.observaciones IS NOT NULL');
+            }
+        }
+        //Obtiene los ids de la consulta para usarlos en el reporte PDF
+        $ids_estudiantes = $estudiantes->get('id');
+        $ids_reporte = $ids_estudiantes->toArray();
+        $request->session()->put('ids_reporte', $ids_reporte);
 
-
-        //dd($estudiantes->get());
+        //dd($estudiantes->toSql());
         $estudiantes = $estudiantes->paginate(25)->withQueryString();
-        //dd($estudiantes);
 
-        return view('estudiantes.index', compact('estudiantes', 'searchR', 'status', 'statusR', 'escuelas', 'cve_escuelaR', 'ciudades', 'cve_ciudadR', 'carreraR'));
+        return view('estudiantes.index', compact(
+            'estudiantes', 'totEstudiantes', 'searchR', 'status', 
+            'statusR', 'escuelas', 'cve_escuelaR', 'ciudades',
+            'cve_ciudadR', 'carreraR', 'localidades', 'cve_localidadOR', 
+            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR'));
     }
 
     public function edit($id)
@@ -934,5 +1011,20 @@ class EstudianteController extends Controller
         }
 
         return redirect()->route('estudiantes.index')->with('message', 'Estudiante CENSADO con éxito!')->with('msg_type', 'success');
+    }
+
+    public function pdf(Request $request)
+    {
+        $ids_reporte = $request->session()->get('ids_reporte');
+
+        $tituloReporte = $request->tituloReporte;
+
+        $estudiantes_reporte = Estudiante::whereIn('id', $ids_reporte)->get(); 
+
+        // return view('estudiantes.reporte_pdf', compact('estudiantes_reporte', 'tituloReporte'));
+
+        $pdf = PDF::loadView('estudiantes.reporte_pdf',['estudiantes_reporte'=>$estudiantes_reporte, 'tituloReporte'=>$tituloReporte]);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream();
     }
  }
