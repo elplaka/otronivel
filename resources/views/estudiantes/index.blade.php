@@ -274,6 +274,25 @@
                                             <div class="col-md-1">
                                                 <button type="submit" class="btn btn-info btn-sm"> Buscar </button>
                                             </div>
+                                            <div class="col-md-9 text-md-right" style="font-size:13px">
+                                                <label class="col-form-label" style="font-size:13px"> <i class="fas fa-sort"></i> <b> &nbsp; Ordenar por <i class="fas fa-angle-double-right"></i> </b> </label>
+                                            </div>
+                                            <div class="col-md-2" style="font-size:13px">
+                                                <div class="search_select_box">
+                                                    <select name="selOrderBy1" id="selOrderBy1" data-style="btn-selectpicker" class="form-control selectpicker" data-style-base="form-control" autofocus>
+                                                        <option value="" selected> -- SIN ORDENAR -- </option>
+                                                        <option value=1 {{ $orderBy1R == 1 ? 'selected' : '' }}> APELLIDOS </option>
+                                                        <option value=0 {{ isset($orderBy1R) && $orderBy1R == 0 ? 'selected' : '' }}> NOMBRE </option>
+                                                        <option value=2 {{ $orderBy1R == 2 ? 'selected' : '' }}> ESCUELA </option>
+                                                        <option value=3 {{ $orderBy1R == 3 ? 'selected' : '' }}> CARRERA </option>
+                                                        <option value=4 {{ $orderBy1R == 4 ? 'selected' : '' }}> CIUDAD ESCUELA </option>
+                                                        <option value=5 {{ $orderBy1R == 5 ? 'selected' : '' }}> TURNO ESCUELA </option>
+                                                        <option value=6 {{ $orderBy1R == 6 ? 'selected' : '' }}> AÑO ESCOLAR </option>
+                                                        <option value=7 {{ $orderBy1R == 7 ? 'selected' : '' }}> PROMEDIO </option>
+                                                        <option value=8 {{ $orderBy1R == 8 ? 'selected' : '' }}> LUGAR ORIGEN </option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>

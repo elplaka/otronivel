@@ -758,6 +758,7 @@ class EstudianteController extends Controller
         $ano_escolarR = $request->selAnoEscolar;
         $promedioR = $request->selPromedio;
         $socioeconomicaR = $request->selSocioeconomica;
+        $orderBy1R = $request->selOrderBy1;
 
         $totEstudiantes = Estudiante::count();
 
@@ -851,10 +852,55 @@ class EstudianteController extends Controller
                 })->whereRaw('datos_socioeconomicos.observaciones IS NOT NULL');
             }
         }
+
+       
         //Obtiene los ids de la consulta para usarlos en el reporte PDF
         $ids_estudiantes = $estudiantes->get('id');
         $ids_reporte = $ids_estudiantes->toArray();
         $request->session()->put('ids_reporte', $ids_reporte);
+        $request->session()->put('orderBy1', $orderBy1R);
+
+        if (isset($request->selOrderBy1))
+        {
+            switch($orderBy1R)  
+            {
+                case 0: //NOMBRE
+                    $estudiantes = $estudiantes->orderBy('nombre');
+                    break;
+                case 1:  //APELLIDOS
+                    $estudiantes = $estudiantes->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+                case 2: //ESCUELA
+                    $estudiantes = $estudiantes->orderBy('cve_escuela')->orderBy('cve_ciudad_escuela');
+                    break;
+                case 3:  //CARRERA
+                    $estudiantes = $estudiantes->orderBy('carrera')->orderBy('cve_escuela')->orderBy('cve_ciudad_escuela');
+                    break;
+                case 4:  //CIUDAD ESCUELA
+                    // Sirve para ordenar primero por la carrera y después por el nombre de la escuela. Está más fácil de armar el query pero no es tan óptimo
+                    // $estudiantes = $estudiantes->orderBy('cve_ciudad_escuela')->orderBy(Escuela::select('escuela')->whereColumn('escuelas.cve_escuela', 'estudiantes.cve_escuela'));
+
+                    // Sirve para ordenar primero por la carrera y después por el nombre de la escuela.
+                    $estudiantes = $estudiantes->select(['estudiantes.*', 'escuelas.escuela as nombre_escuela'])
+                                   ->join('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela')
+                                   ->orderBy('estudiantes.cve_ciudad_escuela')->orderBy('nombre_escuela');
+                    break;
+                case 5:  //TURNO ESCUELA
+                    $estudiantes = $estudiantes->orderBy('cve_turno_escuela')->orderBy('carrera');
+                    break;
+                case 6:  //AÑO ESCOLAR
+                    $estudiantes = $estudiantes->orderBy('ano_escolar')->orderBy('carrera');
+                    break;
+                case 7:  //PROMEDIO
+                    $estudiantes = $estudiantes->orderBy('promedio','desc')->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+                case 8:  //LUGAR ORIGEN
+                    $estudiantes = $estudiantes->select(['estudiantes.*', 'localidades.localidad as nombre_localidad'])
+                    ->join('localidades', 'estudiantes.cve_localidad_origen', '=', 'localidades.cve_localidad')
+                    ->orderBy('nombre_localidad')->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+            }
+        }
 
         //dd($estudiantes->toSql());
         $estudiantes = $estudiantes->paginate(25)->withQueryString();
@@ -863,7 +909,7 @@ class EstudianteController extends Controller
             'estudiantes', 'totEstudiantes', 'searchR', 'status', 
             'statusR', 'escuelas', 'cve_escuelaR', 'ciudades',
             'cve_ciudadR', 'carreraR', 'localidades', 'cve_localidadOR', 
-            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR'));
+            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R'));
     }
 
     public function edit($id)
@@ -1016,14 +1062,59 @@ class EstudianteController extends Controller
     public function pdf(Request $request)
     {
         $ids_reporte = $request->session()->get('ids_reporte');
+        $orderBy1 = $request->session()->get('orderBy1');
 
         $tituloReporte = $request->tituloReporte;
 
-        $estudiantes_reporte = Estudiante::whereIn('id', $ids_reporte)->get(); 
+        $estudiantes_reporte = Estudiante::whereIn('id', $ids_reporte); 
+
+        if (isset($orderBy1))
+        {
+            switch($orderBy1)  
+            {
+                case 0: //NOMBRE
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('nombre');
+                    break;
+                case 1:  //APELLIDOS
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+                case 2: //ESCUELA
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('cve_escuela')->orderBy('cve_ciudad_escuela');
+                    break;
+                case 3:  //CARRERA
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('carrera')->orderBy('cve_escuela')->orderBy('cve_ciudad_escuela');
+                    break;
+                case 4:  //CIUDAD ESCUELA
+                    $estudiantes_reporte = $estudiantes_reporte->select(['estudiantes.*', 'escuelas.escuela as nombre_escuela'])
+                                   ->join('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela')
+                                   ->orderBy('estudiantes.cve_ciudad_escuela')->orderBy('nombre_escuela');
+                    break;
+                case 5:  //TURNO ESCUELA
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('cve_turno_escuela')->orderBy('carrera');
+                    break;
+                case 6:  //AÑO ESCOLAR
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('ano_escolar')->orderBy('carrera');
+                    break;
+                case 7:  //PROMEDIO
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('promedio','desc')->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+                case 8:  //LUGAR ORIGEN
+                    $estudiantes_reporte = $estudiantes_reporte->select(['estudiantes.*', 'localidades.localidad as nombre_localidad'])
+                    ->join('localidades', 'estudiantes.cve_localidad_origen', '=', 'localidades.cve_localidad')
+                    ->orderBy('nombre_localidad')->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+            }
+        }
+
+            // METER WHERE A LA CONSULTA DIRECTV
+        // $estudiantes_reporte = Estudiante::select('*')
+        // ->whereRaw('cve_localidad_origen <> cve_localidad_actual')
+        // ->get();
 
         // return view('estudiantes.reporte_pdf', compact('estudiantes_reporte', 'tituloReporte'));
 
-        $pdf = PDF::loadView('estudiantes.reporte_pdf',['estudiantes_reporte'=>$estudiantes_reporte, 'tituloReporte'=>$tituloReporte]);
+
+        $pdf = PDF::loadView('estudiantes.reporte_pdf',['estudiantes_reporte'=>$estudiantes_reporte->get(), 'tituloReporte'=>$tituloReporte]);
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream();
     }
