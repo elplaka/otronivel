@@ -205,7 +205,6 @@ p {
                 $ano_escolar = "SEXTO";
                 break;    
         }
-
     ?>
     <table class="center" width="100%" style="border-spacing: 0px 2px;">
         <tr style="padding-bottom:1px">

@@ -682,18 +682,114 @@ class EstudianteController extends Controller
         }
     }
 
+    public function formulario_final(Request $request, $id_hex)
+    {
+        $estudiante = Estudiante::where('id_hex', $id_hex)->first();
+        $request->session()->put('estudiante', $estudiante);
+        $ff = $request->session()->get('ff');
+        if (!$ff) return view('estudiantes/formulario-final',compact('estudiante'));
+        else return view('estudiantes/operacion_invalida');
+        $request->session()->put('ff', true);
+    }
+    
+    public function formulario_final_post(Request $request)
+    {
+        $validatedData = $request->validate([
+            'img_constancia' => ['required_with:alpha_dash', 'max:2000'],
+        ]);
+
+        $kardexCargado = false;
+        $constanciaCargada = false;
+
+        $estudiante = $request->session()->get('estudiante');
+
+        if (isset($request->img_kardex) || (isset($estudiante) && $estudiante->img_kardex == "KARDEX_OK.pdf")) $kardexCargado = true;
+        if (isset($request->img_constancia) || (isset($estudiante) && $estudiante->img_constancia != "PENDIENTE")) $constanciaCargada = true;
+
+        if ($kardexCargado) $extKardex = "pdf";
+        else $extKardex = substr(strrchr($request->kardex_hidden, "."), 1);
+        if ($constanciaCargada) $extConstancia = "pdf";
+        else $extConstancia = substr(strrchr($request->constancia_hidden, "."), 1);
+
+        $extKardex = strtoupper($extKardex);
+        $extConstancia = strtoupper($extConstancia);
+
+        if (isset($request->img_kardex)) $extKardex = strtoupper($request->img_kardex->getClientOriginalExtension());
+        if (isset($request->img_constancia)) $extConstancia = strtoupper($request->img_constancia->getClientOriginalExtension());
+
+        $message = '<b>ERROR(ES) EN LA INFORMACIÓN: </b> <ul>';
+        $errorKardex = false;
+        $errorConstancia = false;
+
+        //++++++++++++++++++++ VALIDACIÓN DE CAMPOS OBLIGATORIOS +++++++++++++++++++++
+        if (!$kardexCargado && $request->kardex_hidden == "#kardex#")
+        {
+            $message = $message . "<li>El <b>KARDEX</b> es obligatorio.</li>";
+            $errorKardex = true;
+        }
+        if (!$constanciaCargada && $request->constancia_hidden == "PENDIENTE")
+        {
+            $message = $message . "<li>La <b>CONSTANCIA</b> es obligatoria.</li>";
+            $errorConstancia = true;
+        }
+
+        //+++++++++++++++++++++++ VALIDACIÓN DE ARCHIVOS PDF ++++++++++++++++++++++++++++++
+        if ($extKardex != "PDF")
+        {
+            $message = $message . "<li>El archivo del <b>KARDEX</b> debe ser PDF.</li>";
+            $errorKardex = true;
+        }
+        if ($extConstancia != "PDF")
+        {
+            $message = $message . "<li>El archivo de la <b>CONSTANCIA DE ESTUDIOS</b> debe ser PDF.</li>";
+            $errorConstancia = true;
+        }
+
+        $message = $message . "</ul>";
+
+        $rfc = $estudiante->rfc;
+
+        if ($kardexCargado)
+        {
+            $archivoKardex = 'KX_' . $rfc . '.' . $extKardex;
+            $request->img_kardex->move('img/kardex', $archivoKardex);
+        }
+        if ($constanciaCargada)
+        {
+            $archivoConstancia = 'CN_' . $rfc . '.' . $extConstancia;
+            if (isset($request->img_constancia)) $request->img_constancia->move('img/constancias', $archivoConstancia);
+        }
+        if ($errorKardex || $errorConstancia) return redirect()->back()->with('message', $message);
+
+        $estudiante->promedio = $request->promedio;
+        if (isset($archivoKardex)) $estudiante->img_kardex = $archivoKardex;
+        $estudiante->img_constancia = $archivoConstancia;
+        $estudiante->save();
+        
+        $request->session()->put('estudiante', $estudiante);
+        $request->session()->put('ff', false);
+
+        return view('estudiantes.info_actualizada');
+    }
+
+    public function mail_folio()
+    {
+        return redirect()->route('estudiantes.mail_folio');
+    }
+
+    public function folios_enviados($folios)
+    {
+        return view('estudiantes/folios_enviados')->with('folios', $folios);
+    }
+
     public function formulario_enviado(Request $request)
     {
         $fin = $request->session()->get('fin');
-
-        //// $request->session()->forget('estudiante');
-        //// $request->session()->forget('socioeconomico');
 
         $request->session()->forget('f1');
         $request->session()->forget('f2');
         $request->session()->forget('f3');
         $request->session()->forget('f4');
-        //// $request->session()->forget('fin');
 
         if ($fin) return view('estudiantes/formulario_enviado');
         else return view('estudiantes/operacion_invalida');
@@ -963,7 +1059,7 @@ class EstudianteController extends Controller
         if (isset($request->img_kardex)) 
         {
             $extKardex = strtoupper($request->img_kardex->getClientOriginalExtension());
-            $archivoKardex = 'ID_' . $rfc . '.' . $extKardex;
+            $archivoKardex = 'KX_' . $rfc . '.' . $extKardex;
             $request->img_kardex->move('img/kardex', $archivoKardex);
         } 
         if (isset($request->img_constancia)) 

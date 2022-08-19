@@ -1,7 +1,15 @@
 @extends('layouts.main')
 
 <?php
-    $usertype = auth()->user()->usertype;
+    if (isset(auth()->user()->usertype))
+    {
+        $usertype = auth()->user()->usertype;
+    }
+    else 
+    {
+        return redirect()->to('/');
+    }
+
     $i = 1;
 
     function encuentraStatus($status, $statusR)

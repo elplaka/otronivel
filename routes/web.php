@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\UsuarioController;
-use App\Mail\EstudiantesMailable;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\EstudiantesMailable;
+use App\Mail\EstudiantesFolioMailable;
 use App\Models\Estudiante;
 use App\Http\Middleware\ChecaTipoUsuario;
 
@@ -41,7 +42,12 @@ Route::post('/estudiantes/formulario3', [EstudianteController::class, 'formulari
 Route::get('/estudiantes/formulario4', [EstudianteController::class, 'formulario4'])->name('estudiantes.formulario4');
 Route::post('/estudiantes/formulario4', [EstudianteController::class, 'formulario4Post'])->name('estudiantes.formulario4.post');
 
+Route::get('/estudiantes/formulario-final/{id_hex}', [EstudianteController::class, 'formulario_final'])->name('estudiantes.formulario_final');
+Route::post('/estudiantes/formulario-final', [EstudianteController::class, 'formulario_final_post'])->name('estudiantes.formulario_final.post');
+
 Route::get('/estudiantes/formulario_enviado', [EstudianteController::class, 'formulario_enviado'])->name('estudiantes.formulario_enviado');
+
+Route::get('/estudiantes/folios_enviados/{folios}', [EstudianteController::class, 'folios_enviados'])->name('estudiantes.folios_enviados');
 
 Route::get('/estudiantes/registro_pdf/', [EstudianteController::class, 'registro_pdf'])->name('estudiantes.registro_pdf');
 Route::get('/estudiantes/registro_pdf/{id_hex}', [EstudianteController::class, 'registro_pdf_post'])->name('estudiantes.registro_pdf_post');
@@ -49,7 +55,6 @@ Route::get('/estudiantes/registro_pdf/{id_hex}', [EstudianteController::class, '
 Route::get('/registro/{id_hex}', [EstudianteController::class, 'registro'])->name('estudiantes.registro');
 
 Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudiante){
-    
     $correo = new EstudiantesMailable($id_estudiante);
 
     $estudiante = Estudiante::where('id', $id_estudiante)->first();
@@ -61,6 +66,29 @@ Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudi
     }
     else return view('estudiantes/operacion_invalida');
 })->name('estudiantes.mail_confirmacion');
+
+// Route::get('/estudiantes/mail_folio/', function(){
+//     //$estudiantes = Estudiante::all();
+
+//     $estudiantes = Estudiante::whereBetween('id', [1,4])->get();
+
+//     //dd($estudiantes);
+//     $folios = '';
+
+//     foreach ($estudiantes as $estudiante)
+//     {
+//         $id_estudiante = $estudiante->id;
+//         $correo = new EstudiantesFolioMailable($id_estudiante);
+//         $estudiante = Estudiante::where('id', $id_estudiante)->first();
+//         if($estudiante->count() > 0)
+//         {
+//             $email = $estudiante->email;
+//             Mail::to($email)->send($correo);
+//             $folios = $folios . ',' . $email;
+//         }
+//     }
+//     return redirect()->route('estudiantes.folios_enviados', $folios);
+// })->name('estudiantes.mail_folio');
 
 Route::get('/estudiantes/index', [EstudianteController::class, 'index'])->name('estudiantes.index');
 Route::get('/estudiantes/edit/{id}', [EstudianteController::class, 'edit'])->name('estudiantes.edit');
@@ -74,11 +102,7 @@ Route::get('/estudiantes/reporte_pdf/', [EstudianteController::class, 'pdf'])->n
 Route::resource('usuarios', UsuarioController::class);
 
 // Route::get('/estudiantes', function () {
-//     dd('dioses');
 // })->middleware(ChecaTipoUsuario::class);
-
-
-
 
 // Route::post('/estudiantes', [App\Http\Controllers\EstudianteController::class, 'store'])->name('estudiantes.store');
 

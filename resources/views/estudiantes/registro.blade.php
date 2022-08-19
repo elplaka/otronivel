@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <title>ALIVIAN4TE :: Información de Registro </title>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    
+    <!-- Custom styles for this template-->
+    <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     
 <?php 
     //require_once(realpath($_SERVER["DOCUMENT_ROOT"]) .'/include/funciones.php');
@@ -124,6 +129,7 @@ p {
     <div id="logo_aliviane" style="text-align:center;">
         <img src="{{ $logo_aliviane }}" style="width:50%;"> &nbsp;
         <img src="data:image/png;base64, {!! $qrcode !!}" style="width:20%;">
+        <a href="{{ route('estudiantes.formulario_final', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-success btn-md"> <b> Completar <br> REGISTRO </b> </a>
     </div>
      <br>
      <table class="center" width="100%" style="border-spacing: 0px 2px;">
