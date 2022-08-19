@@ -146,8 +146,8 @@
                                 <br>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-primary">
-                                            <i class="fas fa-upload"></i> &nbsp; INFORMACIÓN A SUBIR Y/O ACTUALIZAR
+                                        <div class="card-header text-white" style="background:#5b5b5e">
+                                            <i class="fas fa-upload"></i> &nbsp; DOCUMENTACIÓN PENDIENTE DE SUBIR
                                         </div>
                                         <br>
                                         <div>
@@ -200,7 +200,7 @@
                                                 </div>
                                             </div> --}}
                                             <div class="row mb-3">
-                                                <label class="col-md-6 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> En formato PDF que no pese más de 2MB"><img src="{{ url('/img/help.jpg')}}" style="width:12px;cursor:pointer;"></a></label>
+                                                <label class="col-md-6 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> Del Ciclo Escolar 2022-2023 en formato PDF que no pese más de 2MB"><img src="{{ url('/img/help.jpg')}}" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
                                                     {{-- @if ($archivoConstancia != "PENDIENTE") <a href="{{ "/img/constancias/" . $archivoConstancia  }}" title="Ver PDF" class="btn btn-danger"> <b> Ver PDF </b></a> 
                                                     @endif --}}
