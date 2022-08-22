@@ -24,14 +24,18 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/estudiantes/formulario1', [EstudianteController::class, 'formulario1'])->name('estudiantes.formulario1');
+    Route::post('/estudiantes/formulario1', [EstudianteController::class, 'formulario1Post'])->name('estudiantes.formulario1.post');    
+});
+
 Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 
 Route::get('/', function () {
     return redirect()->route('estudiantes.forget');
 });
 
-Route::get('/estudiantes/formulario1', [EstudianteController::class, 'formulario1'])->name('estudiantes.formulario1');
-Route::post('/estudiantes/formulario1', [EstudianteController::class, 'formulario1Post'])->name('estudiantes.formulario1.post');
+
 
 Route::get('/estudiantes/formulario2', [EstudianteController::class, 'formulario2'])->name('estudiantes.formulario2');
 Route::post('/estudiantes/formulario2', [EstudianteController::class, 'formulario2Post'])->name('estudiantes.formulario2.post');
@@ -45,7 +49,7 @@ Route::post('/estudiantes/formulario4', [EstudianteController::class, 'formulari
 Route::get('/estudiantes/formulario-final/{id_hex}', [EstudianteController::class, 'formulario_final'])->name('estudiantes.formulario_final');
 Route::post('/estudiantes/formulario-final', [EstudianteController::class, 'formulario_final_post'])->name('estudiantes.formulario_final.post');
 
-Route::get('/estudiantes/formulario_enviado', [EstudianteController::class, 'formulario_enviado'])->name('estudiantes.formulario_enviado');
+// Route::get('/estudiantes/formulario_enviado', [EstudianteController::class, 'formulario_enviado'])->name('estudiantes.formulario_enviado');
 
 Route::get('/estudiantes/folios_enviados/{folios}', [EstudianteController::class, 'folios_enviados'])->name('estudiantes.folios_enviados');
 

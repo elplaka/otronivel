@@ -143,7 +143,7 @@
                     <div class="col">
                         <div class="d-sm-flex align-items-center justify-content-between mb-0">
                             <h1 class="h3 mt-2 mb-0 text-gray-800"><b>
-                            Estudiantes</b></h1>
+                            Estudiantes</b></h1> <a href="{{ route("estudiantes.forget") }}" class="btn btn-success" title="Registrar estudiante"> <b> + </b> </a>
                         </div>
                         <div class="card mt-3">
                             <div class="card-header bg-info" style="color:#ffffff;padding:2px;font-size:15px">
@@ -282,7 +282,19 @@
                                             <div class="col-md-1">
                                                 <button type="submit" class="btn btn-info btn-sm"> Buscar </button>
                                             </div>
-                                            <div class="col-md-9 text-md-right" style="font-size:13px">
+                                            <div class="col-md-3 text-md-right" style="font-size:13px">
+                                                <label class="col-form-label" style="font-size:13px"> <b> &nbsp; Documentación </b> </label>
+                                            </div>
+                                            <div class="col-md-2" style="font-size:13px">
+                                                <div class="search_select_box">
+                                                    <select name="selDocumentacion" id="selDocumentacion" data-style="btn-selectpicker" class="form-control selectpicker" data-style-base="form-control" autofocus>
+                                                        <option value="" selected> -- TODOS -- </option>
+                                                        <option value=1 {{ $documentacionR == 1 ? 'selected' : '' }}> COMPLETA </option>
+                                                        <option value=2 {{ $documentacionR == 2 ? 'selected' : '' }}> INCOMPLETA </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 text-md-right" style="font-size:13px">
                                                 <label class="col-form-label" style="font-size:13px"> <i class="fas fa-sort"></i> <b> &nbsp; Ordenar por <i class="fas fa-angle-double-right"></i> </b> </label>
                                             </div>
                                             <div class="col-md-2" style="font-size:13px">

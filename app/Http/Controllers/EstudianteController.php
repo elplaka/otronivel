@@ -855,6 +855,7 @@ class EstudianteController extends Controller
         $promedioR = $request->selPromedio;
         $socioeconomicaR = $request->selSocioeconomica;
         $orderBy1R = $request->selOrderBy1;
+        $documentacionR = $request->selDocumentacion;
 
         $totEstudiantes = Estudiante::count();
 
@@ -899,6 +900,12 @@ class EstudianteController extends Controller
             if (isset($request->searchCarrera))
             {
                 $query->where('carrera','like',"%{$request->searchCarrera}%"); 
+            }
+            if (isset($request->selDocumentacion))
+            {
+                $selDocumentacion = $request->selDocumentacion;
+                if ($selDocumentacion == 1)  $query->where('img_constancia', '!=', 'PENDIENTE');
+                elseif ($selDocumentacion == 2)  $query->where('img_constancia', 'PENDIENTE');
             }
          });
          if (isset($request->selPromedio))
@@ -1005,7 +1012,7 @@ class EstudianteController extends Controller
             'estudiantes', 'totEstudiantes', 'searchR', 'status', 
             'statusR', 'escuelas', 'cve_escuelaR', 'ciudades',
             'cve_ciudadR', 'carreraR', 'localidades', 'cve_localidadOR', 
-            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R'));
+            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R', 'documentacionR'));
     }
 
     public function edit($id)
