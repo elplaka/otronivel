@@ -9,6 +9,7 @@ use App\Models\DatoSocioeconomico;
 use App\Models\Escuela;
 use App\Models\Ciudad;
 use App\Models\StatusEstudiante;
+use App\Models\BoletoAsignado;
 
 class Estudiante extends Model
 {
@@ -74,4 +75,10 @@ class Estudiante extends Model
     {
         return $this->belongsTo(StatusEstudiante::class, 'cve_status');
     }
+
+    public function boletos_asignados()
+    {
+        return $this->hasMany(BoletoAsignado::class, 'id_estudiante');
+    }
+
 }

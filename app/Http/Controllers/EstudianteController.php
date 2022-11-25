@@ -12,6 +12,7 @@ use App\Models\Techo;
 use App\Models\MontoMensual;
 use App\Models\DatoSocioeconomico;
 use App\Models\StatusEstudiante;
+use App\Models\Boleto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use PDF;
@@ -698,35 +699,35 @@ class EstudianteController extends Controller
             'img_constancia' => ['required_with:alpha_dash', 'max:2000'],
         ]);
 
-        $kardexCargado = false;
+        // $kardexCargado = false;
         $constanciaCargada = false;
 
         $estudiante = $request->session()->get('estudiante');
 
-        if (isset($request->img_kardex) || (isset($estudiante) && $estudiante->img_kardex == "KARDEX_OK.pdf")) $kardexCargado = true;
+        // if (isset($request->img_kardex) || (isset($estudiante) && $estudiante->img_kardex == "KARDEX_OK.pdf")) $kardexCargado = true;
         if (isset($request->img_constancia) || (isset($estudiante) && $estudiante->img_constancia != "PENDIENTE")) $constanciaCargada = true;
 
-        if ($kardexCargado) $extKardex = "pdf";
-        else $extKardex = substr(strrchr($request->kardex_hidden, "."), 1);
+        // if ($kardexCargado) $extKardex = "pdf";
+        // else $extKardex = substr(strrchr($request->kardex_hidden, "."), 1);
         if ($constanciaCargada) $extConstancia = "pdf";
         else $extConstancia = substr(strrchr($request->constancia_hidden, "."), 1);
 
-        $extKardex = strtoupper($extKardex);
+        // $extKardex = strtoupper($extKardex);
         $extConstancia = strtoupper($extConstancia);
 
-        if (isset($request->img_kardex)) $extKardex = strtoupper($request->img_kardex->getClientOriginalExtension());
+        // if (isset($request->img_kardex)) $extKardex = strtoupper($request->img_kardex->getClientOriginalExtension());
         if (isset($request->img_constancia)) $extConstancia = strtoupper($request->img_constancia->getClientOriginalExtension());
 
         $message = '<b>ERROR(ES) EN LA INFORMACIÓN: </b> <ul>';
-        $errorKardex = false;
+        // $errorKardex = false;
         $errorConstancia = false;
 
         //++++++++++++++++++++ VALIDACIÓN DE CAMPOS OBLIGATORIOS +++++++++++++++++++++
-        if (!$kardexCargado && $request->kardex_hidden == "#kardex#")
-        {
-            $message = $message . "<li>El <b>KARDEX</b> es obligatorio.</li>";
-            $errorKardex = true;
-        }
+        // if (!$kardexCargado && $request->kardex_hidden == "#kardex#")
+        // {
+        //     $message = $message . "<li>El <b>KARDEX</b> es obligatorio.</li>";
+        //     $errorKardex = true;
+        // }
         if (!$constanciaCargada && $request->constancia_hidden == "PENDIENTE")
         {
             $message = $message . "<li>La <b>CONSTANCIA</b> es obligatoria.</li>";
@@ -734,11 +735,11 @@ class EstudianteController extends Controller
         }
 
         //+++++++++++++++++++++++ VALIDACIÓN DE ARCHIVOS PDF ++++++++++++++++++++++++++++++
-        if ($extKardex != "PDF")
-        {
-            $message = $message . "<li>El archivo del <b>KARDEX</b> debe ser PDF.</li>";
-            $errorKardex = true;
-        }
+        // if ($extKardex != "PDF")
+        // {
+        //     $message = $message . "<li>El archivo del <b>KARDEX</b> debe ser PDF.</li>";
+        //     $errorKardex = true;
+        // }
         if ($extConstancia != "PDF")
         {
             $message = $message . "<li>El archivo de la <b>CONSTANCIA DE ESTUDIOS</b> debe ser PDF.</li>";
@@ -749,20 +750,20 @@ class EstudianteController extends Controller
 
         $rfc = $estudiante->rfc;
 
-        if ($kardexCargado)
-        {
-            $archivoKardex = 'KX_' . $rfc . '.' . $extKardex;
-            $request->img_kardex->move('img/kardex', $archivoKardex);
-        }
+        // if ($kardexCargado)
+        // {
+        //     $archivoKardex = 'KX_' . $rfc . '.' . $extKardex;
+        //     $request->img_kardex->move('img/kardex', $archivoKardex);
+        // }
         if ($constanciaCargada)
         {
             $archivoConstancia = 'CN_' . $rfc . '.' . $extConstancia;
             if (isset($request->img_constancia)) $request->img_constancia->move('img/constancias', $archivoConstancia);
         }
-        if ($errorKardex || $errorConstancia) return redirect()->back()->with('message', $message);
+        if ($errorConstancia) return redirect()->back()->with('message', $message);
 
-        $estudiante->promedio = $request->promedio;
-        if (isset($archivoKardex)) $estudiante->img_kardex = $archivoKardex;
+        // $estudiante->promedio = $request->promedio;
+        // if (isset($archivoKardex)) $estudiante->img_kardex = $archivoKardex;
         $estudiante->img_constancia = $archivoConstancia;
         $estudiante->save();
         
@@ -860,6 +861,10 @@ class EstudianteController extends Controller
         $totEstudiantes = Estudiante::count();
 
         $estudiantes = Estudiante::where(function($query) use($request){
+            // if (isset($request->search))
+            // {
+            //     $query->where('nombre','like',"%{$request->search}%")->orWhere('primer_apellido', 'like',"%{$request->search}%")->orWhere('segundo_apellido', 'like',"%{$request->search}%"); 
+            // }
             if (isset($request->selStatus))
             {
                 $statusR = $request->selStatus;
@@ -885,10 +890,6 @@ class EstudianteController extends Controller
                 $ano_escolarR = $request->selAnoEscolar;
                 $query->whereIn('ano_escolar', $ano_escolarR); 
             }
-            if (isset($request->search))
-            {
-                $query->where('nombre','like',"%{$request->search}%")->orWhere('primer_apellido', 'like',"%{$request->search}%")->orWhere('segundo_apellido', 'like',"%{$request->search}%"); 
-            }
             if (isset($request->selCiudad))
             {
                 if (strlen($request->selCiudad) > 0)
@@ -904,10 +905,19 @@ class EstudianteController extends Controller
             if (isset($request->selDocumentacion))
             {
                 $selDocumentacion = $request->selDocumentacion;
-                if ($selDocumentacion == 1)  $query->where('img_constancia', '!=', 'PENDIENTE');
+                //dump($selDocumentacion);
+                if ($selDocumentacion == 1)  $query->where('img_constancia', '!=', "PENDIENTE");
                 elseif ($selDocumentacion == 2)  $query->where('img_constancia', 'PENDIENTE');
             }
          });
+
+         if (isset($request->search))
+         {
+            $estudiantes = $estudiantes->where(function($query) use($request){
+                $query->where('nombre','like',"%{$request->search}%")->orWhere('primer_apellido', 'like',"%{$request->search}%")->orWhere('segundo_apellido', 'like',"%{$request->search}%"); 
+            });
+        }
+
          if (isset($request->selPromedio))
          {
             $estudiantes = $estudiantes->where(function($query) use($request){
@@ -955,7 +965,8 @@ class EstudianteController extends Controller
                 })->whereRaw('datos_socioeconomicos.observaciones IS NOT NULL');
             }
         }
-
+        // dump($estudiantes->toSql());
+        // dd($estudiantes->get());
        
         //Obtiene los ids de la consulta para usarlos en el reporte PDF
         $ids_estudiantes = $estudiantes->get('id');
@@ -1220,5 +1231,15 @@ class EstudianteController extends Controller
         $pdf = PDF::loadView('estudiantes.reporte_pdf',['estudiantes_reporte'=>$estudiantes_reporte->get(), 'tituloReporte'=>$tituloReporte]);
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream();
+    }
+
+    public function boletos($id)
+    {
+        $estudiante = Estudiante::where('id', $id)->first();
+
+        $ano = date("Y");
+        $boletos = Boleto::where('ano', $ano)->get();
+
+        return view('estudiantes.boletos', compact('estudiante', 'ano', 'boletos'));
     }
  }

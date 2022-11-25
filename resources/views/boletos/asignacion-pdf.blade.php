@@ -41,11 +41,13 @@
                 font-size: 9px;
                 font-family: 'Montserrat', serif;
                 color:#424242;
-                LINE-HEIGHT:0.125cm;
+                LINE-HEIGHT:0.4cm;
             }
         </style>  
 </head>
 <?php 
+    use App\Models\BoletoAsignado;
+
     $path = getcwd() . '/img/alivianate.jpg';
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
@@ -55,27 +57,31 @@
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
     $logo_admon = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+    function folios_asignados($id_remesa, $id_estudiante)
+    {
+        $folios_asignados = "";
+        $asignados = BoletoAsignado::where('id_remesa', $id_remesa)->where('id_estudiante', $id_estudiante)->get();
+
+        if ($asignados->count() == 0) return "N/A";
+        foreach($asignados as $asignado)
+        {
+            if ($asignado->folio_inicial == $asignado->folio_final) $folios_asignados = $folios_asignados . " [ " . $asignado->folio_inicial . " ] "; 
+            else $folios_asignados = $folios_asignados . " [ " . $asignado->folio_inicial . " - " . $asignado->folio_final . " ] "; 
+        }
+
+        return $folios_asignados;
+    }
 ?>
 <body>
     <header style="text-align:center;">
-        {{-- <div class="row">
-            <div class="col-md-4" style="text-align:center;">
-                <img src="{{ $logo_admon }}" alt="Por tiempos mejores" style="width:25%">
-            </div>
-            <div class="col-md-4" style="padding:0px;margin:0px">
-                <h2 class="h3 text-gray-800" style="text-align:center;padding:0px;margin:0px"> <b> {{ __('GOBIERNO DEL MUNICIPIO DE CONCORDIA 2021-2024') }} </b> </h1>
-            </div>
-            <div class="col-md-4">
-                <h1 class="h3 text-gray-800"><b>{{ $tituloReporte }} </b></h1>
-            </div>
-        </div> --}}
         <table>
             <tr>
                 <td style="width:8cm">
                     <img src="{{ $logo_admon }}" alt="Por tiempos mejores" style="width:100%">
                 </td>
                 <td style="width:12cm">
-                    <h2 class="h3 text-gray-800" style="text-align:center;padding:0px;margin:0px"> <b> GOBIERNO DEL MUNICIPIO DE CONCORDIA <br> {{ $tituloReporte }} </b> </h1>
+                    <h2 class="h3 text-gray-800" style="text-align:center;padding:0px;margin:0px"> <b> GOBIERNO DEL MUNICIPIO DE CONCORDIA <br> {{ $tituloReporte }} </b> <br> <b> {{ $remesa }} </b> </h1>
                 </td>
                 <td style="width:5cm"> 
                     <img src="{{ $logo_aliviane }}" alt="Por tiempos mejores" style="width:95%">
@@ -94,14 +100,11 @@
                         <th style="vertical-align:middle;">#</th>
                         <th style="vertical-align:middle;">ID</th>
                         <th style="vertical-align:middle;">Nombre</th>
-                        <th style="vertical-align:middle;">Celular</th>
-                        <th style="vertical-align:middle;">Escuela</th>
+                        <th style="vertical-align:middle;">Escuela - Ciudad</th>
                         <th style="vertical-align:middle;">Carrera</th>
-                        <th style="vertical-align:middle;">Ciudad Escuela</th>
-                        <th style="vertical-align:middle;">Turno</th>
-                        <th style="vertical-align:middle;">Año Escolar</th>
-                        <th style="vertical-align:middle;">Promedio</th>
-                        <th style="vertical-align:middle;">Lugar Origen</th>
+                        <th style="vertical-align:middle;">Cant. Folios</th>
+                        <th style="vertical-align:middle;">Folios</th>
+                        <th style="vertical-align:middle;">Firma</th>
                     </tr>
                 </thead>
                 <?php 
@@ -109,19 +112,19 @@
                 ?>
                 <tbody>
                     @foreach ($estudiantes_reporte as $estudiante)
+                        <?php
+                                if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
+                                elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
+                        ?>
                         <tr>
                             <td style="text-align:center">{{ $i++ }}</th>
                             <td style="text-align:center">{{ $estudiante->id }}</th>
-                            {{-- <td>{{ date('d-m-Y', strtotime($denuncia->created_at)) }}</td> --}}
                             <td>{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }}</td>
-                            <td>{{ $estudiante->celular }}</td>
-                            <td>{{ $estudiante->escuela->escuela_abreviatura }}</td>
+                            <td>{{ $estudiante->escuela_abreviatura . ' - ' . $ciudadEscuela }}</td>
                             <td>{{ $estudiante->carrera }}</td>
-                            <td>{{ $estudiante->ciudad->ciudad }}</td>
-                            <td>{{ substr($estudiante->turno->turno, 0, 3) }}</td>
-                            <td style="text-align:center">{{ $estudiante->ano_escolar }}</td>
-                            <td style="text-align:center">{{ number_format($estudiante->promedio, 1) }}</td>
-                            <td>{{ $estudiante->localidad_origen->localidad }}</td>
+                            <td>{{ $estudiante->cantidad_folios }}</td>
+                            <td>{{ folios_asignados($estudiante->id_remesa, $estudiante->id) }}</td>
+                            <td style="width:8cm"></td>
                          </tr>                     
                     @endforeach 
                 </tbody>

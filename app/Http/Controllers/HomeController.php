@@ -21,8 +21,14 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        //$archivo = "/sistemas/alivianate/resources/views/globales.ini";
+        //$contenido = parse_ini_file($archivo, true);
+        //$ciclo = $contenido["Ciclo Escolar"]["CicloActivo"];
+        $ciclo = "2223";
+        $request->session()->put('ciclo', $ciclo); 
+
         return view('home');
     }
 }

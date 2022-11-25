@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Mail;
@@ -34,8 +35,6 @@ Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name
 Route::get('/', function () {
     return redirect()->route('estudiantes.forget');
 });
-
-
 
 Route::get('/estudiantes/formulario2', [EstudianteController::class, 'formulario2'])->name('estudiantes.formulario2');
 Route::post('/estudiantes/formulario2', [EstudianteController::class, 'formulario2Post'])->name('estudiantes.formulario2.post');
@@ -95,15 +94,40 @@ Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudi
 // })->name('estudiantes.mail_folio');
 
 Route::get('/estudiantes/index', [EstudianteController::class, 'index'])->name('estudiantes.index');
-Route::get('/estudiantes/edit/{id}', [EstudianteController::class, 'edit'])->name('estudiantes.edit');
-Route::post('/estudiantes/update/{id}', [EstudianteController::class, 'update'])->name('estudiantes.update');
-Route::get('/estudiantes/edit_status/{id}', [EstudianteController::class, 'edit_status'])->name('estudiantes.edit_status');
-Route::post('/estudiantes/update_status/{id}', [EstudianteController::class, 'update_status'])->name('estudiantes.update_status');
-Route::get('/estudiantes/edit_se/{id}', [EstudianteController::class, 'edit_socioeconomicos'])->name('estudiantes.edit_se');
-Route::post('/estudiantes/censar/{id}', [EstudianteController::class, 'censar'])->name('estudiantes.censar');
+Route::get('/estudiantes/edit/{id}', [EstudianteController::class, 'edit'])->name('estudiantes.edit')->middleware('editor.user');
+Route::post('/estudiantes/update/{id}', [EstudianteController::class, 'update'])->name('estudiantes.update')->middleware('editor.user');
+Route::get('/estudiantes/edit_status/{id}', [EstudianteController::class, 'edit_status'])->name('estudiantes.edit_status')->middleware('editor.user');
+Route::post('/estudiantes/update_status/{id}', [EstudianteController::class, 'update_status'])->name('estudiantes.update_status')->middleware('editor.user');
+Route::get('/estudiantes/edit_se/{id}', [EstudianteController::class, 'edit_socioeconomicos'])->name('estudiantes.edit_se')->middleware('editor.user');
+Route::post('/estudiantes/censar/{id}', [EstudianteController::class, 'censar'])->name('estudiantes.censar')->middleware('editor.user');
 Route::get('/estudiantes/reporte_pdf/', [EstudianteController::class, 'pdf'])->name('estudiantes.pdf');
 
 Route::resource('usuarios', UsuarioController::class);
+
+Route::get('/boletos/paquetes-index', [BoletoController::class, 'paquetes_index'])->name('boletos.paquetes-index')->middleware('admin.user');
+Route::get('/boletos/paquetes-nuevo', [BoletoController::class, 'paquetes_nuevo'])->name('boletos.paquetes-nuevo')->middleware('admin.user');
+Route::post('/boletos/paquetes-crea', [BoletoController::class, 'paquetes_crea'])->name('boletos.paquetes-crea')->middleware('admin.user');
+Route::get('/boletos/paquetes-editar/{id}', [BoletoController::class, 'paquetes_editar'])->name('boletos.paquetes-editar')->middleware('admin.user');
+Route::post('/boletos/paquetes-actualizar/{id}', [BoletoController::class, 'paquetes_actualizar'])->name('boletos.paquetes-actualizar')->middleware('admin.user');
+
+Route::get('/boletos/remesas-index', [BoletoController::class, 'remesas_index'])->name('boletos.remesas-index')->middleware('admin.user');
+Route::get('/boletos/remesas-nuevo', [BoletoController::class, 'remesas_nuevo'])->name('boletos.remesas-nuevo')->middleware('admin.user');
+Route::post('/boletos/remesas-crea', [BoletoController::class, 'remesas_crea'])->name('boletos.remesas-crea')->middleware('admin.user');
+Route::get('/boletos/remesas-editar/{id}', [BoletoController::class, 'remesas_editar'])->name('boletos.remesas-editar')->middleware('admin.user');
+Route::post('/boletos/remesas-actualizar/{id}', [BoletoController::class, 'remesas_actualizar'])->name('boletos.remesas-actualizar')->middleware('admin.user');
+
+Route::get('/boletos/tantos-index', [BoletoController::class, 'tantos_index'])->name('boletos.tantos-index')->middleware('admin.user');
+Route::get('/boletos/tantos-nuevos', [BoletoController::class, 'tantos_nuevos'])->name('boletos.tantos-nuevos')->middleware('admin.user');
+Route::get('/boletos/tantos-nuevo-uno/{cve_escuela}', [BoletoController::class, 'tantos_nuevo_uno'])->name('boletos.tantos-nuevo-uno')->middleware('admin.user');
+Route::post('/boletos/tantos-crea', [BoletoController::class, 'tantos_crea'])->name('boletos.tantos-crea')->middleware('admin.user');
+Route::post('/boletos/tantos-crea-uno', [BoletoController::class, 'tantos_crea_uno'])->name('boletos.tantos-crea-uno')->middleware('admin.user');
+Route::get('/boletos/tantos-editar/{id_remesa}/{cve_escuela}', [BoletoController::class, 'tantos_editar'])->name('boletos.tantos-editar')->middleware('admin.user');
+Route::post('/boletos/tantos-actualizar/{id_remesa}/{cve_escuela}', [BoletoController::class, 'tantos_actualizar'])->name('boletos.tantos-actualizar')->middleware('admin.user');
+
+Route::get('/boletos/asignacion-nueva', [BoletoController::class, 'asignacion_nueva'])->name('boletos.asignacion-nueva');
+Route::post('/boletos/asignacion-crea/{id_remesa}', [BoletoController::class, 'asignacion_crea'])->name('boletos.asignacion-crea')->middleware('admin.user');
+Route::get('/boletos/asignacion-pdf/', [BoletoController::class, 'asignacion_pdf'])->name('boletos.asignacion-pdf');
+Route::get('/boletos/asignacion-borra/{id_remesa}/{id_estudiante}', [BoletoController::class, 'asignacion_borra'])->name('boletos.asignacion-borra')->middleware('admin.user');
 
 // Route::get('/estudiantes', function () {
 // })->middleware(ChecaTipoUsuario::class);

@@ -141,10 +141,12 @@
             <div class="card-header mt-0">
                 <div class="row mb-0">
                     <div class="col">
+                        
                         <div class="d-sm-flex align-items-center justify-content-between mb-0">
                             <h1 class="h3 mt-2 mb-0 text-gray-800"><b>
-                            Estudiantes</b></h1> <a href="{{ route("estudiantes.forget") }}" class="btn btn-success" title="Registrar estudiante"> <b> + </b> </a>
+                            Estudiantes</b></h1>@if ($usertype <= 1) <a href="{{ route("estudiantes.forget") }}" class="btn btn-success" title="Registrar estudiante"> <b> + </b> </a> @endif
                         </div>
+                        
                         <div class="card mt-3">
                             <div class="card-header bg-info" style="color:#ffffff;padding:2px;font-size:15px">
                                &nbsp; <i class="fas fa-search"></i> &nbsp; Parámetros de Búsqueda  &nbsp; <a data-toggle="collapse" href="#collapseExample" aria-controls="collapseExample" style="color:#ffffff"><i class="fas fa-angle-double-down"></i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fas fa-database"></i> &nbsp; Total de estudiantes registrados: <b> {{ $totEstudiantes }} </b> 
@@ -194,7 +196,10 @@
                                                                         break; 
                                                                     case 6: //ACEPTADO
                                                                         $color = "#00ff00";
-                                                                        break;               
+                                                                        break;
+                                                                    case 7: //ESPECIAL
+                                                                        $color = "#ff00ff";
+                                                                        break;  
                                                                 }
                                                             ?>
                                                             <option style="background: {{ $color }}; color: #ffffff; font-weight: bold" value="{{ $stat->cve_status }}" {{ encuentraStatus($stat->cve_status, $statusR) ? 'selected' : '' }}>{{ $stat->descripcion }} </li>
@@ -327,6 +332,7 @@
                         <thead class="thead-light">
                         <tr>
                             <th class="col-md-auto">#</th>
+                            <th class="col-md-auto">ID</th>
                             <th class="col-sm-4">Nombre</th>
                             <th class="col-sm-2">Escuela - Ciudad</th>
                             <th class="col-sm-3">Carrera</th>
@@ -359,15 +365,29 @@
                                             break; 
                                         case 6: //ACEPTADO
                                             $color = "#00ff00";
-                                            break;               
+                                            break;
+                                        case 7: //ESPECIAL
+                                            $color = "#ff00ff ";
+                                            break;                  
                                     }
                                 ?>
                                 <tr title={{ $estudiante->status->descripcion }} style="font-size:15px">
                                     <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
-                                    <td style="vertical-align:middle">{{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} &nbsp;</td>
+                                    <td style="vertical-align:middle">{{ $estudiante->id }}</td>
+                                    <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
-                                    <td style="vertical-align:middle"> @if ($usertype < 3) <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-success btn-sm"><i class="fas fa-user-edit"></i></a> <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-danger btn-sm"><i class="fas fa-flag"></i></a> @if ($estudiante->cve_status >= 2) <a href="{{ route('estudiantes.edit_se', $estudiante->id) }}" title="Censar" class="btn btn-primary btn-sm"><i class="fas fa-street-view"></i></a> @endif @endif <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" title="Imprimir" class="btn btn-info btn-sm"><i class="fas fa-print"></i></a></td>
+                                    <td style="vertical-align:middle">
+                                        @if ($usertype <= 1)
+                                        <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-success btn-sm"><i class="fas fa-user-edit"></i></a>
+                                        <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-danger btn-sm"><i class="fas fa-flag"></i></a>
+                                        @endif
+                                        @if ($estudiante->cve_status >= 2 && $usertype <=1)
+                                        <a href="{{ route('estudiantes.edit_se', $estudiante->id) }}" title="Censar" class="btn btn-primary btn-sm"><i class="fas fa-street-view"></i></a>
+                                        @endif 
+                                        <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" title="Imprimir" class="btn btn-info btn-sm"><i class="fas fa-print"></i></a>
+                                    {{-- <a href="{{ route('estudiantes.boletos', $estudiante->id) }}" title="Boletos" class="btn btn-secondary btn-sm"><i class="fa-solid fa-ticket"></i></i></a> --}}
+                                    </td>
                                 </tr> 
                                 <?php 
                                 ?>                         
@@ -381,11 +401,9 @@
                     </label>
                     <form method="GET" id="formReport" action="{{ route('estudiantes.pdf') }}">
                         <input id="tituloReporte" name="tituloReporte" type="hidden"  value="" class="form-control">
-                        @if (Auth::user()->usertype == 1)  
                             <div class="float-right">
                                 <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> PDF </b> </button>
                             </div>
-                        @endif
                     </form>
                 </div>
              </div>
