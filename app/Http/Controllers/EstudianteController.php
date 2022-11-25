@@ -19,6 +19,7 @@ use PDF;
 use Dompdf\Dompdf;  
 use DOMDocument;
 use App\Http\Requests\EstudianteUpdateRequest;
+use ZipArchive;
 
 
 class EstudianteController extends Controller
@@ -1233,13 +1234,35 @@ class EstudianteController extends Controller
         return $pdf->stream();
     }
 
-    public function boletos($id)
+    public function download_zip(Request $request, $id)
     {
-        $estudiante = Estudiante::where('id', $id)->first();
+        $zip = new ZipArchive;
+   
+        $fileName = 'docs' . '_' . $id . '.zip';
+   
+        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
+        {
+            $estudiante = Estudiante::findorfail($id);
 
-        $ano = date("Y");
-        $boletos = Boleto::where('ano', $ano)->get();
+            $files[0] = $_SERVER['DOCUMENT_ROOT'] . '/img/curps/' . $estudiante->img_curp;
+            $files[1] = $_SERVER['DOCUMENT_ROOT'] . '/img/actas/' . strtoupper($estudiante->img_acta_nac);
+            $files[2] = $_SERVER['DOCUMENT_ROOT'] . '/img/comprobantes/' . strtoupper($estudiante->img_comprobante_dom);
+            $files[3] = $_SERVER['DOCUMENT_ROOT'] . '/img/identificaciones/' . strtoupper($estudiante->img_identificacion);
+            $files[4] = $_SERVER['DOCUMENT_ROOT'] . '/img/kardex/' . strtoupper($estudiante->img_kardex);
+            if ($estudiante->img_constancia != "PENDIENTE") $files[5] = $_SERVER['DOCUMENT_ROOT'] . '/img/constancias/' . strtoupper($estudiante->img_constancia);
 
-        return view('estudiantes.boletos', compact('estudiante', 'ano', 'boletos'));
+            $i = 1;
+            foreach ($files as $key => $value) {
+                $relativeNameInZipFile = basename($value);
+                //if ($i == 3) dd($value);
+                $zip->addFile($value, $relativeNameInZipFile);
+                //if ($i == 5) dd('Bien');
+                $i++;
+            }
+             
+            $zip->close();
+        }
+    
+        return response()->download(public_path($fileName));
     }
  }

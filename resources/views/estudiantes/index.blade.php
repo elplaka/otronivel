@@ -384,8 +384,11 @@
                                         @endif
                                         @if ($estudiante->cve_status >= 2 && $usertype <=1)
                                         <a href="{{ route('estudiantes.edit_se', $estudiante->id) }}" title="Censar" class="btn btn-primary btn-sm"><i class="fas fa-street-view"></i></a>
-                                        @endif 
+                                        @endif
+                                        @if ($usertype <=3)
                                         <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" title="Imprimir" class="btn btn-info btn-sm"><i class="fas fa-print"></i></a>
+                                        @endif
+                                        <a href="{{ route('estudiantes.download-zip', $estudiante->id) }}" title="Descargar Documentación" class="btn btn-dark btn-sm"><i class="fas fa-download"></i></a>
                                     {{-- <a href="{{ route('estudiantes.boletos', $estudiante->id) }}" title="Boletos" class="btn btn-secondary btn-sm"><i class="fa-solid fa-ticket"></i></i></a> --}}
                                     </td>
                                 </tr> 
