@@ -398,13 +398,21 @@
                         </tbody>
                     </table>
                 </div>
-                <div>
+                <div class="col-mx">
                     <label class="col-form-label float-left">
                         {{ $estudiantes->links('pagination::bootstrap-5') }} 
                     </label>
+                    @if ($usertype == 1)
+                    <form method="GET" action="{{ route('estudiantes.lista-raya') }}">
+                            @csrf
+                            <div class="col-md-0 float-right">
+                                <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-primary btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
+                            </div>
+                    </form>
+                    @endif
                     <form method="GET" id="formReport" action="{{ route('estudiantes.pdf') }}">
                         <input id="tituloReporte" name="tituloReporte" type="hidden"  value="" class="form-control">
-                            <div class="float-right">
+                            <div class="col-md-1 float-right">
                                 <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> PDF </b> </button>
                             </div>
                     </form>
@@ -414,3 +422,29 @@
         </div>
     </div>
 @endsection
+
+
+                    {{-- @if ($id_remesa != 0 && $i > 1)
+                        <div class="col-mx">
+                            <label class="col-form-label float-left">
+                                {{ $estudiantes->links('pagination::bootstrap-5') }} 
+                            </label>
+                            @if ($usertype == 1)
+                            <form method="POST" action="{{ route('boletos.asignacion-crea', $id_remesa) }}">
+                                    @csrf
+                                    <div class="col-md-0 float-right">
+                                        <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-primary btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
+                                    </div>
+                            </form>
+                            @endif
+                            <form method="GET" id="formReport" action="{{ route('boletos.asignacion-pdf') }}">
+                                <input id="tituloReporte" name="tituloReporte" type="hidden"  value="" class="form-control">
+                                <input id="idRemesa" name="idRemesa" type="hidden"  value="{{ $id_remesa }}" class="form-control">
+                                <input id="letraInicial" name="letraInicial" type="hidden"  value="" class="form-control">
+                                <input id="letraFinal" name="letraFinal" type="hidden"  value="" class="form-control">
+                                    <div class="col-md-1 float-right">
+                                        <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> PDF </b> </button>
+                                    </div>
+                            </form>
+                        </div>
+                    @endif --}}

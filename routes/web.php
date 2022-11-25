@@ -102,6 +102,7 @@ Route::get('/estudiantes/edit_se/{id}', [EstudianteController::class, 'edit_soci
 Route::post('/estudiantes/censar/{id}', [EstudianteController::class, 'censar'])->name('estudiantes.censar')->middleware('editor.user');
 Route::get('/estudiantes/reporte_pdf/', [EstudianteController::class, 'pdf'])->name('estudiantes.pdf');
 Route::get('/estudiantes/download-zip/{id}', [EstudianteController::class, 'download_zip'])->name('estudiantes.download-zip');
+Route::get('/estudiantes/lista-raya', [EstudianteController::class, 'lista_raya'])->name('estudiantes.lista-raya');
 
 Route::resource('usuarios', UsuarioController::class);
 

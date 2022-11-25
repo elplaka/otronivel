@@ -1238,18 +1238,18 @@ class EstudianteController extends Controller
     {
         $zip = new ZipArchive;
    
-        $fileName = 'docs' . '_' . $id . '.zip';
+        $estudiante = Estudiante::findorfail($id);
+
+        $fileName = $estudiante->primer_apellido . '_' . $estudiante->segundo_apellido . '_' .$estudiante->nombre . '_docs_' . $id . '.zip';
    
         if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
         {
-            $estudiante = Estudiante::findorfail($id);
-
             $files[0] = $_SERVER['DOCUMENT_ROOT'] . '/img/curps/' . $estudiante->img_curp;
-            $files[1] = $_SERVER['DOCUMENT_ROOT'] . '/img/actas/' . strtoupper($estudiante->img_acta_nac);
-            $files[2] = $_SERVER['DOCUMENT_ROOT'] . '/img/comprobantes/' . strtoupper($estudiante->img_comprobante_dom);
-            $files[3] = $_SERVER['DOCUMENT_ROOT'] . '/img/identificaciones/' . strtoupper($estudiante->img_identificacion);
-            $files[4] = $_SERVER['DOCUMENT_ROOT'] . '/img/kardex/' . strtoupper($estudiante->img_kardex);
-            if ($estudiante->img_constancia != "PENDIENTE") $files[5] = $_SERVER['DOCUMENT_ROOT'] . '/img/constancias/' . strtoupper($estudiante->img_constancia);
+            $files[1] = $_SERVER['DOCUMENT_ROOT'] . '/img/actas/' . substr($estudiante->img_acta_nac, 0, strlen($estudiante->img_acta_nac) - 3) . strtoupper(substr($estudiante->img_acta_nac, strlen($estudiante->img_acta_nac) - 3,3));
+            $files[2] = $_SERVER['DOCUMENT_ROOT'] . '/img/comprobantes/' . substr($estudiante->img_comprobante_dom, 0, strlen($estudiante->img_comprobante_dom) - 3) . strtoupper(substr($estudiante->img_comprobante_dom, strlen($estudiante->img_comprobante_dom) - 3,3));
+            $files[3] = $_SERVER['DOCUMENT_ROOT'] . '/img/identificaciones/' . substr($estudiante->img_identificacion, 0, strlen($estudiante->img_identificacion) - 3) . strtoupper(substr($estudiante->img_identificacion, strlen($estudiante->img_identificacion) - 3,3));
+            $files[4] = $_SERVER['DOCUMENT_ROOT'] . '/img/kardex/' . substr($estudiante->img_kardex, 0, strlen($estudiante->img_kardex) - 3) . strtoupper(substr($estudiante->img_kardex, strlen($estudiante->img_kardex) - 3,3));
+            if ($estudiante->img_constancia != "PENDIENTE") $files[5] = $_SERVER['DOCUMENT_ROOT'] . '/img/constancias/' . $estudiante->img_constancia;
 
             $i = 1;
             foreach ($files as $key => $value) {
@@ -1264,5 +1264,65 @@ class EstudianteController extends Controller
         }
     
         return response()->download(public_path($fileName));
+    }
+
+    public function lista_raya(Request $request)
+    {
+        $ids_reporte = $request->session()->get('ids_reporte');
+        $orderBy1 = $request->session()->get('orderBy1');
+
+        $tituloReporte = $request->tituloReporte;
+
+        $estudiantes_reporte = Estudiante::whereIn('id', $ids_reporte); 
+
+        if (isset($orderBy1))
+        {
+            switch($orderBy1)  
+            {
+                case 0: //NOMBRE
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('nombre');
+                    break;
+                case 1:  //APELLIDOS
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+                case 2: //ESCUELA
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('cve_escuela')->orderBy('cve_ciudad_escuela');
+                    break;
+                case 3:  //CARRERA
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('carrera')->orderBy('cve_escuela')->orderBy('cve_ciudad_escuela');
+                    break;
+                case 4:  //CIUDAD ESCUELA
+                    $estudiantes_reporte = $estudiantes_reporte->select(['estudiantes.*', 'escuelas.escuela as nombre_escuela'])
+                                   ->join('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela')
+                                   ->orderBy('estudiantes.cve_ciudad_escuela')->orderBy('nombre_escuela');
+                    break;
+                case 5:  //TURNO ESCUELA
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('cve_turno_escuela')->orderBy('carrera');
+                    break;
+                case 6:  //AÑO ESCOLAR
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('ano_escolar')->orderBy('carrera');
+                    break;
+                case 7:  //PROMEDIO
+                    $estudiantes_reporte = $estudiantes_reporte->orderBy('promedio','desc')->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+                case 8:  //LUGAR ORIGEN
+                    $estudiantes_reporte = $estudiantes_reporte->select(['estudiantes.*', 'localidades.localidad as nombre_localidad'])
+                    ->join('localidades', 'estudiantes.cve_localidad_origen', '=', 'localidades.cve_localidad')
+                    ->orderBy('nombre_localidad')->orderBy('primer_apellido')->orderBy('segundo_apellido');
+                    break;
+            }
+        }
+
+            // METER WHERE A LA CONSULTA DIRECTV
+        // $estudiantes_reporte = Estudiante::select('*')
+        // ->whereRaw('cve_localidad_origen <> cve_localidad_actual')
+        // ->get();
+
+        // return view('estudiantes.reporte_pdf', compact('estudiantes_reporte', 'tituloReporte'));
+
+
+        $pdf = PDF::loadView('estudiantes.reporte_pdf',['estudiantes_reporte'=>$estudiantes_reporte->get(), 'tituloReporte'=>$tituloReporte]);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream();
     }
  }
