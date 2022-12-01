@@ -172,6 +172,14 @@
                 <a class="nav-link" href="{{ route('estudiantes.index') }}">
                     <i class="fas fa-book"></i>
                     <span>&nbsp;Estudiantes</span></a>
+                    
+                    {{-- @if (Auth::user()->usertype == 1) 
+                    <div id="collapseSystem1" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+                        <div class="py-0 collapse-inner rounded">
+                                <a class="nav-link" href="{{ route('estudiantes.monto-raya') }}"><i class="fa-solid fa-boxes-stacked"></i>Monto Raya </a>
+                        </div>
+                    </div>
+                    @endif --}}
             </li>
             @endif
             {{-- <li class="nav-item">
@@ -211,11 +219,34 @@
                      <a class="nav-link" href="{{ route('boletos.remesas-index') }}"><i class="fa-solid fa-people-carry-box"></i>Remesas </a>
                      <a class="nav-link" href="{{ route('boletos.tantos-index') }}"><i class="fa-solid fa-spinner"></i>Tantos </a>
                      @endif
-                     <a class="nav-link" href="{{ route('boletos.asignacion-nueva') }}">                    <i class="fa-solid fa-hand-holding-dollar"></i>Asignación </a>
+                     <a class="nav-link" href="{{ route('boletos.asignacion-nueva') }}">                    <i class="fa-solid fa-hand-holding"></i>Asignación </a>
                 </div>
             </div>
-        </li>
+            </li>
            @endif
+
+           @if (Auth::user()->usertype == 1 || Auth::user()->usertype == 3)  
+           <!-- Divider -->
+          <hr class="sidebar-divider"> 
+          <li class="nav-item">
+           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSystem3"
+           aria-expanded="true" aria-controls="collapseSystem3">
+           <i class="fa-solid fa-circle-dollar-to-slot"></i>
+               <span>Apoyos Económicos</span>
+           </a>
+           <div id="collapseSystem3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+               <div class="py-0 collapse-inner rounded">
+                    @if (Auth::user()->usertype == 1) 
+                    <a class="nav-link" href="{{ route('apoyos.montos-index') }}"><i class="fa-solid fa-sack-dollar"></i>Montos </a>
+                    <a class="nav-link" href="{{ route('apoyos.asignacion') }}"><i class="fa-solid fa-hand-holding-dollar"></i>Asignación </a>
+                    {{--  <a class="nav-link" href="{{ route('boletos.tantos-index') }}"><i class="fa-solid fa-spinner"></i>Tantos </a>
+                    @endif
+                    <a class="nav-link" href="{{ route('boletos.asignacion-nueva') }}">                    <i class="fa-solid fa-hand-holding-dollar"></i>Asignación </a> --}}
+                    @endif
+               </div>
+           </div>
+           </li>
+          @endif
 
             @if (Auth::user()->usertype == 1)  
              <!-- Divider -->

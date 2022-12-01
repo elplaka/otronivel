@@ -4,32 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Estudiante;
 use App\Models\Ciclo;
 use App\Models\BoletosRemesa;
-use App\Models\BoletosPaquete;
+use App\Models\Escuela;
+use App\Models\Ciudad;
 
-class BoletoAsignado extends Model
+class ApoyosMonto extends Model
 {
     use HasFactory;
 
-    protected $table = "boletos_asignados";
+    protected $table = "apoyos_montos";
+    protected $uniqueKey = ['id_remesa', 'id_ciclo', 'cve_ciudad_escuela', 'cve_escuela'];
 
     protected $fillable = [
         'id_remesa',
-        'id_paquete',
         'id_ciclo',
-        'id_estudiante',
-        'folio_inicial',
-        'folio_final',
-        'entregados',
+        'cve_ciudad_escuela',
+        'cve_escuela',
+        'monto',
     ]; 
-
-    public function estudiante()
-    {
-        return $this->belongsTo(Estudiante::class, 'id_estudiante');
-    }
-
+    
     public function ciclo()
     {
         return $this->belongsTo(Ciclo::class);
@@ -40,9 +34,13 @@ class BoletoAsignado extends Model
         return $this->belongsTo(BoletosRemesa::class, 'id_remesa');
     }
 
-    public function boleto_paquete()
+    public function ciudad()
     {
-        return $this->belongsTo(BoletosPaquete::class, 'id_paquete');
+        return $this->belongsTo(Ciudad::class, 'cve_ciudad');
     }
 
+    public function escuela()
+    {
+        return $this->belongsTo(Escuela::class, 'cve_escuela');
+    }
 }

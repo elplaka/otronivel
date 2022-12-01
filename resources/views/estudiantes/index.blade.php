@@ -378,7 +378,7 @@
                                     <td style="vertical-align:middle">{{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
                                     <td style="vertical-align:middle">
-                                        @if ($usertype <= 1)
+                                        @if ($usertype <= 2)
                                         <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-success btn-sm"><i class="fas fa-user-edit"></i></a>
                                         <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-danger btn-sm"><i class="fas fa-flag"></i></a>
                                         @endif
@@ -402,14 +402,6 @@
                     <label class="col-form-label float-left">
                         {{ $estudiantes->links('pagination::bootstrap-5') }} 
                     </label>
-                    @if ($usertype == 1)
-                    <form method="GET" action="{{ route('estudiantes.lista-raya') }}">
-                            @csrf
-                            <div class="col-md-0 float-right">
-                                <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-primary btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
-                            </div>
-                    </form>
-                    @endif
                     <form method="GET" id="formReport" action="{{ route('estudiantes.pdf') }}">
                         <input id="tituloReporte" name="tituloReporte" type="hidden"  value="" class="form-control">
                             <div class="col-md-1 float-right">
@@ -418,7 +410,6 @@
                     </form>
                 </div>
              </div>
-
         </div>
     </div>
 @endsection

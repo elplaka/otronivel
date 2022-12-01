@@ -4,24 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Estudiante;
 use App\Models\Ciclo;
 use App\Models\BoletosRemesa;
-use App\Models\BoletosPaquete;
+use App\Models\Escuela;
+use App\Models\Estudiante;
 
-class BoletoAsignado extends Model
+
+class ApoyoAsignado extends Model
 {
     use HasFactory;
 
-    protected $table = "boletos_asignados";
+    protected $table = "apoyos_asignados";
 
     protected $fillable = [
         'id_remesa',
-        'id_paquete',
         'id_ciclo',
         'id_estudiante',
-        'folio_inicial',
-        'folio_final',
+        'monto',
         'entregados',
     ]; 
 
@@ -40,9 +39,10 @@ class BoletoAsignado extends Model
         return $this->belongsTo(BoletosRemesa::class, 'id_remesa');
     }
 
-    public function boleto_paquete()
+    public function escuela()
     {
-        return $this->belongsTo(BoletosPaquete::class, 'id_paquete');
+        return $this->belongsTo(Escuela::class, 'cve_escuela');
     }
 
+    
 }
