@@ -221,7 +221,17 @@ class BoletoController extends Controller
         $cantidad_folios = $request->session()->get('cantidad_folios');
         $i = 0;
         $estudiantes_asignacion = 0;
-        $folios_requeridos = array_sum($cantidad_folios);   //Cantidad de folios que se ocuparán para asignar
+
+        //$folios_requeridos = array_sum($cantidad_folios);   //Cantidad de folios que se ocuparán para asignar
+
+        $folios_requeridos =  Estudiante::select('boletos_tantos.cantidad_folios')
+        ->leftjoin('boletos_tantos', 'boletos_tantos.cve_escuela', '=', 'estudiantes.cve_escuela')
+        ->whereIn('estudiantes.id', $ids_asignar)
+        ->whereNotIn('id', function($query){
+            $query->select('id_estudiante')
+            ->from(with(new BoletoAsignado)->getTable());
+        })->where('boletos_tantos.id_remesa', $id_remesa)->sum('boletos_tantos.cantidad_folios');
+
         $folios_disponibles = BoletosPaquete::where('folios_disponibles', '>', 0)->sum('folios_disponibles');
 
         if ($folios_disponibles < $folios_requeridos)  return redirect()->back()->with('message', 'La cantidad de FOLIOS DISPONIBLES no es suficiente para la ASIGNACIÓN solicitada!')->with('tipo_msg', 'danger');
