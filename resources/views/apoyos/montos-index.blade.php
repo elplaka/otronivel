@@ -133,7 +133,7 @@
                                 <td>{{ isset($monto->monto) ? '$ ' . $monto->monto : "N/A" }}</td>                               
                                 <td>
                                     @if (isset($monto->monto))
-                                    <a href="{{ route('apoyos.montos-editar', [$monto->id_remesa, $monto->cve_escuela]) }}" class="btn-sm btn-success"> <i class="fa-solid fa-pen-to-square"></i> </a>
+                                    <a href="{{ route('apoyos.monto-editar', [$monto->id_remesa, $monto->cve_ciudad_escuela, $monto->cve_escuela]) }}" class="btn-sm btn-success"> <i class="fa-solid fa-pen-to-square"></i> </a>
                                     @else
                                     <a href="{{ route('apoyos.montos-nuevo-uno', [$monto->id_remesa, $monto->cve_ciudad_escuela, $monto->cve_escuela]) }}" class="btn-sm btn-success"> <i class="fa-solid fa-square-plus"></i> </a>
                                     @endif

@@ -17,7 +17,7 @@
             } */
 
                 @page{
-                margin-top: 100px;
+                margin-top: 80px;
                 margin-bottom: 40px;
                 }
 
@@ -38,14 +38,14 @@
             }​​​​​​​​​​​​​
 
             th, td, div {
-                font-size: 10px;
+                font-size: 9px;
                 font-family: 'Montserrat', serif;
                 color:#424242;
-                LINE-HEIGHT:0.25cm;
+                LINE-HEIGHT:0.175cm;
             }
 
             h1 {
-                font-size: 13px;
+                font-size: 12px;
                 text-transform: uppercase;
                 font-weight: normal;
                 line-height: normal;
@@ -174,20 +174,20 @@
                                 elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
                         ?>
                         <tr>
-                            <td style="text-align:center">{{ $i++ }}</th>
-                            <td style="text-align:center">{{ $estudiante->id }}</th>
+                            <td style="text-align:center;width:0.15cm">{{ $i++ }}</th>
+                            <td style="text-align:center;width:0.15cm">{{ $estudiante->id }}</th>
                             <td>{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }}</td>
                             <td>{{ $estudiante->lugar_origen }}</td>
                             <td>{{ $estudiante->escuela_abreviatura . ' - ' . $ciudadEscuela }}</td>
                             <td>{{ $estudiante->carrera }}</td>
                             <td style="text-align:right">{{ monto_asignado($estudiante->id_remesa, $estudiante->id) }}</td>
-                            <td style="width:8cm"></td>
+                            <td style="width:6cm"></td>
                          </tr>                     
                     @endforeach 
                     <tr>
                             <td colspan="6" style="text-align:center"> <b> SUMAS : </b> </th>
-                            <td style="text-align:right"><b>  {{ '$ ' . number_format($suma_montos,2) }} </b></td>
-                            <td style="width:8cm"></td>
+                            <td style="text-align:right;width:1.75cm"><b>  {{ '$ ' . number_format($suma_montos,2) }} </b></td>
+                            <td style="width:6cm"></td>
                     </tr>
                 </tbody>
             </table>  

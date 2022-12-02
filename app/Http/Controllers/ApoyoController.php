@@ -354,4 +354,21 @@ class ApoyoController extends Controller
             throw $e;
         }
     }
+
+    public function monto_editar($id_remesa, $cve_ciudad, $cve_escuela, Request $request)
+    {
+        $ciclo = $request->session()->get('ciclo');
+        $monto = ApoyosMonto::where('id_remesa',$id_remesa)->where('id_ciclo', $ciclo)->where('cve_ciudad_escuela', $cve_ciudad)->where('cve_escuela', $cve_escuela)->first();
+        $remesas = BoletosRemesa::all();
+
+        return view('apoyos.monto-editar', compact('monto', 'remesas'));
+    }
+
+    public function monto_actualizar(Request $request, $id_remesa, $cve_ciudad_escuela, $cve_escuela)
+    {
+        $ciclo = $request->session()->get('ciclo');
+        $tanto = ApoyosMonto::where('id_remesa',$id_remesa)->where('id_ciclo', $ciclo)->where('cve_ciudad_escuela', $cve_ciudad_escuela)->where('cve_escuela', $cve_escuela)->update(['monto' => $request->monto]);
+
+        return redirect()->route('apoyos.montos-index')->with('message', 'Monto ACTUALIZADO con éxito!')->with('tipo_msg', 'success');
+    }
 }
