@@ -95,12 +95,19 @@
                 </div>
 
                 <div class="row mb-3">
+                    <label for="ciudad" class="col-md-4 col-form-label text-md-right">{{ __('Ciudad Escuela') }} </label>
+                    <div class="col-md-8">
+                        <input id="ciudad" type="text" class="form-control" name="ciudad" value="{{ old('ciudad', $ciudadEscuela) }}" required autocomplete="ciudad" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
                     <label for="escuela" class="col-md-4 col-form-label text-md-right">{{ __('Escuela') }} </label>
                     <div class="col-md-8">
                         <input id="escuela" type="text" class="form-control" name="escuela" value="{{ old('escuela', $monto->escuela->escuela_abreviatura) }}" required autocomplete="escuela" readonly>
                     </div>
                 </div>
-
+               
                 <div class="row mb-3">
                     <label for="monto" class="col-md-4 col-form-label text-md-right">{{ __('Monto') }}</label>
                     <div class="col-md-5">
