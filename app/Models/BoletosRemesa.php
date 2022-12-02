@@ -18,6 +18,7 @@ class BoletosRemesa extends Model
         'id_ciclo',
         'fecha',
         'descripcion',
+        'descripcion_apoyos',
         'realizada',
     ]; 
     

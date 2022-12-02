@@ -238,11 +238,11 @@
                <div class="py-0 collapse-inner rounded">
                     @if (Auth::user()->usertype == 1) 
                     <a class="nav-link" href="{{ route('apoyos.montos-index') }}"><i class="fa-solid fa-sack-dollar"></i>Montos </a>
+                    @endif
+                    @if (Auth::user()->usertype == 1 || Auth::user()->usertype == 3) 
                     <a class="nav-link" href="{{ route('apoyos.asignacion') }}"><i class="fa-solid fa-hand-holding-dollar"></i>Asignación </a>
-                    {{--  <a class="nav-link" href="{{ route('boletos.tantos-index') }}"><i class="fa-solid fa-spinner"></i>Tantos </a>
                     @endif
-                    <a class="nav-link" href="{{ route('boletos.asignacion-nueva') }}">                    <i class="fa-solid fa-hand-holding-dollar"></i>Asignación </a> --}}
-                    @endif
+         
                </div>
            </div>
            </li>

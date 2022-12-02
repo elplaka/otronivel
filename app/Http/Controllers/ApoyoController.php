@@ -33,9 +33,6 @@ class ApoyoController extends Controller
         $id_remesa = $request->idRemesa;
         $cve_ciudad = $request->cveCiudad;
 
-        $remesa = BoletosRemesa::where('id_remesa', $id_remesa)
-        ->where('id_ciclo', $ciclo)->first();
-
         if ($cve_ciudad == 1)  //MAZATLÁN
         {
             $estudiantes_reporte = Estudiante::select('estudiantes.id as id', 'estudiantes.nombre as nombre', 'estudiantes.primer_apellido as primer_apellido', 'estudiantes.segundo_apellido', 'estudiantes.cve_ciudad_escuela as cve_ciudad_escuela', 'estudiantes.carrera as carrera', 'apoyos_montos.id_remesa as id_remesa', 'escuelas.escuela_abreviatura as escuela_abreviatura', 'apoyos_montos.monto as monto', 'localidades.localidad as lugar_origen')
@@ -73,11 +70,10 @@ class ApoyoController extends Controller
             ->orderBy('estudiantes.nombre'); 
         }
 
-
         $montos = $request->session()->get('montos');
         $suma_montos = array_sum($montos);
 
-        $pdf = PDF::loadView('apoyos.asignacion-pdf',['estudiantes_reporte'=>$estudiantes_reporte->get(), 'tituloReporte'=>$tituloReporte, 'remesa'=>$remesa->descripcion, 'suma_montos'=>$suma_montos]);
+        $pdf = PDF::loadView('apoyos.asignacion-pdf',['estudiantes_reporte'=>$estudiantes_reporte->get(), 'tituloReporte'=>$tituloReporte, 'suma_montos'=>$suma_montos]);
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream();
     }
@@ -185,7 +181,12 @@ class ApoyoController extends Controller
                     ->orderBy('estudiantes.segundo_apellido')
                     ->orderBy('estudiantes.nombre');
         }
-                
+        
+        $remesa = BoletosRemesa::where('id_remesa', $id_remesa)
+        ->where('id_ciclo', $ciclo)->first();
+       
+        if (isset($remesa)) $periodo = $remesa->descripcion_apoyos;
+        else $periodo = '';
 
         $ids_estudiantes = $estudiantes->pluck('id');
         $ids_asignar = $ids_estudiantes->toArray();
@@ -197,7 +198,7 @@ class ApoyoController extends Controller
 
         $estudiantes = $estudiantes->paginate(25)->withQueryString();
 
-        return view('apoyos.asignacion', compact('remesas', 'ciudades', 'estudiantes', 'id_remesa', 'cve_ciudad', 'ciclo'));
+        return view('apoyos.asignacion', compact('remesas', 'ciudades', 'estudiantes', 'id_remesa', 'cve_ciudad', 'ciclo', 'periodo'));
     }
 
     public function montos_index(Request $request)

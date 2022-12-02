@@ -37,8 +37,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label"> <b> Título del Reporte </b></label>
-                        <input type="text" value="CORRESPONDIENTE MES DE " class="form-control" id="recipient-name">
+                        <label for="recipient-name" class="col-form-label"> <b> PERIODO </b></label>
+                        <input type="text" value="CORRESPONDIENTE MES DE NOVIEMBRE DE 2022" .class="form-control" id="recipient-name">
                     </div>
                 </div>
                 <div class="modal-footer">

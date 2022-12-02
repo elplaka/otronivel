@@ -137,8 +137,8 @@ Route::post('/apoyos/montos-crea-uno', [ApoyoController::class, 'montos_crea_uno
 Route::post('/apoyos/montos-crea', [ApoyoController::class, 'montos_crea'])->name('apoyos.montos-crea')->middleware('admin.user');
 Route::get('/apoyos/monto-editar/{id_remesa}/{cve_ciudad_escuela}/{cve_escuela}', [ApoyoController::class, 'monto_editar'])->name('apoyos.monto-editar')->middleware('admin.user');
 Route::post('/apoyos/monto-actualizar/{id_remesa}/{cve_ciudad_escuela}/{cve_escuela}', [ApoyoController::class, 'monto_actualizar'])->name('apoyos.monto-actualizar')->middleware('admin.user');
-Route::get('/apoyos/asignacion', [ApoyoController::class, 'asignacion'])->name('apoyos.asignacion')->middleware('responsable.user')->middleware('admin.user');
-Route::post('/boletos/asignacion-crea/{id_remesa}', [ApoyoController::class, 'asignacion_crea'])->name('apoyos.asignacion-crea')->middleware('admin.user');
+Route::get('/apoyos/asignacion', [ApoyoController::class, 'asignacion'])->name('apoyos.asignacion')->middleware('responsable.user')->middleware('responsable.user');
+Route::post('/apoyos/asignacion-crea/{id_remesa}', [ApoyoController::class, 'asignacion_crea'])->name('apoyos.asignacion-crea')->middleware('admin.user');
 Route::get('/apoyos/asignacion-borra/{id_remesa}/{id_estudiante}', [ApoyoController::class, 'asignacion_borra'])->name('apoyos.asignacion-borra')->middleware('admin.user');
 Route::get('/apoyos/asignacion-pdf/', [ApoyoController::class, 'asignacion_pdf'])->name('apoyos.asignacion-pdf')->middleware('responsable.user');
 
