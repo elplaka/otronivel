@@ -87,7 +87,7 @@ class BoletoController extends Controller
     private function regresa_paquetes_requeridos($ciclo, $cantidad_folios)
     {
         //Necesito saber los folios disponibles de cada paquete
-       $paquetes = BoletosPaquete::where('id_ciclo', $ciclo)->where('folios_disponibles', '>', 0)->orderBy('folio_inicial')->orderBy('folio_final')->get();
+       $paquetes = BoletosPaquete::where('id_ciclo', $ciclo)->where('folios_disponibles', '>', 0)->orderBy('folio_final')->get();
 
        $j = 0; //Controla el índice del array que contiene los paquetes requeridos
        $sigue = true; 
@@ -468,13 +468,15 @@ class BoletoController extends Controller
         return redirect()->route('boletos.remesas-index')->with('message', 'Remesa ACTUALIZADA con éxito!')->with('tipo_msg', 'success');
     }
 
-    public function paquetes_index()
+    public function paquetes_index(Request $request)
     {
-        $paquetes = BoletosPaquete::all();
+        $ciclo = $request->session()->get('ciclo');
+
+        $paquetes = BoletosPaquete::where('id_ciclo', $ciclo)->orderBy('folio_final')->get();
         return view('boletos.paquetes-index', compact('paquetes'));
     }
 
-    public function paquetes_nuevo()
+    public function paquetes_nuevo(Request $request)
     {
         return view('boletos.paquetes-nuevo');
     }
