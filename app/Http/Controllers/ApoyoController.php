@@ -222,7 +222,11 @@ class ApoyoController extends Controller
                 $join->on('estudiantes.cve_ciudad_escuela', '=', 'am.cve_ciudad_escuela');
                 $join->on('estudiantes.cve_escuela', '=', 'am.cve_escuela');
             })
-            ->leftjoin('boletos_remesas as br', 'estudiantes.id_ciclo', '=', 'br.id_ciclo')
+            ->leftjoin('boletos_remesas as br', function($join)
+            {
+                $join->on('estudiantes.id_ciclo', '=', 'br.id_ciclo');
+                $join->on('am.id_remesa', '=', 'br.id_remesa');
+            })
             ->leftjoin('escuelas as es', 'estudiantes.cve_escuela', '=', 'es.cve_escuela')
             ->where('estudiantes.id_ciclo', $ciclo)
             ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 7)
@@ -233,12 +237,17 @@ class ApoyoController extends Controller
         else //CULIACÁN ACEPTADOS
         {
             $montos = Estudiante::select('br.id_remesa','br.descripcion', 'es.escuela_abreviatura', 'estudiantes.cve_escuela', 'estudiantes.cve_ciudad_escuela', 'am.monto')->distinct()
+            //->leftjoin('apoyos_montos as am', 'estudiantes.cve_ciudad_escuela', '=', 'am.cve_ciudad_escuela')
             ->leftJoin('apoyos_montos as am', function($join)
             {
                 $join->on('estudiantes.cve_ciudad_escuela', '=', 'am.cve_ciudad_escuela');
                 $join->on('estudiantes.cve_escuela', '=', 'am.cve_escuela');
             })
-            ->leftjoin('boletos_remesas as br', 'estudiantes.id_ciclo', '=', 'br.id_ciclo')
+            ->leftjoin('boletos_remesas as br', function($join)
+            {
+                $join->on('estudiantes.id_ciclo', '=', 'br.id_ciclo');
+                $join->on('am.id_remesa', '=', 'br.id_remesa');
+            })
             ->leftjoin('escuelas as es', 'estudiantes.cve_escuela', '=', 'es.cve_escuela')
             ->where('estudiantes.id_ciclo', $ciclo)
             ->where('estudiantes.cve_ciudad_escuela', 2)->where('estudiantes.cve_status', 6)
