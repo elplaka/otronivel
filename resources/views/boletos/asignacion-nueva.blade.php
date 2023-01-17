@@ -246,7 +246,13 @@
                                                 break;
                                             case 7: //ESPECIAL
                                                 $color = "#ff00ff";
-                                                break;      
+                                                break;
+                                            case 8: //ACEPTADO 2.0
+                                                $color = "#00a135";
+                                                break;  
+                                            case 9: //ESPECIAL 2.0
+                                                $color = "#ff8000";
+                                                break;  
                                         }
                                     ?>                
                                     <tr style="font-size:15px">
@@ -277,13 +283,11 @@
                             </tbody>
                         </table>
                     </div>
-
                     @if ($id_remesa != 0 && $i == 1)
                         <div class="col-md-6">
                             <label for="id_remesa" class="col-md-10 col-form-label text-md-right">{{ __('* Esta REMESA no tiene asignados los TANTOS.') }} </label>
                         </div>
                     @endif
-
                     @if ($id_remesa != 0 && $i > 1)
                         <div class="col-mx">
                             <label class="col-form-label float-left">

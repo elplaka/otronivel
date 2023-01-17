@@ -199,6 +199,12 @@
                                                                         break;
                                                                     case 7: //ESPECIAL
                                                                         $color = "#ff00ff";
+                                                                        break;
+                                                                    case 8: //ACEPTADO 2.0
+                                                                        $color = "#00a135";
+                                                                        break;  
+                                                                    case 9: //ESPECIAL 2.0
+                                                                        $color = "#ff8000";
                                                                         break;  
                                                                 }
                                                             ?>
@@ -368,7 +374,13 @@
                                             break;
                                         case 7: //ESPECIAL
                                             $color = "#ff00ff ";
-                                            break;                  
+                                            break;
+                                        case 8: //ACEPTADO 2.0
+                                            $color = "#00a135";
+                                            break;  
+                                        case 9: //ESPECIAL 2.0
+                                            $color = "#ff8000";
+                                            break;  
                                     }
                                 ?>
                                 <tr title={{ $estudiante->status->descripcion }} style="font-size:15px">

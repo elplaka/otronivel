@@ -46,7 +46,7 @@ class ApoyoController extends Controller
             ->whereIn('estudiantes.id', $ids_asignar)
             ->where('id_remesa', $id_remesa)
             ->where('estudiantes.id_ciclo', $ciclo)
-            ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 7)
+            ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 9)
             ->orderBy('estudiantes.primer_apellido')
             ->orderBy('estudiantes.segundo_apellido')
             ->orderBy('estudiantes.nombre'); 
@@ -64,7 +64,7 @@ class ApoyoController extends Controller
             ->whereIn('estudiantes.id', $ids_asignar)
             ->where('id_remesa', $id_remesa)
             ->where('estudiantes.id_ciclo', $ciclo)
-            ->where('estudiantes.cve_ciudad_escuela', 2)->where('estudiantes.cve_status', 6)
+            ->where('estudiantes.cve_ciudad_escuela', 2)->where('estudiantes.cve_status', 8)
             ->orderBy('estudiantes.primer_apellido')
             ->orderBy('estudiantes.segundo_apellido')
             ->orderBy('estudiantes.nombre'); 
@@ -161,7 +161,7 @@ class ApoyoController extends Controller
                         $join->on('estudiantes.cve_escuela', '=', 'apoyos_montos.cve_escuela');
                     })
                     ->where('id_remesa', $id_remesa)
-                    ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)->where('estudiantes.cve_status', 7)
+                    ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)->where('estudiantes.cve_status', 9)
                     ->orderBy('estudiantes.primer_apellido')
                     ->orderBy('estudiantes.segundo_apellido')
                     ->orderBy('estudiantes.nombre');
@@ -176,7 +176,7 @@ class ApoyoController extends Controller
                         $join->on('estudiantes.cve_escuela', '=', 'apoyos_montos.cve_escuela');
                     })
                     ->where('id_remesa', $id_remesa)
-                    ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)->where('estudiantes.cve_status', 6)
+                    ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)->where('estudiantes.cve_status', 8)
                     ->orderBy('estudiantes.primer_apellido')
                     ->orderBy('estudiantes.segundo_apellido')
                     ->orderBy('estudiantes.nombre');
@@ -229,7 +229,7 @@ class ApoyoController extends Controller
             })
             ->leftjoin('escuelas as es', 'estudiantes.cve_escuela', '=', 'es.cve_escuela')
             ->where('estudiantes.id_ciclo', $ciclo)
-            ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 7)
+            ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 9)
             ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)
             ->where('br.id_remesa', $id_remesa)
             ->get();
@@ -250,7 +250,7 @@ class ApoyoController extends Controller
             })
             ->leftjoin('escuelas as es', 'estudiantes.cve_escuela', '=', 'es.cve_escuela')
             ->where('estudiantes.id_ciclo', $ciclo)
-            ->where('estudiantes.cve_ciudad_escuela', 2)->where('estudiantes.cve_status', 6)
+            ->where('estudiantes.cve_ciudad_escuela', 2)->where('estudiantes.cve_status', 8)
             ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)
             ->where('br.id_remesa', $id_remesa)
             ->get();
@@ -295,7 +295,7 @@ class ApoyoController extends Controller
                 $cves_escuelas = Escuela::whereIn('cve_escuela', function($query){
                     $query->select('cve_escuela')
                     ->from(with(new Estudiante)->getTable())
-                    ->where('cve_status', 7)
+                    ->where('cve_status', 9)
                     ->where('cve_ciudad_escuela', 1);
                 })->get();
             }
@@ -304,7 +304,7 @@ class ApoyoController extends Controller
                 $cves_escuelas = Escuela::whereIn('cve_escuela', function($query){
                     $query->select('cve_escuela')
                     ->from(with(new Estudiante)->getTable())
-                    ->where('cve_status', 6)
+                    ->where('cve_status', 8)
                     ->where('cve_ciudad_escuela', 2);
                 })->get();
             }

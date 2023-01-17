@@ -26,10 +26,10 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/estudiantes/formulario1', [EstudianteController::class, 'formulario1'])->name('estudiantes.formulario1');
-    Route::post('/estudiantes/formulario1', [EstudianteController::class, 'formulario1Post'])->name('estudiantes.formulario1.post');    
-});
+// Route::middleware(['auth'])->group(function () {
+    Route::get('/estudiantes/formulario1', [EstudianteController::class, 'formulario1'])->name('estudiantes.formulario1')->middleware('admin.user');;
+    Route::post('/estudiantes/formulario1', [EstudianteController::class, 'formulario1Post'])->name('estudiantes.formulario1.post')->middleware('admin.user');;    
+// });
 
 Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 
