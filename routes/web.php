@@ -28,7 +28,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 // Route::middleware(['auth'])->group(function () {
     Route::get('/estudiantes/formulario1', [EstudianteController::class, 'formulario1'])->name('estudiantes.formulario1')->middleware('admin.user');;
-    Route::post('/estudiantes/formulario1', [EstudianteController::class, 'formulario1Post'])->name('estudiantes.formulario1.post')->middleware('admin.user');;    
+    Route::post('/estudiantes/formulario1', [EstudianteController::class, 'formulario1Post'])->name('estudiantes.formulario1.post')->middleware('admin.user');    
 // });
 
 Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
@@ -95,7 +95,7 @@ Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudi
 // })->name('estudiantes.mail_folio');
 
 Route::get('/estudiantes/index', [EstudianteController::class, 'index'])->name('estudiantes.index');
-Route::get('/estudiantes/edit/{id}', [EstudianteController::class, 'edit'])->name('estudiantes.edit')->middleware('editor.user');
+Route::get('/estudiantes/edit/{id}', [EstudianteController::class, 'edit'])->name('estudiantes.edit')->middleware('admin.user');
 Route::post('/estudiantes/update/{id}', [EstudianteController::class, 'update'])->name('estudiantes.update')->middleware('editor.user');
 Route::get('/estudiantes/edit_status/{id}', [EstudianteController::class, 'edit_status'])->name('estudiantes.edit_status')->middleware('editor.user');
 Route::post('/estudiantes/update_status/{id}', [EstudianteController::class, 'update_status'])->name('estudiantes.update_status')->middleware('editor.user');

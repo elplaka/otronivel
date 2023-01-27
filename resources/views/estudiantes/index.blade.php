@@ -390,7 +390,7 @@
                                     <td style="vertical-align:middle">{{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
                                     <td style="vertical-align:middle">
-                                        @if ($usertype <= 2)
+                                        @if ($usertype <= 1)
                                         <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-success btn-sm"><i class="fas fa-user-edit"></i></a>
                                         <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-danger btn-sm"><i class="fas fa-flag"></i></a>
                                         @endif
