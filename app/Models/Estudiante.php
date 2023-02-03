@@ -37,6 +37,7 @@ class Estudiante extends Model
         'img_comprobante_dom', 
         'img_identificacion',  
         'img_kardex',
+        'img_constancia',
         'cve_status'
     ];  
 

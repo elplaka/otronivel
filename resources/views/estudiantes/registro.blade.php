@@ -129,7 +129,7 @@ p {
     <div id="logo_aliviane" style="text-align:center;">
         <img src="{{ $logo_aliviane }}" style="width:50%;"> &nbsp;
         <img src="data:image/png;base64, {!! $qrcode !!}" style="width:20%;">
-        <a href="{{ route('estudiantes.formulario_final', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-success btn-md"> <b> Completar <br> REGISTRO </b> </a>
+        <a href="{{ route('estudiantes.formulario_final', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-success btn-md"> <b> Subir <br> CONSTANCIA </b> </a>
     </div>
      <br>
      <table class="center" width="100%" style="border-spacing: 0px 2px;">
