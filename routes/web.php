@@ -129,6 +129,7 @@ Route::get('/boletos/asignacion-nueva', [BoletoController::class, 'asignacion_nu
 Route::post('/boletos/asignacion-crea/{id_remesa}', [BoletoController::class, 'asignacion_crea'])->name('boletos.asignacion-crea')->middleware('admin.user');
 Route::get('/boletos/asignacion-pdf/', [BoletoController::class, 'asignacion_pdf'])->name('boletos.asignacion-pdf')->middleware('responsable.user');
 Route::get('/boletos/asignacion-borra/{id_remesa}/{id_estudiante}', [BoletoController::class, 'asignacion_borra'])->name('boletos.asignacion-borra')->middleware('admin.user');
+Route::get('/boletos/asignados/{id_remesa}', [BoletoController::class, 'asignados'])->name('boletos.asignados')->middleware('admin.user');
 
 Route::get('/apoyos/montos-index', [ApoyoController::class, 'montos_index'])->name('apoyos.montos-index')->middleware('admin.user');
 Route::get('/apoyos/montos-nuevos', [ApoyoController::class, 'montos_nuevos'])->name('apoyos.montos-nuevos')->middleware('admin.user');

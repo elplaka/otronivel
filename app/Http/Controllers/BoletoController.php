@@ -53,6 +53,21 @@ class BoletoController extends Controller
         }
     }
 
+    public function asignados(Request $request, $id_remesa)
+    {
+        $ciclo = $request->session()->get('ciclo');
+
+        $remesa = BoletosRemesa::where('id_remesa', $id_remesa)
+        ->where('id_ciclo', $ciclo)->first();
+
+        $tituloReporte = "BOLETOS ASIGNADOS :: " . $remesa->descripcion;
+        
+        $boletos_asignados = BoletoAsignado::where('id_ciclo',$ciclo)->where('id_remesa', $id_remesa)->orderBy(Estudiante::select('primer_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('segundo_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('nombre')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc');
+        $pdf = PDF::loadView('boletos.asignados-pdf',['boletos_asignados'=>$boletos_asignados->get(), 'tituloReporte'=>$tituloReporte]);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream();
+    }
+
     public function asignacion_nueva(Request $request)
     {
         $ciclo = $request->session()->get('ciclo');
@@ -65,7 +80,7 @@ class BoletoController extends Controller
                 ->leftjoin('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela' )
                 ->leftjoin('boletos_tantos', 'estudiantes.cve_escuela', '=', 'boletos_tantos.cve_escuela')
                 ->where('id_remesa', $id_remesa)
-                ->where('cve_ciudad_escuela', 1)->where('cve_status', 8)
+                ->where('cve_ciudad_escuela', 1)->where('cve_status', 6)
                 ->orderBy('estudiantes.primer_apellido')
                 ->orderBy('estudiantes.segundo_apellido')
                 ->orderBy('estudiantes.nombre');
@@ -289,7 +304,7 @@ class BoletoController extends Controller
         ->leftjoin('boletos_remesas as br', 'bt.id_remesa', '=', 'br.id_remesa')
         ->leftjoin('escuelas as es', 'estudiantes.cve_escuela', '=', 'es.cve_escuela')
         ->where('estudiantes.id_ciclo', $ciclo)
-        ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 8)
+        ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 6)
         ->where('br.id_remesa', $id_remesa)
         ->get();
         // ->orderBy('estudiantes.primer_apellido')
@@ -373,7 +388,7 @@ class BoletoController extends Controller
             $cves_escuelas = Escuela::whereIn('cve_escuela', function($query){
                 $query->select('cve_escuela')
                 ->from(with(new Estudiante)->getTable())
-                ->where('cve_status', 8)
+                ->where('cve_status', 6)
                 ->where('cve_ciudad_escuela', 1)
                 ->where('cve_escuela', '!=', 1);
             })->get();

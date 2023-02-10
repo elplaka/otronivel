@@ -200,6 +200,11 @@
                         </span>
                         @enderror
                     </div>
+                    @if ($usertype == 1 && $id_remesa > 0)
+                    <div class="col-md-6">
+                        <a href="{{ route('boletos.asignados', $id_remesa) }}" class="btn btn-sm btn-danger float-right"><i class="fa-solid fa-ticket"></i></a>
+                    </div>
+                    @endif
                 </div>
             </form>
             {{-- <form>   --}}
