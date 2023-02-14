@@ -74,29 +74,52 @@ class BoletoController extends Controller
         $id_remesa = $request->id_remesa;
         if (!isset($id_remesa)) $id_remesa = 0;
         $remesas = BoletosRemesa::where('id_ciclo', $ciclo)->get();
+        
+        $remesa = BoletosRemesa::where('id_remesa', $id_remesa)->first();
+        if(!isset($remesa)) $remesa_realizada = 0;
+        else $remesa_realizada = $remesa->realizada;
 
-        $estudiantes = Estudiante::select('estudiantes.id as id', 'estudiantes.nombre as nombre', 'estudiantes.primer_apellido as primer_apellido', 'estudiantes.segundo_apellido', 'estudiantes.cve_ciudad_escuela as cve_ciudad_escuela', 'estudiantes.carrera as carrera', 'estudiantes.cve_status as cve_status', 'boletos_tantos.id_remesa as id_remesa', 'escuelas.escuela_abreviatura as escuela_abreviatura', 'boletos_tantos.cantidad_folios as cantidad_folios')
-                //->leftjoin('boletos_asignados', 'estudiantes.id', '=', 'boletos_asignados.id_estudiante')
-                ->leftjoin('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela' )
-                ->leftjoin('boletos_tantos', 'estudiantes.cve_escuela', '=', 'boletos_tantos.cve_escuela')
-                ->where('id_remesa', $id_remesa)
-                ->where('cve_ciudad_escuela', 1)->where('cve_status', 6)
-                ->orderBy('estudiantes.primer_apellido')
-                ->orderBy('estudiantes.segundo_apellido')
-                ->orderBy('estudiantes.nombre');
+        if ($remesa_realizada)
+        {
+            $boletos_asignados = BoletoAsignado::where('id_ciclo',$ciclo)->where('id_remesa', $id_remesa)->orderBy(Estudiante::select('primer_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('segundo_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('nombre')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc');
+
+            $ids_estudiantes = $boletos_asignados->pluck('id_estudiante');
+            $ids_asignar = $ids_estudiantes->toArray();
+            $request->session()->put('ids_asignar', $ids_asignar);
+
+            $boletos_asignados = $boletos_asignados->paginate(25)->withQueryString();
+
+            return view('boletos.asignacion-nueva', compact('remesas', 'boletos_asignados', 'id_remesa', 'ciclo'));
+        }
+        else
+        {
+            $estudiantes = Estudiante::select('estudiantes.id as id', 'estudiantes.nombre as nombre', 'estudiantes.primer_apellido as primer_apellido', 'estudiantes.segundo_apellido', 'estudiantes.cve_ciudad_escuela as cve_ciudad_escuela', 'estudiantes.carrera as carrera', 'estudiantes.cve_status as cve_status', 'boletos_tantos.id_remesa as id_remesa', 'escuelas.escuela_abreviatura as escuela_abreviatura', 'boletos_tantos.cantidad_folios as cantidad_folios')
+            //->leftjoin('boletos_asignados', 'estudiantes.id', '=', 'boletos_asignados.id_estudiante')
+            ->leftjoin('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela' )
+            ->leftjoin('boletos_tantos', 'estudiantes.cve_escuela', '=', 'boletos_tantos.cve_escuela')
+            ->where('id_remesa', $id_remesa)
+            ->where('cve_ciudad_escuela', 1)->where('cve_status', 6)
+            ->orderBy('estudiantes.primer_apellido')
+            ->orderBy('estudiantes.segundo_apellido')
+            ->orderBy('estudiantes.nombre');
+
+            $ids_estudiantes = $estudiantes->pluck('id');
+            $ids_asignar = $ids_estudiantes->toArray();
+            $request->session()->put('ids_asignar', $ids_asignar);
+    
+            $cant_folios = $estudiantes->pluck('cantidad_folios');
+            $cantidad_folios = $cant_folios->toArray();
+            $request->session()->put('cantidad_folios', $cantidad_folios);
+    
+            $estudiantes = $estudiantes->paginate(25)->withQueryString();
+
+            return view('boletos.asignacion-nueva', compact('remesas', 'estudiantes', 'id_remesa', 'ciclo'));
+        }
                 
 
-        $ids_estudiantes = $estudiantes->pluck('id');
-        $ids_asignar = $ids_estudiantes->toArray();
-        $request->session()->put('ids_asignar', $ids_asignar);
+  
 
-        $cant_folios = $estudiantes->pluck('cantidad_folios');
-        $cantidad_folios = $cant_folios->toArray();
-        $request->session()->put('cantidad_folios', $cantidad_folios);
-
-        $estudiantes = $estudiantes->paginate(25)->withQueryString();
-
-        return view('boletos.asignacion-nueva', compact('remesas', 'estudiantes', 'id_remesa', 'ciclo'));
+        
     }
 
     private function regresa_paquetes_requeridos($ciclo, $cantidad_folios)

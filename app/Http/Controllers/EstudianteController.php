@@ -846,11 +846,11 @@ class EstudianteController extends Controller
         $localidades = Localidad::orderBy('localidad')->get();
         $turnos = Turno::all();
 
-        $searchR = mb_strtoupper($request->search);
+        $searchR = mb_strtoupper(isset($request->search) ? $request->search: "");
         $statusR = $request->selStatus;
         $cve_escuelaR = $request->selEscuela;
         $cve_ciudadR = $request->selCiudad;
-        $carreraR = mb_strtoupper($request->searchCarrera);
+        $carreraR = mb_strtoupper(isset($request->searchCarrera) ? $request->searchCarrera: "");
         $cve_localidadOR = $request->selLocalidadO;
         $cve_turnoR = $request->selTurno;
         $ano_escolarR = $request->selAnoEscolar;

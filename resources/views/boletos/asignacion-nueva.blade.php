@@ -79,6 +79,7 @@
 <?php 
 
     use App\Models\BoletoAsignado;
+    use App\Models\BoletosRemesa;
 
     function formato_fecha_espanol_corta($fecha)
     {
@@ -200,11 +201,25 @@
                         </span>
                         @enderror
                     </div>
-                    @if ($usertype == 1 && $id_remesa > 0)
-                    <div class="col-md-6">
+                    <?php
+                        $remesa = BoletosRemesa::where('id_remesa', $id_remesa)->first();
+                        if(!isset($remesa)) $remesa_realizada = 0;
+                        else $remesa_realizada = $remesa->realizada;
+                    ?>
+                    <div>
+                        <table>
+                            <tr>
+                                <td style="background:rgb(240, 240, 240)">
+                                    {{ $remesa_realizada ? "Realizada" : "No realizada" }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    {{-- @if ($usertype == 1 && $id_remesa > 0)
+                    <div class="col-md-4">
                         <a href="{{ route('boletos.asignados', $id_remesa) }}" class="btn btn-sm btn-danger float-right"><i class="fa-solid fa-ticket"></i></a>
                     </div>
-                    @endif
+                    @endif --}}
                 </div>
             </form>
             {{-- <form>   --}}
@@ -223,69 +238,137 @@
                                 @if ($usertype == 1) <th class="col-md-auto"></th> @endif
                             </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($estudiantes as $estudiante)
-                                    <?php
-                                        if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
-                                        elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
-                                        else $ciudadEscuela = "NULL";
-                                        switch ($estudiante->cve_status)  // Se colorea el borde izquierdo de la celda de acuerdo al status del estudiante
-                                        {
-                                            case 1:   //RECIBIDO
-                                                $color = "#9944d9"; 
-                                                break;
-                                            case 2:  //REVISADO
-                                                $color = "#0071bc";
-                                                break; 
-                                            case 3: //CENSADO
-                                                $color = "#7dc3f5";
-                                                break; 
-                                            case 4: //RECHAZADO
-                                                $color = "#ff0000";
-                                                break;
-                                            case 5: //PENDIENTE
-                                                $color = "#ffe26e";
-                                                break; 
-                                            case 6: //ACEPTADO
-                                                $color = "#00ff00";
-                                                break;
-                                            case 7: //ESPECIAL
-                                                $color = "#ff00ff";
-                                                break;
-                                            case 8: //ACEPTADO 2.0
-                                                $color = "#00a135";
-                                                break;  
-                                            case 9: //ESPECIAL 2.0
-                                                $color = "#ff8000";
-                                                break;  
-                                        }
-                                    ?>                
-                                    <tr style="font-size:15px">
-                                        <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
-                                        <td style="vertical-align:middle">{{ $estudiante->id }}</td>
-                                        <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
-                                        <td style="vertical-align:middle">{{ $estudiante->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
-                                        <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
-                                        <td style="vertical-align:middle">{{ $estudiante->cantidad_folios }} &nbsp;</td>
-                                        <td style="vertical-align:middle">
-                                        @if ($id_remesa != 0)
-                                            {{ $folios_asignados = folios_asignados($estudiante->id_remesa, $estudiante->id) }}
-                                        @endif
-                                        </td>
-                                        @if ($usertype == 1)
-                                        <td style="vertical-align:middle">
-                                            @if ($folios_asignados != "N/A")
-                                            <form method="GET" action="{{ route('boletos.asignacion-borra', [$id_remesa,$estudiante->id]) }}" >
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button>
-                                            </form>  
+                            @if ($remesa_realizada)
+                                <tbody>
+                                    @foreach ($boletos_asignados as $boletos)
+                                        <?php
+                                            if ($boletos->estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
+                                            elseif ($boletos->estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
+                                            else $ciudadEscuela = "NULL";
+                                            switch ($boletos->estudiante->cve_status)  // Se colorea el borde izquierdo de la celda de acuerdo al status del estudiante
+                                            {
+                                                case 1:   //RECIBIDO
+                                                    $color = "#9944d9"; 
+                                                    break;
+                                                case 2:  //REVISADO
+                                                    $color = "#0071bc";
+                                                    break; 
+                                                case 3: //CENSADO
+                                                    $color = "#7dc3f5";
+                                                    break; 
+                                                case 4: //RECHAZADO
+                                                    $color = "#ff0000";
+                                                    break;
+                                                case 5: //PENDIENTE
+                                                    $color = "#ffe26e";
+                                                    break; 
+                                                case 6: //ACEPTADO
+                                                    $color = "#00ff00";
+                                                    break;
+                                                case 7: //ESPECIAL
+                                                    $color = "#ff00ff";
+                                                    break;
+                                                case 8: //ACEPTADO 2.0
+                                                    $color = "#00a135";
+                                                    break;  
+                                                case 9: //ESPECIAL 2.0
+                                                    $color = "#ff8000";
+                                                    break;  
+                                            }
+
+                                            $cantidad_folios = $boletos->folio_final - $boletos->folio_inicial + 1;
+                                        ?>                
+                                        <tr style="font-size:15px">
+                                            <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
+                                            <td style="vertical-align:middle">{{ $boletos->estudiante->id }}</td>
+                                            <td style="vertical-align:middle">{{ $boletos->estudiante->primer_apellido . ' ' . $boletos->estudiante->segundo_apellido . ' ' . $boletos->estudiante->nombre }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $boletos->estudiante->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $boletos->estudiante->carrera }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $cantidad_folios }} &nbsp;</td>
+                                            <td style="vertical-align:middle">
+                                            @if ($id_remesa != 0)
+                                                {{ $folios_asignados = folios_asignados($boletos->id_remesa, $boletos->estudiante->id) }}
                                             @endif
-                                        </td> 
-                                        @endif                                  
-                                    </tr> 
-                                @endforeach
-                            </tbody>
+                                            </td>
+                                            @if ($usertype == 1)
+                                            <td style="vertical-align:middle">
+                                                @if ($folios_asignados != "N/A")
+                                                <form method="GET" action="{{ route('boletos.asignacion-borra', [$id_remesa,$boletos->estudiante->id]) }}" >
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button>
+                                                </form>  
+                                                @endif
+                                            </td> 
+                                            @endif                                  
+                                        </tr> 
+                                    @endforeach
+                                </tbody>
+                            @else
+                                <tbody>
+                                    @foreach ($estudiantes as $estudiante)
+                                        <?php
+                                            if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
+                                            elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
+                                            else $ciudadEscuela = "NULL";
+                                            switch ($estudiante->cve_status)  // Se colorea el borde izquierdo de la celda de acuerdo al status del estudiante
+                                            {
+                                                case 1:   //RECIBIDO
+                                                    $color = "#9944d9"; 
+                                                    break;
+                                                case 2:  //REVISADO
+                                                    $color = "#0071bc";
+                                                    break; 
+                                                case 3: //CENSADO
+                                                    $color = "#7dc3f5";
+                                                    break; 
+                                                case 4: //RECHAZADO
+                                                    $color = "#ff0000";
+                                                    break;
+                                                case 5: //PENDIENTE
+                                                    $color = "#ffe26e";
+                                                    break; 
+                                                case 6: //ACEPTADO
+                                                    $color = "#00ff00";
+                                                    break;
+                                                case 7: //ESPECIAL
+                                                    $color = "#ff00ff";
+                                                    break;
+                                                case 8: //ACEPTADO 2.0
+                                                    $color = "#00a135";
+                                                    break;  
+                                                case 9: //ESPECIAL 2.0
+                                                    $color = "#ff8000";
+                                                    break;  
+                                            }
+                                        ?>                
+                                        <tr style="font-size:15px">
+                                            <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
+                                            <td style="vertical-align:middle">{{ $estudiante->id }}</td>
+                                            <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $estudiante->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $estudiante->cantidad_folios }} &nbsp;</td>
+                                            <td style="vertical-align:middle">
+                                            @if ($id_remesa != 0)
+                                                {{ $folios_asignados = folios_asignados($estudiante->id_remesa, $estudiante->id) }}
+                                            @endif
+                                            </td>
+                                            @if ($usertype == 1)
+                                            <td style="vertical-align:middle">
+                                                @if ($folios_asignados != "N/A")
+                                                <form method="GET" action="{{ route('boletos.asignacion-borra', [$id_remesa,$estudiante->id]) }}" >
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button>
+                                                </form>  
+                                                @endif
+                                            </td> 
+                                            @endif                                  
+                                        </tr> 
+                                    @endforeach
+                                </tbody>
+                            @endif
                         </table>
                     </div>
                     @if ($id_remesa != 0 && $i == 1)
@@ -295,9 +378,15 @@
                     @endif
                     @if ($id_remesa != 0 && $i > 1)
                         <div class="col-mx">
-                            <label class="col-form-label float-left">
-                                {{ $estudiantes->links('pagination::bootstrap-5') }} 
-                            </label>
+                            @if ($remesa_realizada)
+                                <label class="col-form-label float-left">
+                                    {{ $boletos_asignados->links('pagination::bootstrap-5') }} 
+                                </label>
+                            @else
+                                <label class="col-form-label float-left">
+                                    {{ $estudiantes->links('pagination::bootstrap-5') }} 
+                                </label>
+                            @endif
                             @if ($usertype == 1)
                             <form method="POST" action="{{ route('boletos.asignacion-crea', $id_remesa) }}">
                                     @csrf
