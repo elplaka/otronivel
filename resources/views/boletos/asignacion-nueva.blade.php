@@ -282,7 +282,7 @@
                                             <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
                                             <td style="vertical-align:middle">{{ $boletos->estudiante->id }}</td>
                                             <td style="vertical-align:middle">{{ $boletos->estudiante->primer_apellido . ' ' . $boletos->estudiante->segundo_apellido . ' ' . $boletos->estudiante->nombre }} &nbsp;</td>
-                                            <td style="vertical-align:middle">{{ $boletos->estudiante->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $boletos->estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
                                             <td style="vertical-align:middle">{{ $boletos->estudiante->carrera }} &nbsp;</td>
                                             <td style="vertical-align:middle">{{ $cantidad_folios }} &nbsp;</td>
                                             <td style="vertical-align:middle">
