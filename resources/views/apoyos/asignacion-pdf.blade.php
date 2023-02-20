@@ -177,7 +177,7 @@
                                 $monto_asignado = monto_asignado($estudiante->id_remesa, $estudiante->id);
 
                                 $apoyo = ApoyoAsignado::where('id_remesa', $estudiante->id_remesa)->where('id_estudiante', $estudiante->id)->first();
-                                $suma_montos += $apoyo->monto;
+                                $suma_montos += isset($apoyo->monto) ? $apoyo->monto : 0;
                         ?>
                         <tr>
                             <td style="text-align:center;width:0.15cm">{{ $i++ }}</th>
