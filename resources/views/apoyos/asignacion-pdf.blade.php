@@ -166,12 +166,18 @@
                 </thead>
                 <?php 
                     $salto = false;
+                    $suma_montos = 0;
                 ?>
                 <tbody>
                     @foreach ($estudiantes_reporte as $estudiante)
                         <?php
                                 if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
                                 elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
+
+                                $monto_asignado = monto_asignado($estudiante->id_remesa, $estudiante->id);
+
+                                $apoyo = ApoyoAsignado::where('id_remesa', $estudiante->id_remesa)->where('id_estudiante', $estudiante->id)->first();
+                                $suma_montos += $apoyo->monto;
                         ?>
                         <tr>
                             <td style="text-align:center;width:0.15cm">{{ $i++ }}</th>
@@ -180,7 +186,7 @@
                             <td>{{ $estudiante->lugar_origen }}</td>
                             <td>{{ $estudiante->escuela_abreviatura . ' - ' . $ciudadEscuela }}</td>
                             <td>{{ $estudiante->carrera }}</td>
-                            <td style="text-align:right">{{ monto_asignado($estudiante->id_remesa, $estudiante->id) }}</td>
+                            <td style="text-align:right">{{ $monto_asignado }}</td>
                             <td style="width:6cm"></td>
                          </tr>                     
                     @endforeach 
