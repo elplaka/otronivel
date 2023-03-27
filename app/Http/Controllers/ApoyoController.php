@@ -295,7 +295,7 @@ class ApoyoController extends Controller
                 $cves_escuelas = Escuela::whereIn('cve_escuela', function($query){
                     $query->select('cve_escuela')
                     ->from(with(new Estudiante)->getTable())
-                    ->where('cve_status', 9)
+                    ->where('cve_status', 7)
                     ->where('cve_ciudad_escuela', 1);
                 })->get();
             }
@@ -304,7 +304,7 @@ class ApoyoController extends Controller
                 $cves_escuelas = Escuela::whereIn('cve_escuela', function($query){
                     $query->select('cve_escuela')
                     ->from(with(new Estudiante)->getTable())
-                    ->where('cve_status', 8)
+                    ->where('cve_status', 6)
                     ->where('cve_ciudad_escuela', 2);
                 })->get();
             }

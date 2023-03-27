@@ -115,17 +115,12 @@ class BoletoController extends Controller
 
             return view('boletos.asignacion-nueva', compact('remesas', 'estudiantes', 'id_remesa', 'ciclo'));
         }
-                
-
-  
-
-        
     }
 
     private function regresa_paquetes_requeridos($ciclo, $cantidad_folios)
     {
         //Necesito saber los folios disponibles de cada paquete
-       $paquetes = BoletosPaquete::where('id_ciclo', $ciclo)->where('folios_disponibles', '>', 0)->orderBy('folio_final')->get();
+       $paquetes = BoletosPaquete::where('id_ciclo', $ciclo)->where('folios_disponibles', '>', 0)->orderBy('folios_disponibles')->get();
 
        $j = 0; //Controla el índice del array que contiene los paquetes requeridos
        $sigue = true; 
