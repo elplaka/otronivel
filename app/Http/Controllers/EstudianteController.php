@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Estudiante;
+use App\Models\Ciclo;
 use App\Models\Localidad;
 use App\Models\Escuela;
 use App\Models\Ciudad;
@@ -20,10 +21,15 @@ use Dompdf\Dompdf;
 use DOMDocument;
 use App\Http\Requests\EstudianteUpdateRequest;
 use ZipArchive;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 
 class EstudianteController extends Controller
 {
+    private $archivoCurp;
+
     private function calcula_ano($ano_2dig)
     {
         $ano_abs = abs($ano_2dig);
@@ -34,148 +40,157 @@ class EstudianteController extends Controller
         return $ano;
     }
 
-    private function esCURP($rfc)
+    private function esCURP($curp)
     {
-        $chars = str_split($rfc);
+        $patron = "/^[A-Z]{4}\d{6}[HM][A-Z]{2}[B-DF-HJ-NP-TV-Z]{3}[A-Z0-9][0-9]$/";
 
-        if (ctype_upper($chars[0]) && ctype_upper($chars[1]) && ctype_upper($chars[2]) && ctype_upper($chars[3]))
-        {
-            if (is_numeric($chars[4]) && is_numeric($chars[5]) && is_numeric($chars[6]) && is_numeric($chars[7]) && is_numeric($chars[8]) && is_numeric($chars[9])) return true;
-            else return false;
-        }
-        else return false;
+        return preg_match($patron, $curp) == 1;
     }
 
-    private function generaRfcAleatorio($length)
+    public function forget(Request $request)
     {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
+        $request->session()->forget('ciclo');
+        $request->session()->forget('estudiante');
+        $request->session()->forget('socioeconomico');
+        $request->session()->forget('existente');
+        $request->session()->forget('fcurp');
+        $request->session()->forget('fdocumentos');
+        $request->session()->forget('f2');
+        $request->session()->forget('f3');
+        $request->session()->forget('f3OK');
+        $request->session()->forget('f4');
+        $request->session()->forget('fconstancia');
+        $request->session()->forget('fin');
+
+        $ciclo = $this->getCiclo();
+
+        $request->session()->put('ciclo', $ciclo);
+        $request->session()->put('fcurp', true);
+
+        return redirect()->route('estudiantes.formulario-curp');
     }
 
-    private function sacaRFC($img_curp)
+    public function getEstudiante($img_curp)
     {
-        $nomArchivo = '_' . $this->generaRfcAleatorio(9);
-        $archivo = $nomArchivo . '.' . $img_curp->getClientOriginalExtension();
-        $img_curp->move('img/tmp', $archivo);
-        $bandera = "#curp#";
-
         //Lee el archivo PDF y separa por párrafos
         $parser = new \Smalot\PdfParser\Parser();
-        $pdf = $parser->parseFile('img/tmp/' . $archivo);
+        $pdf = $parser->parseFile($img_curp);
         $text = $pdf->getText();
         $parr = explode("\n", $text);
 
         $max_key = array_key_last($parr);  //Obtiene la última clave de un array
 
-        if ($max_key < 11)  //Si no hubo 11 párrafos entonces no es un pdf de curp de los recientes
-        {
-            $rfc = $nomArchivo;
-            rename('img/tmp/' . $archivo, 'img/curps/' . 'CU_' . $rfc . '.pdf');
-            return $rfc;
-        }
-        else
-        {
-            $curp = $parr[11];
-            $rfc = substr($curp, 0, 10);
-            if ($this->esCURP($rfc)) 
-            {
-                rename('img/tmp/' . $archivo, 'img/curps/' . 'CU_' . $rfc . '.pdf');
-                return $rfc;
-            }
-            else
-            {
-                $rfc = $nomArchivo;
-                rename('img/tmp/' . $archivo, 'img/curps/' . 'CU_' . $rfc . '.pdf');
-                return $rfc;
-            }
-        }
-    }
+        $curp = ""; 
 
-    private function esValidoArchivoCURP($img_curp, &$rfc, $fileCurp)
-    {
-        if ($fileCurp) $rfc = $this->sacaRFC($img_curp); //Si se cargó el archivo en el input copia pdf y saca rfc
+        //Dependiendo del archivo PDF del CURP hay varios tipos y la localización de los datos varía 
+        switch($max_key)
+        {
+            case 32:
+                $curp = $parr[10];
+                $nombre_pdf = $parr[11];
+                break;
+            case 33:
+                $curp = $parr[11];
+                $nombre_pdf = $parr[12];
+                break;
+        }
+
+        $this->rfc = substr($curp, 0, 10);
+        if ($this->esCURP($curp)) 
+        {
+            $estudiante = Estudiante::where('curp', $curp)->orderByDesc('id_ciclo')->first();
+
+            if (isset($estudiante))   //SI YA SE HABÍA INSCRITO EN CICLOS PASADOS
+            {
+                $estudiante->img_curp = null;
+                $estudiante->img_acta_nac = null;
+                $estudiante->img_comprobante_dom = null;
+                $estudiante->img_identificacion = null;
+                $estudiante->img_kardex = null;
+                $estudiante->img_constancia = null;
+                return $estudiante;
+            }
+            else 
+            {
+                $estudiante = new Estudiante();
+
+                $nombre_completo = explode(" ", $nombre_pdf);
+                $max_key = array_key_last($nombre_completo);
+                $nombre = '';
+                for ($i=0; $i<=$max_key-2; $i++)
+                {
+                    $nombre = $nombre . ' ' . $nombre_completo[$i];
+                }
+                $estudiante->nombre = trim($nombre);
+                $estudiante->primer_apellido = trim($nombre_completo[$max_key-1]);
+                $estudiante->segundo_apellido = trim($nombre_completo[$max_key]);
+    
+                $estudiante->curp = $curp;
+                $estudiante->rfc = substr($curp, 0, 10);
+                $dia_nac = substr($curp, 8, 2);
+                $mes_nac = substr($curp, 6, 2);
+                $ano_nac = $this->calcula_ano(substr($curp, 4, 2));        
+                $estudiante->fecha_nac = $ano_nac . '-' . $mes_nac . '-' . $dia_nac;
+                $estudiante->cve_localidad_origen = 1;
+                return $estudiante;
+            }
+        }
         else return false;
-
-        $primer_car = substr($rfc,0,1);
-        if (!isset($rfc) ||  $primer_car == '_') return false;
-        else return true;
     }
 
-    public function forget(Request $request)
+    public function getCiclo()
     {
-        $request->session()->forget('estudiante');
-        $request->session()->forget('socioeconomico');
-        $request->session()->forget('f1');
-        $request->session()->forget('f2');
-        $request->session()->forget('f3');
-        $request->session()->forget('f4');
-        $request->session()->forget('fin');
+        $configFilePath = config_path('ciclo_actual.ini');
+        $config = parse_ini_file($configFilePath, true);
 
-        $request->session()->put('f1', true);
-
-        return redirect()->route('estudiantes.formulario1');
+        $cicloActual = $config['Ciclo']['CicloActual'];
+        return $cicloActual;
     }
-     /**
-     * Show the step One Form for creating a new product.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function formulario1(Request $request)
+
+    public function getCicloDescripcion($id_ciclo)
     {
-        $request->session()->put('f2', false);
-        $request->session()->put('f3', false);
-        $request->session()->put('f4', false);
-        $request->session()->put('fin', false);
+        $ciclo = Ciclo::findOrFail($id_ciclo);
 
-        $f1 = $request->session()->get('f1');
+        return $ciclo->descripcion;
+    }
 
-        if ($f1)
+    public function formulario_curp(Request $request)
+    {
+        // $request->session()->forget('estudiante');
+        // $request->session()->forget('socioeconomico');
+        // $request->session()->forget('existente');
+        // $request->session()->put('fdocumentos', false);
+        // $request->session()->put('f2', false);
+        // $request->session()->put('f3', false);
+        // $request->session()->put('f3OK', false);
+        // $request->session()->put('f4', false);
+        // $request->session()->put('fin', false);
+
+        $ciclo = $this->getCiclo();
+
+        $request->session()->put('ciclo', $ciclo);
+
+        $fcurp = $request->session()->get('fcurp');
+
+        if ($fcurp)
         {
             $estudiante = $request->session()->get('estudiante');
-            return view('estudiantes/formulario1',compact('estudiante'));
+            return view('estudiantes/formulario-curp',compact('estudiante'));
         }
         else return view('estudiantes/operacion_invalida');
     }
-  
-    /**  
-     * Post Request to store step1 info in session
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function formulario1Post(Request $request)
+
+    public function formulario_curpPost(Request $request)
     {
+        $message = '';
+
         $validatedData = $request->validate([
-            'img_curp' => ['required_with:alpha_dash', 'max:2000'],
-            'img_acta_nac' => ['required_with:alpha_dash', 'max:2000'],
-            'img_comprobante_dom' => ['required_with:alpha_dash', 'max:2000'],
-            'img_identificacion' => ['required_with:alpha_dash', 'max:2000'],
-            'img_kardex' => ['required_with:alpha_dash', 'max:2000'],
-            'img_constancia' => ['required_with:alpha_dash', 'max:2000'],
+            'img_curp' => ['file', 'max:500'], // Aquí 'file' se asegura de que sea un archivo válido
+        ], [
+            'img_curp.max' => 'El archivo del <b> CURP </b> no debe pesar más de 500 KB.',
         ]);
 
-        $actaCargada = false;
-        $comprobanteCargado = false;
-        $identificacionCargada = false;
-        $kardexCargado = false;
-        $constanciaCargada = false;
-
         $extCurp = "ext";
-
-        $estudiante = $request->session()->get('estudiante');
-
-        //if ($actaCargada) $extActa = $request->img_acta_nac->getClientOriginalExtension();
-
-        if (isset($request->img_acta_nac) || (isset($estudiante) && $estudiante->img_acta_nac == "ACTA_OK.pdf")) $actaCargada = true;
-        if (isset($request->img_comprobante_dom) || (isset($estudiante) && $estudiante->img_comprobante_dom == "COMPROBANTE_OK.pdf")) $comprobanteCargado = true;
-        if (isset($request->img_identificacion) || (isset($estudiante) && $estudiante->img_identificacion == "ID_OK.pdf")) $identificacionCargada = true;
-        if (isset($request->img_kardex) || (isset($estudiante) && $estudiante->img_kardex == "KARDEX_OK.pdf")) $kardexCargado = true;
-        // if (isset($request->img_constancia) || (isset($estudiante) && $estudiante->img_constancia == "CONSTANCIA_OK.pdf")) $constanciaCargada = true;
 
         if (isset($request->img_curp)) 
         {
@@ -188,7 +203,296 @@ class EstudianteController extends Controller
             $extCurp = strtoupper(substr(strrchr($request->curp_hidden, "."), 1));
         }
 
-        //dd($extCurp);
+        if (!$fileCurp)
+        {
+            $message = $message . "<li>El archivo del <b>CURP</b> es obligatorio.</li>";
+            $message = $message . "</ul>";
+            return redirect()->back()->with('message', $message);
+        }
+
+        $errorCurp = false;
+
+        if ($extCurp != "PDF") $errorCurp = true;
+
+        if ($errorCurp)
+        {
+            $message = $message . "<li>El archivo del <b>CURP</b> debe ser PDF.</li>";
+            $message = $message . "</ul>";
+            return redirect()->back()->with('message', $message);
+        }
+
+        $estudiante = $this->getEstudiante($request->img_curp);
+        if (!$estudiante)
+        {
+            $message = $message . "<li>El archivo del <b>CURP</b> no es válido.</li>";
+            $message = $message . "</ul>";
+            return redirect()->back()->with('message', $message);
+        }
+        $this->archivoCurp = $request->img_curp;
+
+        $ciclo = $request->session()->get('ciclo');
+
+
+        if ($ciclo == $estudiante->id_ciclo)   //YA EXISTE EN EL CICLO ACTUAL
+        {
+            $request->session()->put('existente', true);
+            return redirect()->route('estudiantes.existente', $estudiante->id_hex);
+        }
+
+        $request->session()->put('fcurp', false);
+        $request->session()->put('f2', true);
+
+        // COPIAR ARCHIVO A STORAGE
+        $fileExtension = $request->img_curp->getClientOriginalExtension();
+        $newFileName = "CU_" . $estudiante->rfc . '.' . $fileExtension;
+        Storage::putFileAs('tmp', $request->img_curp, $newFileName);
+
+        $estudiante->img_curp = $newFileName;
+
+        $request->session()->put('estudiante', $estudiante);         
+
+        return redirect()->route('estudiantes.formulario2');  
+    }
+
+    public function existente(Request $request, $id_hex)
+    {
+        $existente = $request->session()->get('existente');
+        if ($existente)
+        {
+            $estudiante = Estudiante::where('id_hex', $id_hex)->first();
+            if (isset($estudiante))  //EXISTE EL ESTUDIANTE EN EL CICLO ACTUAL
+            {
+                $ciclo = $this->getCicloDescripcion($request->session()->get('ciclo'));
+                $request->session()->put('estudiante', $estudiante);
+                $request->session()->put('fconstancia', true);
+                return view('estudiantes/existente', compact('ciclo', 'estudiante'));
+            }
+            else return view('estudiantes/operacion_invalida');
+        }
+        else return view('estudiantes/operacion_invalida');
+    }
+
+    public function formulario2(Request $request)  //INFORMACIÓN PERSONAL
+    {
+        $f2 = $request->session()->get('f2');
+
+        if ($f2)
+        {
+            $localidades = Localidad::orderBy('localidad', 'ASC')->get();
+            $estudiante = $request->session()->get('estudiante');
+            return view('estudiantes/formulario2', compact('estudiante', 'localidades'));
+        }
+        else return view('estudiantes/operacion_invalida');
+    }
+
+    public function formulario2Post(Request $request)
+    {
+        $id_ciclo = $request->session()->get('ciclo');
+
+        $curp = $request->input('curp');
+
+        $id_hex = Estudiante::where('curp', $curp)
+        ->where('id_ciclo', $id_ciclo)
+        ->value('id_hex');
+
+        $validatedData = $request->validate([
+            'nombre' => ['required', 'max:20'],
+            'primer_apellido' => ['required', 'max:20'],
+            'segundo_apellido' => ['required', 'max:20'],
+            'curp' => [
+                'required',
+                Rule::unique('estudiantes')->where(function ($query) use ($id_ciclo) {
+                    return $query->where('id_ciclo', $id_ciclo);
+                }),
+                'min:18',
+                'max:18'
+            ],
+            'fecha_nac' => ['required'],
+            'celular' => ['required', 'digits:10'],
+            'email' => ['required', 'max:40'],
+            'cve_localidad_origen' => ['required'],
+        ], [
+            'curp.unique' => 'El CURP ya está en uso para este ciclo escolar. Puedes ver la hoja de registro <a href="' . route('estudiantes.registro_pdf', ['id_hex' => $id_hex]) . '"> aquí </a>',
+        ]);
+
+        $validatedData = $request->except(['nombre', 'primer_apellido', 'segundo_apellido', 'email']);  //Se exceptúan porque se van a cambiar a mayúsculas después
+        $nombre = trim(mb_strtoupper($request->nombre));
+        $primer_apellido = trim(mb_strtoupper($request->primer_apellido));
+        $segundo_apellido = trim(mb_strtoupper($request->segundo_apellido));
+        $email = trim(mb_strtolower($request->email));
+
+        $estudiante = $request->session()->get('estudiante');
+        $estudiante->fill($validatedData);
+        $estudiante->nombre = $nombre;
+        $estudiante->primer_apellido = $primer_apellido;
+        $estudiante->segundo_apellido = $segundo_apellido;
+        $estudiante->email = $email;
+        $request->session()->put('estudiante', $estudiante);
+
+        $request->session()->put('f3', true);
+        return redirect()->route('estudiantes.formulario3');
+    }
+
+    public function getAnoSiguiente($ano)
+    {
+        if ($ano <= 6) 
+        {
+            $ano++;
+            return $ano;
+        }
+        else return 6;
+    }
+
+    public function formulario3(Request $request)  //INFORMACIÓN ESCOLAR
+    {
+        $f3 = $request->session()->get('f3');
+
+        if ($f3)
+        {
+            // $escuelas = Escuela::orderBy('escuela', 'ASC')->get();
+            $escuelas = Escuela::where('cve_escuela', '!=', '999')->orderBy('escuela', 'ASC')->get();
+            $ciudades = Ciudad::all();
+            $turnos = Turno::all();
+            $estudiante = $request->session()->get('estudiante');
+            $f3OK = $request->session()->get('f3OK');    
+            if (!$f3OK)  //Si es la primera vez que se carga el formulario 3
+            {
+                $estudiante->ano_escolar = $this->getAnoSiguiente($estudiante->ano_escolar);
+                $estudiante->promedio = 0.00;
+            }
+            $request->session()->put('f3OK', true);  //Ya se cargó el formulario 3 por primera vez
+            $id_ciclo = $request->session()->get('ciclo');
+            $cicloDescripcion = $this->getCicloDescripcion($id_ciclo);
+            return view('estudiantes/formulario3', compact('estudiante', 'cicloDescripcion', 'escuelas', 'ciudades', 'turnos'));
+        }
+        else return view('estudiantes/operacion_invalida');
+    }
+
+    public function formulario3Post(Request $request)
+    {
+        $validatedData = $request->validate([
+            'cve_ciudad_escuela' => ['required'], 
+            'cve_escuela' => ['required'],        
+            'cve_turno_escuela' => ['required'],  
+            'carrera' => ['required', 'max:30'] ,             
+            'ano_escolar' => ['required'],         
+            'promedio' => ['required', 'numeric', 'between:0,10.0'],            
+        ]);
+
+        $validatedData = $request->except('carrera');  //Se exceptúa CARRERA porque se va a cambiar a mayúsculas después
+        $carrera = trim(mb_strtoupper($request->carrera));
+
+        $estudiante = $request->session()->get('estudiante');
+        $estudiante->fill($validatedData);  //Se llena ESTUDIANTE con todos los campos validados excepto CARRERA
+        $estudiante->carrera = $carrera;
+
+        if(isset($estudiante->id))   //SI YA ES ESTUDIANTE DEL CICLO PASADO
+        { 
+            $socioeconomico = DatoSocioEconomico::where('id_estudiante', $estudiante->id)->first();
+            $request->session()->put('socioeconomico', $socioeconomico);
+        }
+
+        $request->session()->put('estudiante', $estudiante);
+        $request->session()->put('f4', true);
+        return redirect()->route('estudiantes.formulario4');
+    }
+
+    public function formulario4(Request $request)
+    {
+        $f4 = $request->session()->get('f4');
+
+        $estudiante = $request->session()->get('estudiante');
+        $socioeconomico = $request->session()->get('socioeconomico');
+
+        // dd($socioeconomico);
+        $techos = Techo::all();
+        $montos = MontoMensual::all(); 
+        if ($f4) return view('estudiantes/formulario4', compact('estudiante','socioeconomico','techos', 'montos'));
+        else return view('estudiantes/operacion_invalida');  
+    }
+
+    public function formulario4Post(Request $request)
+    {
+        $validatedData = $request->validate([
+            'cve_techo_vivienda' => ['required'], 
+            'cuartos_vivienda' => ['required', 'numeric', 'between:1,20'],        
+            'personas_vivienda' => ['required', 'numeric', 'between:1,20'],
+            'cve_monto_mensual' => ['required'] ,
+            'beca_estudios' => ['required'] ,             
+            'apoyo_gobierno' => ['required'],         
+            'empleo' => ['nullable', 'max:30'], 
+            'gasto_transporte' => ['required', 'numeric', 'between:0,1000'],             
+        ]);
+
+        $validatedData = $request->except('empleo');  //Se exceptúa EMPLEO porque se va a cambiar a mayúsculas después
+        $empleo = trim(mb_strtoupper($request->empleo));
+        
+        if(empty($request->session()->get('socioeconomico')))
+        {
+            $socioeconomico = new DatoSocioeconomico;
+            $socioeconomico->fill($validatedData);
+            // $socioeconomico->id_estudiante = $id_estudiante;
+        }
+        else
+        {
+            $socioeconomico = $request->session()->get('socioeconomico');
+            $socioeconomico->fill($validatedData);
+        }
+        $socioeconomico->empleo = $empleo;
+        $request->session()->put('socioeconomico', $socioeconomico);
+        //$socioeconomico->save();
+
+        $request->session()->put('fdocumentos', true);
+        return redirect()->route('estudiantes.formulario-documentos');
+    }
+
+    public function formulario_documentos(Request $request)
+    {
+        $fdocumentos = $request->session()->get('fdocumentos');
+
+        $estudiante = $request->session()->get('estudiante');
+        if ($fdocumentos) return view('estudiantes/formulario-documentos',compact('estudiante'));
+        else return view('estudiantes/operacion_invalida');
+    }
+  
+    /**  
+     * Post Request to store step1 info in session
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function formulario_documentosPost(Request $request)
+    {
+        $validatedData = $request->validate([
+            'img_acta_nac' => ['required', 'file','max:1024'],
+            'img_comprobante_dom' => ['required', 'file', 'max:1024'],
+            'img_identificacion' => ['required', 'file', 'max:1024'],
+            'img_kardex' => ['required', 'file', 'max:1024'],
+            ], [
+                'img_acta_nac.required' => 'El campo <b>ACTA DE NACIMIENTO</b> es obligatorio.',
+                'img_comprobante_dom.required' => 'El campo <b>COMPROBANTE DE DOMICILIO</b> es obligatorio.',
+                'img_identificacion.required' => 'El campo <b>IDENTIFICACIÓN</b> es obligatorio.',
+                'img_kardex.required' => 'El campo <b>KARDEX</b> es obligatorio.',
+                'img_acta_nac.max' => 'El archivo del <b> ACTA DE NACIMIENTO </b> no debe pesar más de 1 MB.',
+                'img_comprobante_dom.max' => 'El archivo del <b> COMPROBANTE DE DOMICILIO </b> no debe pesar más de 1 MB.',
+                'img_identificacion.max' => 'El archivo de la <b> IDENTIFICACIÓN </b> no debe pesar más de 1 MB.',
+                'img_kardex.max' => 'El archivo del <b> KARDEX </b> no debe pesar más de 1 MB.',
+            ]);
+
+
+        $actaCargada = false;
+        $comprobanteCargado = false;
+        $identificacionCargada = false;
+        $kardexCargado = false;
+        $constanciaCargada = false;
+
+        $estudiante = $request->session()->get('estudiante');
+     
+        if (isset($request->img_acta_nac) || (isset($estudiante) && $estudiante->img_acta_nac == "ACTA_OK.pdf")) $actaCargada = true;
+        if (isset($request->img_comprobante_dom) || (isset($estudiante) && $estudiante->img_comprobante_dom == "COMPROBANTE_OK.pdf")) $comprobanteCargado = true;
+        if (isset($request->img_identificacion) || (isset($estudiante) && $estudiante->img_identificacion == "ID_OK.pdf")) $identificacionCargada = true;
+        if (isset($request->img_kardex) || (isset($estudiante) && $estudiante->img_kardex == "KARDEX_OK.pdf")) $kardexCargado = true;
+  
         if ($actaCargada) $extActa = "pdf";
         else $extActa = substr(strrchr($request->acta_hidden, "."), 1);
         if ($comprobanteCargado) $extComprobante = "pdf";
@@ -207,19 +511,62 @@ class EstudianteController extends Controller
         // if (isset($request->img_constancia)) $extConstancia = strtoupper($request->img_constancia->getClientOriginalExtension());
 
         $message = '<b>ERROR(ES) EN LA INFORMACIÓN: </b> <ul>';
-        $errorCurp = false;
         $errorActa = false;
         $errorComprobante = false;
         $errorIdentificacion = false;
         $errorKardex = false;
         $errorConstancia = false;
 
-        //+++++++++++++++++++++++ VALIDACIÓN DE ARCHIVOS PDF ++++++++++++++++++++++++++++++
-        if ($extCurp != "PDF")
+        //++++++++++++++++++++ VALIDACIÓN DE CAMPOS OBLIGATORIOS +++++++++++++++++++++
+        if (!$actaCargada && $estudiante->img_acta_nac === null)
         {
-            //$message = $message . "<li>El archivo del <b>CURP</b> debe ser PDF.</li>";
-            $errorCurp = true;
+            $message = $message . "<li>El <b>ACTA DE NACIMIENTO</b> es obligatoria.</li>";
+            $errorActa = true;
         }
+        if (!$comprobanteCargado && $estudiante->img_comprobante_dom === null)
+        {
+            $message = $message . "<li>El <b>COMPROBANTE DE DOMICILIO</b> es obligatorio.</li>";
+            $errorComprobante = true;
+        }
+        if (!$identificacionCargada && $estudiante->img_identificacion === null)
+        {
+            $message = $message . "<li>La <b>IDENTIFICACIÓN OFICIAL</b> es obligatoria.</li>";
+            $errorIdentificacion = true;
+        }
+        if (!$kardexCargado && $estudiante->img_kardex === null)
+        {
+            $message = $message . "<li>El <b>KARDEX</b> es obligatorio.</li>";
+            $errorKardex = true;
+        }
+        // if (!$constanciaCargada && $request->constancia_hidden == "#constancia#")
+        // {
+        //     $message = $message . "<li>La <b>CONSTANCIA</b> es obligatoria.</li>";
+        //     $errorConstancia = true;
+        // }
+
+
+        if (!$errorActa) $estudiante->img_acta_nac = "ACTA_OK." . $extActa;
+        if (!$errorComprobante) $estudiante->img_comprobante_dom = "COMPROBANTE_OK." . $extComprobante;
+        if (!$errorIdentificacion) $estudiante->img_identificacion = 'ID_OK.' . $extIdentificacion;
+        if (!$errorKardex) $estudiante->img_kardex = "KARDEX_OK." . $extKardex;
+        // if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
+        $rfc = $estudiante->rfc;
+        $time_int = time() * 999;
+        $time_str = strval($time_int);
+        $time_hex = dechex($time_str);
+        $estudiante->id_hex = $time_hex;
+
+        $message = $message . "</ul>";
+
+        // dump(isset($request->img_acta_nac));
+        // dd($request->img_acta_nac);
+
+        if ($errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia)
+        {
+            return redirect()->back()->with('message', $message);
+        }
+
+        //+++++++++++++++++++++++ VALIDACIÓN DE ARCHIVOS PDF ++++++++++++++++++++++++++++++
         if ($extActa != "PDF")
         {
             $message = $message . "<li>El archivo del <b>ACTA DE NACIMIENTO</b> debe ser PDF.</li>";
@@ -244,503 +591,162 @@ class EstudianteController extends Controller
         // {
         //     $message = $message . "<li>El archivo de la <b>CONSTANCIA DE ESTUDIOS</b> debe ser PDF.</li>";
         //     $errorConstancia = true;
-        // }
+        // }        
 
-        // if ($errorCurp || $errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia)
-        // {
-        //     return redirect()->back()->with('message', $message);
-        // }
-
-        //++++++++++++++++++++ VALIDACIÓN DE CAMPOS OBLIGATORIOS +++++++++++++++++++++
-        if (!$actaCargada && $request->acta_hidden == "#acta#")
+        if ($errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia)
         {
-            $message = $message . "<li>El <b>ACTA DE NACIMIENTO</b> es obligatoria.</li>";
-            $errorActa = true;
-        }
-        if (!$comprobanteCargado && $request->comprobante_hidden == "#comprobante#")
-        {
-            $message = $message . "<li>El <b>COMPROBANTE DE DOMICILIO</b> es obligatorio.</li>";
-            $errorComprobante = true;
-        }
-        if (!$identificacionCargada && $request->identificacion_hidden == "#identificacion#")
-        {
-            $message = $message . "<li>La <b>IDENTIFICACIÓN OFICIAL</b> es obligatoria.</li>";
-            $errorIdentificacion = true;
-        }
-        if (!$kardexCargado && $request->kardex_hidden == "#kardex#")
-        {
-            $message = $message . "<li>El <b>KARDEX</b> es obligatorio.</li>";
-            $errorKardex = true;
-        }
-        // if (!$constanciaCargada && $request->constancia_hidden == "#constancia#")
-        // {
-        //     $message = $message . "<li>La <b>CONSTANCIA</b> es obligatoria.</li>";
-        //     $errorConstancia = true;
-        // }
-
-        $message = $message . "</ul>";
-
-        if ($errorCurp)
-        {
-            $message = '<b>ERROR(ES) EN LA INFORMACIÓN: </b> <ul>';
-            $message = $message . "<li>El archivo del <b>CURP</b> debe ser PDF.</li>";
-            $message = $message . "</ul>";
-            $message = $message . "NOTA: Todos los campos son <b>obligatorios</b> y debes subir <b>archivos PDF</b>.";
             return redirect()->back()->with('message', $message);
         }
 
-        if ($this->esValidoArchivoCURP($request->img_curp, $rfc, $fileCurp)) //Valida que el PDF cargado sea el esperado
+        //Sólo se copiarán los archivos únicamente cuando estén cargados en el input
+        if ($actaCargada) 
         {
-            if(empty($request->session()->get('estudiante')))
-            {
-                $estudiante = new Estudiante();
-                $estudiante->img_curp = "CURP_OK.pdf";
-                if (!$errorActa) $estudiante->img_acta_nac = "ACTA_OK." . $extActa;
-                if (!$errorComprobante) $estudiante->img_comprobante_dom = "COMPROBANTE_OK." . $extComprobante;
-                if (!$errorIdentificacion) $estudiante->img_identificacion = 'ID_OK.' . $extIdentificacion;
-                if (!$errorKardex) $estudiante->img_kardex = "KARDEX_OK." . $extKardex;
-                // if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
-                $estudiante->rfc = $rfc;
-                $estudiante->cve_localidad_origen = 1;
-                $estudiante->cve_localidad_actual = 1;
-                $request->session()->put('estudiante', $estudiante);
-            }
-            else
-            {
-                $estudiante = $request->session()->get('estudiante');
-                $estudiante->img_curp = "CURP_OK.pdf";
-                if (!$errorActa) $estudiante->img_acta_nac = "ACTA_OK." . $extActa;
-                if (!$errorComprobante) $estudiante->img_comprobante_dom = "COMPROBANTE_OK." . $extComprobante;
-                if (!$errorIdentificacion) $estudiante->img_identificacion = 'ID_OK.' . $extIdentificacion;
-                if (!$errorKardex) $estudiante->img_kardex = "KARDEX_OK." . $extKardex;
-                // if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
-                if ($fileCurp) $estudiante->rfc = $rfc;
-                $rfc = $estudiante->rfc;
-                $request->session()->put('estudiante', $estudiante);
-            }
-            $parser = new \Smalot\PdfParser\Parser();
-            
-            $pdf = $parser->parseFile('img/curps/CU_'. $rfc . ".pdf");
-            $text = $pdf->getText();
-            $parr = explode("\n", $text);
-
-            $nombre_completo = explode(" ", $parr[12]);
-            $max_key = array_key_last($nombre_completo);
-            $nombre = '';
-            for ($i=0; $i<=$max_key-2; $i++)
-            {
-                $nombre = $nombre . ' ' . $nombre_completo[$i];
-            }
-            $estudiante->nombre = trim($nombre);
-            $estudiante->primer_apellido = trim($nombre_completo[$max_key-1]);
-            $estudiante->segundo_apellido = trim($nombre_completo[$max_key]);
-
-            $curp = $parr[11];
-            $estudiante->curp = $curp;
-            $dia_nac = substr($curp, 8, 2);
-            $mes_nac = substr($curp, 6, 2);
-            $ano_nac = $this->calcula_ano(substr($curp, 4, 2));
-
-            $estudiante->fecha_nac = $ano_nac . '-' . $mes_nac . '-' . $dia_nac;
-
-            //Sólo se copiarán los archivos únicamente cuando estén cargados en el input
-            if ($actaCargada) 
-            {
-                $archivo = 'AC_' . $rfc . '.' . $extActa;
-                $request->img_acta_nac->move('img/actas', $archivo);
-            }  
-            if ($comprobanteCargado)
-            {
-                $archivo = 'CO_' . $rfc . '.' . $extComprobante;
-                $request->img_comprobante_dom->move('img/comprobantes', $archivo);
-            }
-            if ($identificacionCargada)
-            {
-                $archivo = 'ID_' . $rfc . '.' . $extIdentificacion;
-                $request->img_identificacion->move('img/identificaciones', $archivo);
-            }
-            if ($kardexCargado)
-            {
-                $archivo = 'KX_' . $rfc . '.' . $extKardex;
-                $request->img_kardex->move('img/kardex', $archivo);
-            }
-            // if ($constanciaCargada)
-            // {
-            //     $archivo = 'CN_' . $rfc . '.' . $extConstancia;
-            //     $request->img_constancia->move('img/constancias', $archivo);
-            // }
-            if ($errorCurp || $errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia) return redirect()->back()->with('message', $message);
-
-            $request->session()->put('f1', false);
-            $request->session()->put('f2', true);
-            return redirect()->route('estudiantes.formulario2');
+            $newFileName = "AC_" . $estudiante->rfc . '.' . $extActa;
+            Storage::putFileAs('actas', $request->img_acta_nac, $newFileName);
+            $estudiante->img_acta_nac = $newFileName;
+        }  
+        if ($comprobanteCargado)
+        {
+            $newFileName = "CO_" . $estudiante->rfc . '.' . $extComprobante;
+            Storage::putFileAs('comprobantes', $request->img_comprobante_dom, $newFileName);
+            $estudiante->img_comprobante_dom = $newFileName;
         }
-        else //Si no es válido el archivo PDF del CURP
+        if ($identificacionCargada)
         {
-            if($fileCurp)  //Si se cargó el pdf en el input del CURP 
-            {
-                $estudiante = new Estudiante();
-               
-                //Sólo se copiarán los archivos únicamente cuando estén cargados en el input
-                if ($actaCargada) 
-                {
-                    if ($estudiante->img_acta_nac != "ACTA_OK.PDF")  //Si no se había subido el archivo previamente
-                    {
-                        $archivo = 'AC_' . $rfc . '.' . $extActa;
-                        $request->img_acta_nac->move('img/actas', $archivo);
-                    }
-                }  
-                if ($comprobanteCargado)
-                {
-                    if ($estudiante->img_comprobante_dom != "COMPROBANTE_OK.PDF")  //Si no se había subido el archivo previamente
-                    {
-                        $archivo = 'CO_' . $rfc . '.' . $extComprobante;
-                        $request->img_comprobante_dom->move('img/comprobantes', $archivo);
-                    }
-                }
-                if ($identificacionCargada)
-                {
-                    if ($estudiante->img_identificacion != "ID_OK.PDF")  //Si no se había subido el archivo previamente
-                    {
-                        $archivo = 'ID_' . $rfc . '.' . $extIdentificacion;
-                        $request->img_identificacion->move('img/identificaciones', $archivo);
-                    }
-                }
-                if ($kardexCargado)
-                {
-                    if ($estudiante->img_kardex != "KARDEX_OK.PDF")  //Si no se había subido el archivo previamente
-                    {
-                        $archivo = 'KX_' . $rfc . '.' . $extKardex;
-                        $request->img_kardex->move('img/kardex', $archivo);
-                    }
-                }
-                // if ($constanciaCargada)
-                // {
-                //     if ($estudiante->img_constancia != "CONSTANCIA_OK.pdf")  //Si no se había subido el archivo previamente
-                //     {
-                //         $archivo = 'CN_' . $rfc . '.' . $extConstancia;
-                //         $request->img_constancia->move('img/constancias', $archivo);
-                //     }
-                // }
-
-                $estudiante = $request->session()->get('estudiante');
-                if (!isset($estudiante)) $estudiante = new Estudiante();
-                $estudiante->img_curp = "CURP_OK.pdf";
-                if (!$errorActa) $estudiante->img_acta_nac = "ACTA_OK." . $extActa;
-                if (!$errorComprobante) $estudiante->img_comprobante_dom = "COMPROBANTE_OK." . $extComprobante;
-                if (!$errorIdentificacion) $estudiante->img_identificacion = 'ID_OK.' . $extIdentificacion;
-                if (!$errorKardex) $estudiante->img_kardex = "KARDEX_OK." . $extKardex;
-                // if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
-                $estudiante->rfc = $rfc;
-                $estudiante->cve_localidad_origen = 1;
-                $estudiante->cve_localidad_actual = 1;
-                $request->session()->put('estudiante', $estudiante);
-
-                if ($errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia) return redirect()->back()->with('message', $message);
-
-                $request->session()->put('f1', false);
-                $request->session()->put('f2', true);
-                return redirect()->route('estudiantes.formulario2');                  
-            }
-            else  //Indica que en esta ocasión no se cargó el CURP en el input el archivo pero...
-            {
-                if (isset($estudiante) && strlen($estudiante->rfc) == 10) $rfc = $estudiante->rfc;  //Si ya se extrajo el rfc del pdf
-                else $rfc = "probando123"; //Si no es un archivo de curp pdf válido va a tomar otro rfc
-                
-                if (isset($estudiante) && $estudiante->img_curp == 'CURP_OK.pdf')  //Significa que ya se había cargado el archivo del CURP previamente
-                {
-                    //Sólo se copiarán los archivos únicamente cuando estén cargados en el input
-                    if ($actaCargada) 
-                    {
-                        if ($estudiante->img_acta_nac != "ACTA_OK.pdf")  //Si no se había subido el archivo previamente
-                        {
-                            $archivo = 'AC_' . $rfc . '.' . $extActa;
-                            $request->img_acta_nac->move('img/actas', $archivo);
-                        }
-                    }  
-                    if ($comprobanteCargado)
-                    {
-                        if ($estudiante->img_comprobante_dom != "COMPROBANTE_OK.pdf")  //Si no se había subido el archivo previamente
-                        {
-                            $archivo = 'CO_' . $rfc . '.' . $extComprobante;
-                            $request->img_comprobante_dom->move('img/comprobantes', $archivo);
-                        }
-                    }
-                    if ($identificacionCargada)
-                    {
-                        if ($estudiante->img_identificacion != "ID_OK.pdf")  //Si no se había subido el archivo previamente
-                        {
-                            $archivo = 'ID_' . $rfc . '.' . $extIdentificacion;
-                            $request->img_identificacion->move('img/identificaciones', $archivo);
-                        }
-                    }
-                    if ($kardexCargado)
-                    {
-                        if ($estudiante->img_kardex != "KARDEX_OK.pdf")  //Si no se había subido el archivo previamente
-                        {
-                            $archivo = 'KX_' . $rfc . '.' . $extKardex;
-                            $request->img_kardex->move('img/kardex', $archivo);
-                        }
-                    }
-                    // if ($constanciaCargada)
-                    // {
-                    //     if ($estudiante->img_constancia != "CONSTANCIA_OK.pdf")  //Si no se había subido el archivo previamente
-                    //     {
-                    //         $archivo = 'CN_' . $rfc . '.' . $extConstancia;
-                    //         $request->img_constancia->move('img/constancias', $archivo);
-                    //     }
-                    // }
-
-                    // if(empty($request->session()->get('estudiante')))
-                    // {
-                    //     $estudiante = new Estudiante();
-                    //     if (!$errorActa) $estudiante->img_acta_nac = "ACTA_OK." . $extActa;
-                    //     if (!$errorComprobante) $estudiante->img_comprobante_dom = "COMPROBANTE_OK." . $extComprobante;
-                    //     if (!$errorIdentificacion) $estudiante->img_identificacion = 'ID_OK.' . $extIdentificacion;
-                    //     if (!$errorKardex) $estudiante->img_kardex = "KARDEX_OK." . $extKardex;
-                    //     // if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
-                    //     $request->session()->put('estudiante', $estudiante);
-                    // }
-                    // else
-                    // {
-                        $estudiante = $request->session()->get('estudiante');
-                        if (!$errorActa) $estudiante->img_acta_nac = "ACTA_OK." . $extActa;
-                        if (!$errorComprobante) $estudiante->img_comprobante_dom = "COMPROBANTE_OK." . $extComprobante;
-                        if (!$errorIdentificacion) $estudiante->img_identificacion = 'ID_OK.' . $extIdentificacion;
-                        if (!$errorKardex) $estudiante->img_kardex = "KARDEX_OK." . $extKardex;
-                        // if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
-                        $request->session()->put('estudiante', $estudiante);
-                    // }
-
-                    if ($errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia) return redirect()->back()->with('message', $message);
-
-                    $request->session()->put('f2', true);
-                    return redirect()->route('estudiantes.formulario2');  
-                }
-                else return redirect()->back()->with('message', '¡ERROR! :: Primeramente selecciona el <b>archivo PDF del CURP</b>');
-            }
-            // if ($fileCurp) return redirect()->back()->with('message', 'Error en el archivo PDF del CURP. Intente subiendo otro archivo.');
-            // else return redirect()->back()->with('message', '¡ERROR! :: Selecciona el <b>archivo PDF del CURP</b>');
+            $newFileName = "ID_" . $estudiante->rfc . '.' . $extIdentificacion;
+            Storage::putFileAs('identificaciones', $request->img_identificacion, $newFileName);
+            $estudiante->img_identificacion = $newFileName;
         }
-    }
-
-    public function formulario2(Request $request)
-    {
-        $f2 = $request->session()->get('f2');
-
-        if ($f2)
+        if ($kardexCargado)
         {
-            $localidades = Localidad::orderBy('localidad', 'ASC')->get();
+            $newFileName = "KX_" . $estudiante->rfc . '.' . $extKardex;
+            Storage::putFileAs('kardex', $request->img_kardex, $newFileName);
+            $estudiante->img_kardex = $newFileName;
+        }
+        if ($constanciaCargada)
+        {
+            $archivo = 'CN_' . $rfc . '.' . $extConstancia;
+            $request->img_constancia->move('img/constancias', $archivo);
+        }
+
+         // Obtener la ruta del archivo original
+        $archivoOriginal = 'tmp/' . $estudiante->img_curp;
+        // Definir la ruta de destino
+        $rutaDestino = 'curps/' . basename($archivoOriginal);
+
+        // Mover el archivo a la carpeta de destino
+        Storage::move($archivoOriginal, $rutaDestino);
+
+        try {
+            DB::beginTransaction();
+        
+            $request->session()->put('estudiante', $estudiante);
             $estudiante = $request->session()->get('estudiante');
-            return view('estudiantes/formulario2', compact('estudiante', 'localidades'));
-        }
-        else return view('estudiantes/operacion_invalida');
-    }
-
-    public function formulario2Post(Request $request)
-    {
-        $validatedData = $request->validate([
-            'nombre' => ['required', 'max:20'],
-            'primer_apellido' => ['required', 'max:20'],
-            'segundo_apellido' => ['required', 'max:20'],
-            'curp' => ['required', 'unique:estudiantes', 'min:18', 'max:18'],
-            'fecha_nac' => ['required'],
-            'celular' => ['required', 'digits:10'],
-            'email' => ['required', 'max:40'],
-            'cve_localidad_origen' => ['required'],
-            'cve_localidad_actual' => ['required'],
-        ]);
-
-        $validatedData = $request->except(['nombre', 'primer_apellido', 'segundo_apellido', 'email']);  //Se exceptúan porque se van a cambiar a mayúsculas después
-        $nombre = trim(mb_strtoupper($request->nombre));
-        $primer_apellido = trim(mb_strtoupper($request->primer_apellido));
-        $segundo_apellido = trim(mb_strtoupper($request->segundo_apellido));
-        $email = trim(mb_strtolower($request->email));
-
-        $estudiante = $request->session()->get('estudiante');
-        $estudiante->fill($validatedData);
-        $estudiante->nombre = $nombre;
-        $estudiante->primer_apellido = $primer_apellido;
-        $estudiante->segundo_apellido = $segundo_apellido;
-        $estudiante->email = $email;
-        $request->session()->put('estudiante', $estudiante);
-
-        $request->session()->put('f3', true);
-        return redirect()->route('estudiantes.formulario3');
-    }
-
-
-    public function formulario3(Request $request)
-    {
-        $f3 = $request->session()->get('f3');
-
-        if ($f3)
-        {
-            // $escuelas = Escuela::orderBy('escuela', 'ASC')->get();
-            $escuelas = Escuela::where('cve_escuela', '!=', '999')->orderBy('escuela', 'ASC')->get();
-            $ciudades = Ciudad::all();
-            $turnos = Turno::all();
-            $estudiante = $request->session()->get('estudiante');
-            return view('estudiantes/formulario3', compact('estudiante', 'escuelas', 'ciudades', 'turnos'));
-        }
-        else return view('estudiantes/operacion_invalida');
-    }
-
-    public function formulario3Post(Request $request)
-    {
-        $validatedData = $request->validate([
-            'cve_ciudad_escuela' => ['required'], 
-            'cve_escuela' => ['required'],        
-            'cve_turno_escuela' => ['required'],  
-            'carrera' => ['required', 'max:30'] ,             
-            'ano_escolar' => ['required'],         
-            'promedio' => ['required', 'numeric', 'between:0,10.0'],            
-        ]);
-
-        $validatedData = $request->except('carrera');  //Se exceptúa CARRERA porque se va a cambiar a mayúsculas después
-        $carrera = trim(mb_strtoupper($request->carrera));
-
-        $estudiante = $request->session()->get('estudiante');
-        $estudiante->fill($validatedData);  //Se llena ESTUDIANTE con todos los campos validados excepto CARRERA
-        $estudiante->carrera = $carrera;
-
-        $request->session()->put('estudiante', $estudiante);
-        $request->session()->put('f4', true);
-        return redirect()->route('estudiantes.formulario4');
-    }
-
-    public function formulario4(Request $request)
-    {
-        $f4 = $request->session()->get('f4');
-
-        $socioeconomico = $request->session()->get('socioeconomico');
-        $techos = Techo::all();
-        $montos = MontoMensual::all(); 
-        if ($f4) return view('estudiantes/formulario4', compact('socioeconomico','techos', 'montos'));
-        else return view('estudiantes/operacion_invalida');  
-    }
-
-    public function formulario4Post(Request $request)
-    {
-        $validatedData = $request->validate([
-            'cve_techo_vivienda' => ['required'], 
-            'cuartos_vivienda' => ['required', 'numeric', 'between:1,20'],        
-            'personas_vivienda' => ['required', 'numeric', 'between:1,20'],
-            'cve_monto_mensual' => ['required'] ,
-            'beca_estudios' => ['required'] ,             
-            'apoyo_gobierno' => ['required'],         
-            'empleo' => ['nullable', 'max:30'], 
-            'gasto_transporte' => ['required', 'numeric', 'between:0,1000'],             
-        ]);
-        $validatedData = $request->except('empleo');  //Se exceptúa EMPLEO porque se va a cambiar a mayúsculas después
-        $empleo = trim(mb_strtoupper($request->empleo));
-
-        $estudiante = $request->session()->get('estudiante');
-        $rfc = $estudiante->rfc;
-        $estudiante->img_curp =             'CU_' . $rfc . '.pdf';
-        $estudiante->img_acta_nac =         'AC_' . $rfc . '.pdf';
-        $estudiante->img_comprobante_dom =  'CO_' . $rfc . '.pdf';
-        $estudiante->img_identificacion =   'ID_' . $rfc . '.pdf';
-        $estudiante->img_kardex =           'KX_' . $rfc . '.pdf';
-        //$estudiante->img_constancia =       'CN_' . $rfc . '.pdf';
-
-        $time_int = time() * 999;
-        $time_str = strval($time_int);
-        $time_hex = dechex($time_str);
-        $estudiante->id_hex = $time_hex;
-
-        $request->session()->put('estudiante', $estudiante);
-        DB::beginTransaction();
-        try
-        {
-            $estudiante->save();
-
+            $socioeconomico = $request->session()->get('socioeconomico');
+            $ciclo = $request->session()->get('ciclo');
+    
+            // Crear una nueva instancia del modelo Estudiante
+            $estudianteBD = new Estudiante;
+    
+            // Asignar los valores individualmente
+            $estudianteBD->id_ciclo = $ciclo;
+            $estudianteBD->nombre = $estudiante['nombre'];
+            $estudianteBD->primer_apellido = $estudiante['primer_apellido'];
+            $estudianteBD->segundo_apellido = $estudiante['segundo_apellido'];
+            $estudianteBD->curp = $estudiante['curp'] ;
+            $estudianteBD->rfc = $estudiante['rfc'];
+            $estudianteBD->fecha_nac = $estudiante['fecha_nac'];
+            $estudianteBD->celular = $estudiante['celular'];
+            $estudianteBD->email = $estudiante['email'];
+            $estudianteBD->cve_localidad_origen = $estudiante['cve_localidad_origen'];
+            $estudianteBD->cve_localidad_actual = 1;
+            $estudianteBD->cve_ciudad_escuela = $estudiante['cve_ciudad_escuela'];
+            $estudianteBD->cve_escuela = $estudiante['cve_escuela'];
+            $estudianteBD->cve_turno_escuela = $estudiante['cve_turno_escuela'];
+            $estudianteBD->carrera = $estudiante['carrera'];
+            $estudianteBD->ano_escolar = $estudiante['ano_escolar'];
+            $estudianteBD->promedio = $estudiante['promedio'];
+            $estudianteBD->img_curp = $estudiante['img_curp'];
+            $estudianteBD->img_acta_nac = $estudiante['img_acta_nac'];
+            $estudianteBD->img_comprobante_dom = $estudiante['img_comprobante_dom'];
+            $estudianteBD->img_identificacion = $estudiante['img_identificacion'];
+            $estudianteBD->img_kardex = $estudiante['img_kardex'];
+            $estudianteBD->img_constancia = "PENDIENTE";
+            $estudianteBD->id_hex = $estudiante['id_hex'];  
+        
+            // Guardar el estudiante en la base de datos
+            $estudianteBD->save();
+        
             $id_estudiante = DB::getPdo()->lastInsertId();   //Obtiene el ID recién guardado 
-            if(empty($request->session()->get('socioeconomico')))
-            {
-                $socioeconomico = new DatoSocioeconomico;
-                $socioeconomico->fill($validatedData);
-                $socioeconomico->id_estudiante = $id_estudiante;
-            }
-            else
-            {
-                $socioeconomico = $request->session()->get('socioeconomico');
-                $socioeconomico->fill($validatedData);
-            }
-
-            $socioeconomico->empleo = $empleo;
-            $request->session()->put('socioeconomico', $socioeconomico);
-            $socioeconomico->save();
-
-            DB::commit();
-
+            $estudiante->id = $id_estudiante;
+        
+            $request->session()->put('estudiante', $estudiante);
+        
+            $socioeconomicoBD = new DatoSocioeconomico;
+            $socioeconomicoBD->id_estudiante = $id_estudiante;
+            $socioeconomicoBD->cve_techo_vivienda = $socioeconomico['cve_techo_vivienda'];
+            $socioeconomicoBD->cuartos_vivienda = $socioeconomico['cuartos_vivienda'];
+            $socioeconomicoBD->personas_vivienda = $socioeconomico['personas_vivienda'];
+            $socioeconomicoBD->cve_monto_mensual = $socioeconomico['cve_monto_mensual'];
+            $socioeconomicoBD->beca_estudios = $socioeconomico['beca_estudios'];
+            $socioeconomicoBD->apoyo_gobierno = $socioeconomico['apoyo_gobierno'];
+            $socioeconomicoBD->empleo = $socioeconomico['empleo'];
+            $socioeconomicoBD->gasto_transporte = $socioeconomico['gasto_transporte'];
+            $socioeconomicoBD->observaciones = $socioeconomico['observaciones'];
+        
+            $socioeconomicoBD->save();
+        
+            $request->session()->put('fdocumentos', false);
             $request->session()->put('fin', true);
+        
+            DB::commit(); // Confirmar la transacción si todas las operaciones fueron exitosas
+
             return redirect()->route('estudiantes.mail_confirmacion', $estudiante->id);
-        }
-        catch (\Exception $e)
-        {
-            DB::rollback();
-            throw $e;
+        } catch (\Exception $e) {
+            DB::rollBack(); // Deshacer todas las operaciones si ocurrió alguna excepción
+            throw $e; // Relanzar la excepción para que puedas manejarla en otro lugar si es necesario
         }
     }
 
-    public function formulario_final(Request $request, $id_hex)
+    public function formulario_constancia(Request $request, $id_hex)
     {
         $estudiante = Estudiante::where('id_hex', $id_hex)->first();
         $request->session()->put('estudiante', $estudiante);
-        $ff = $request->session()->get('ff');
-        if (!$ff) return view('estudiantes/formulario-final',compact('estudiante'));
+        $fconstancia = $request->session()->get('fconstancia');
+        if ($fconstancia) return view('estudiantes/formulario-constancia',compact('estudiante'));
         else return view('estudiantes/operacion_invalida');
         $request->session()->put('ff', true);
     }
     
-    public function formulario_final_post(Request $request)
+    public function formulario_constancia_post(Request $request)
     {
         $validatedData = $request->validate([
             'img_constancia' => ['required_with:alpha_dash', 'max:2000'],
         ]);
 
-        // $kardexCargado = false;
         $constanciaCargada = false;
 
         $estudiante = $request->session()->get('estudiante');
 
-        // if (isset($request->img_kardex) || (isset($estudiante) && $estudiante->img_kardex == "KARDEX_OK.pdf")) $kardexCargado = true;
         if (isset($request->img_constancia) || (isset($estudiante) && $estudiante->img_constancia != "PENDIENTE")) $constanciaCargada = true;
 
-        // if ($kardexCargado) $extKardex = "pdf";
-        // else $extKardex = substr(strrchr($request->kardex_hidden, "."), 1);
         if ($constanciaCargada) $extConstancia = "pdf";
         else $extConstancia = substr(strrchr($request->constancia_hidden, "."), 1);
 
-        // $extKardex = strtoupper($extKardex);
         $extConstancia = strtoupper($extConstancia);
 
-        // if (isset($request->img_kardex)) $extKardex = strtoupper($request->img_kardex->getClientOriginalExtension());
         if (isset($request->img_constancia)) $extConstancia = strtoupper($request->img_constancia->getClientOriginalExtension());
 
         $message = '<b>ERROR(ES) EN LA INFORMACIÓN: </b> <ul>';
-        // $errorKardex = false;
         $errorConstancia = false;
 
-        //++++++++++++++++++++ VALIDACIÓN DE CAMPOS OBLIGATORIOS +++++++++++++++++++++
-        // if (!$kardexCargado && $request->kardex_hidden == "#kardex#")
-        // {
-        //     $message = $message . "<li>El <b>KARDEX</b> es obligatorio.</li>";
-        //     $errorKardex = true;
-        // }
         if (!$constanciaCargada && $request->constancia_hidden == "PENDIENTE")
         {
             $message = $message . "<li>La <b>CONSTANCIA</b> es obligatoria.</li>";
             $errorConstancia = true;
         }
 
-        //+++++++++++++++++++++++ VALIDACIÓN DE ARCHIVOS PDF ++++++++++++++++++++++++++++++
-        // if ($extKardex != "PDF")
-        // {
-        //     $message = $message . "<li>El archivo del <b>KARDEX</b> debe ser PDF.</li>";
-        //     $errorKardex = true;
-        // }
+
         if ($extConstancia != "PDF")
         {
             $message = $message . "<li>El archivo de la <b>CONSTANCIA DE ESTUDIOS</b> debe ser PDF.</li>";
@@ -751,25 +757,19 @@ class EstudianteController extends Controller
 
         $rfc = $estudiante->rfc;
 
-        // if ($kardexCargado)
-        // {
-        //     $archivoKardex = 'KX_' . $rfc . '.' . $extKardex;
-        //     $request->img_kardex->move('img/kardex', $archivoKardex);
-        // }
         if ($constanciaCargada)
         {
-            $archivoConstancia = 'CN_' . $rfc . '.' . $extConstancia;
-            if (isset($request->img_constancia)) $request->img_constancia->move('img/constancias', $archivoConstancia);
+            $newFileName = "CN_" . $estudiante->rfc . '.' . $extConstancia;
+            Storage::putFileAs('constancias', $request->img_constancia, $newFileName);
+            $estudiante->img_constancia = $newFileName;
         }
         if ($errorConstancia) return redirect()->back()->with('message', $message);
 
-        // $estudiante->promedio = $request->promedio;
-        // if (isset($archivoKardex)) $estudiante->img_kardex = $archivoKardex;
-        $estudiante->img_constancia = $archivoConstancia;
+   
+        $estudiante->img_constancia = $newFileName;
         $estudiante->save();
         
         $request->session()->put('estudiante', $estudiante);
-        $request->session()->put('ff', false);
 
         return view('estudiantes.info_actualizada');
     }
@@ -788,7 +788,7 @@ class EstudianteController extends Controller
     {
         $fin = $request->session()->get('fin');
 
-        $request->session()->forget('f1');
+        $request->session()->forget('fdocumentos');
         $request->session()->forget('f2');
         $request->session()->forget('f3');
         $request->session()->forget('f4');
@@ -800,15 +800,19 @@ class EstudianteController extends Controller
     public function registro_pdf(Request $request)
     {
         $estudiante = $request->session()->get('estudiante');
-        $id_estudiante = $estudiante->id;
+        if (isset($estudiante))
+        {
+            $id_estudiante = $estudiante->id;
 
-        $estudiante = Estudiante::where('id', $id_estudiante)->first();
-        $socioeconomico = DatoSocioeconomico::where('id_estudiante', $id_estudiante)->first();
-        $pdf = PDF::loadView('estudiantes.registro_pdf',['estudiante'=>$estudiante, 'socioeconomico'=>$socioeconomico]);
-        $pdf->setPaper("Letter", "portrait");
-        return $pdf->stream('alivianate.pdf');
+            $estudiante = Estudiante::where('id', $id_estudiante)->first();
+            $socioeconomico = DatoSocioeconomico::where('id_estudiante', $id_estudiante)->first();
+            $pdf = PDF::loadView('estudiantes.registro_pdf',['estudiante'=>$estudiante, 'socioeconomico'=>$socioeconomico]);
+            $pdf->setPaper("Letter", "portrait");
+            return $pdf->stream('alivianate.pdf');
 
-        return view('estudiantes.registro_pdf');
+            return view('estudiantes.registro_pdf');
+        }
+        else return view('estudiantes/operacion_invalida');
     }
 
     public function registro_pdf_post($id_hex)
@@ -833,6 +837,7 @@ class EstudianteController extends Controller
         {
             $id_estudiante = $estudiante->id;
             $socioeconomico = DatoSocioeconomico::where('id_estudiante', $id_estudiante)->first();
+            $request->session()->put('fconstancia', true);
             return view('estudiantes.registro', compact('estudiante', 'socioeconomico'));
         }
         else return view('estudiantes/operacion_invalida'); 

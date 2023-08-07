@@ -111,78 +111,83 @@ p {
 }
 </style>
 
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ALIVIAN4TE :: Información de Registro</title>
 </head>
-<body style="font-family: 'Montserrat'; -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+<body>
     <header>
         <div style="text-align:center;">
-            <img src="{{ $logo_admon }}" style="width:85%">
+            <img src="https://alivianate.concordia.gob.mx/img/logo_escudo.jpg" style="width:75%">
+        </div>
+        <br> 
+        <div id="logo_aliviane" style="text-align:center;">
+            <img src="https://alivianate.concordia.gob.mx/img/logo_alivianate.jpg" style="width:50%;"> &nbsp;
         </div>
     </header>
-    <br>
-    <div id="logo_aliviane" style="text-align:center;">
-        <img src="{{ $logo_aliviane }}" style="width:55%;"> &nbsp;
-        <img src="data:image/png;base64, {!! $qrcode !!}" style="width:20%;">
-    </div>
      <br>
-    <div style="text-align:center;"> <h1> DATOS DE REGISTRO <h1> </div>
-    <div style="text-align:center;"> <h2> INFORMACIÓN PERSONAL </h2> </div>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Nombre: </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} </b> </td>
+     <div align="center"> <h2> CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} </h2> </div> 
+    <div align="center"> <h1> DATOS DE REGISTRO <h1> </div>
+    <div align="center">
+       {{-- <a href="{{ url('/registro/' . $estudiante->id_hex) }}">Ver Hoja de Registro</a> --}}
+       <a href="{{ url('/registro/' . $estudiante->id_hex) }}" style="display: inline-block; padding: 10px 20px; background-color: #B12A34; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">Ver PDF</a>
+
+    </div>
+    <br>
+    <table width="100%" border="1" cellspacing="0">
+        <tr>
+            <td width="30%" align="right"><b>Nombre:</b></td>
+            <td width="70%">{{ $estudiante->nombre }} {{ $estudiante->primer_apellido }} {{ $estudiante->segundo_apellido }}</td>
         </tr>
-    </table>  
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> CURP:  </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->curp }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>CURP:</b></td>
+            <td width="70%">{{ $estudiante->curp }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">       
-            <td width="30%" style="text-align:right;"> Fecha Nac:  </td> <td class="celdagris" width="70%"> <b> {{ date('d', strtotime($estudiante->fecha_nac)) . '-' . date('m', strtotime($estudiante->fecha_nac)) . '-' . date('Y', strtotime($estudiante->fecha_nac)) }}  </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>Fecha Nac:</b></td>
+            <td width="70%">{{ date('d-m-Y', strtotime($estudiante->fecha_nac)) }}</td>
         </tr>
-     </table>
-     <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px"> 
-            <td width="30%" style="text-align:right;"> Celular: </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->celular }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>Celular:</b></td>
+            <td width="70%">{{ $estudiante->celular }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-          <td width="30%" style="text-align:right;"> E-mail:  </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->email }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>E-mail:</b></td>
+            <td width="70%">{{ $estudiante->email }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Lugar Origen: </td> <td class="celdagris" width="70%">  <b> {{ $estudiante->localidad_origen->localidad }} </b> </td> 
+        <tr>
+            <td width="30%" align="right"><b>Lugar Origen:</b></td>
+            <td width="70%">{{ $estudiante->localidad_origen->localidad }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Lugar Transporte: </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->localidad_actual->localidad }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>Lugar Transporte:</b></td>
+            <td width="70%">{{ $estudiante->localidad_actual->localidad }}</td>
         </tr>
     </table>
     <br>
-    <div style="text-align:center;"> <h2> INFORMACIÓN ESCOLAR </h2> </div>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Institución Educativa: </td> <td class="celdagris" width="70%">  <b> {{ $estudiante->escuela->escuela }} </b> </td>
+    <div align="center">
+        <h2>INFORMACIÓN ESCOLAR</h2>
+    </div>
+    <table width="100%" border="1" cellspacing="0">
+        <tr>
+            <td width="30%" align="right"><b>Institución Educativa:</b></td>
+            <td width="70%">{{ $estudiante->escuela->escuela }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Carrera: </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->carrera }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>Carrera:</b></td>
+            <td width="70%">{{ $estudiante->carrera }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Ciudad Escuela: </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->ciudad->ciudad }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>Ciudad Escuela:</b></td>
+            <td width="70%">{{ $estudiante->ciudad->ciudad }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Turno Escuela: </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->turno->turno }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>Turno Escuela:</b></td>
+            <td width="70%">{{ $estudiante->turno->turno }}</td>
         </tr>
-    </table>
+    
     <?php 
         switch ($estudiante->ano_escolar)
         {
@@ -206,65 +211,55 @@ p {
                 break;    
         }
     ?>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Año Escolar: </td> <td class="celdagris" width="70%"> <b> {{ $ano_escolar }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>Año Escolar:</b></td>
+            <td width="70%">{{ $ano_escolar }}</td>
         </tr>
-    </table> 
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="30%" style="text-align:right;"> Promedio Actual: </td> <td class="celdagris" width="70%"> <b> {{ $estudiante->promedio }} </b> </td>
+        <tr>
+            <td width="30%" align="right"><b>Promedio Actual:</b></td>
+            <td width="70%">{{ $estudiante->promedio }}</td>
         </tr>
-    </table> 
+    </table>
     <br>
-    <div style="text-align:center;"> <h2> INFORMACIÓN SOCIOECONÓMICA </h2> </div>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="55%" style="text-align:right;"> ¿De qué material es el techo de tu vivienda?  </td> <td class="celdagris" width="45%">  <b> {{ $estudiante->socioeconomico->techo->techo }} </b> </td>
+    <div align="center">
+        <h2>INFORMACIÓN SOCIOECONÓMICA</h2>
+    </div>
+    <table width="100%" border="1" cellspacing="0">
+        <tr>
+            <td width="55%" align="right"><b>¿De qué material es el techo de tu vivienda?</b></td>
+            <td width="45%">{{ $estudiante->socioeconomico->techo->techo }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="55%" style="text-align:right;"> ¿Cuántos cuartos y baños disponen en tu vivienda? </td> <td class="celdagris" width="45%"> <b> {{ $estudiante->socioeconomico->cuartos_vivienda }} </b> </td>
+        <tr>
+            <td width="55%" align="right"><b>¿Cuántos cuartos y baños disponen en tu vivienda?</b></td>
+            <td width="45%">{{ $estudiante->socioeconomico->cuartos_vivienda }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="55%" style="text-align:right;"> ¿Cuántas personas viven normalmente en tu vivienda? </td> <td class="celdagris" width="45%"> <b> {{ $estudiante->socioeconomico->personas_vivienda }} </b> </td>
+        <tr>
+            <td width="55%" align="right"><b>¿Cuántas personas viven normalmente en tu vivienda?</b></td>
+            <td width="45%">{{ $estudiante->socioeconomico->personas_vivienda }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="55%" style="text-align:right;"> ¿Cuál es el monto mensual que entra a tu hogar?  </td> <td class="celdagris" width="45%"> <b> {{ $estudiante->socioeconomico->monto_mensual->monto }} </b> </td>
+        <tr>
+            <td width="55%" align="right"><b>¿Cuál es el monto mensual que entra a tu hogar?</b></td>
+            <td width="45%">{{ $estudiante->socioeconomico->monto_mensual->monto }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="55%" style="text-align:right;"> ¿Recibes alguna beca para apoyar tus estudios? </td> <td class="celdagris" width="45%"> <b> {{ $estudiante->socioeconomico->beca_estudios == 1 ? 'SÍ' : 'NO' }} </b> </td>
+        <tr>
+            <td width="55%" align="right"><b>¿Recibes alguna beca para apoyar tus estudios?</b></td>
+            <td width="45%">{{ $estudiante->socioeconomico->beca_estudios == 1 ? 'SÍ' : 'NO' }}</td>
         </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="55%" style="text-align:right;"> ¿Recibes algún tipo de ayuda económica del gobierno?? </td> <td class="celdagris" width="545%"> <b> {{ $estudiante->socioeconomico->ayuda_gobierno == 1 ? 'SÍ' : 'NO' }} </b> </td>
+        <tr>
+            <td width="55%" align="right"><b>¿Recibes algún tipo de ayuda económica del gobierno?</b></td>
+            <td width="45%">{{ $estudiante->socioeconomico->ayuda_gobierno == 1 ? 'SÍ' : 'NO' }}</td>
         </tr>
-    </table>
-    <?php  
-        $empleo = false;
-        if (strlen($estudiante->socioeconomico->empleo) > 0) $empleo = true;
-    ?>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            @if ($empleo)
-            <td width="55%" style="text-align:right;">  ¿Tienes algún empleo? </td> <td class="celdagris" width="5%"> <b> {{ $empleo ? 'SÍ' : 'NO' }} </b> </td>
-            <td width="11%"style="text-align:right;">Especifica: </td> <td width="29%" class="celdagris"> <b> {{ $estudiante->socioeconomico->empleo }} </b> </td>
-            @else
-            <td width="55%" style="text-align:right;">  ¿Tienes algún empleo? </td> <td class="celdagris" width="45%"> <b> {{ $empleo ? 'SÍ' : 'NO' }} </b> </td>
-            @endif
-        </tr>   
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="55%" style="text-align:right;"> ¿Cuánto gastas en transporte diario a la escuela? </td> <td class="celdagris" width="45%"> <b> {{ '$ ' .  number_format($estudiante->socioeconomico->gasto_transporte) . '.00' }} </b> </td>
+        <?php  
+            $empleo = false;
+            if (strlen($estudiante->socioeconomico->empleo) > 0) $empleo = true;
+        ?>
+        <tr>
+            <td width="55%" align="right"><b>¿Recibes alguna beca para apoyar tus estudios?</b></td>
+            <td width="45%">{{ $estudiante->socioeconomico->beca_estudios == 1 ? 'SÍ' : 'NO' }}</td>
+        </tr>
+        <tr>
+            <td width="55%" align="right"><b>¿Recibes algún tipo de ayuda económica del gobierno?</b></td>
+            <td width="45%">{{ $estudiante->socioeconomico->ayuda_gobierno == 1 ? 'SÍ' : 'NO' }}</td>
         </tr>
     </table>
 </body>

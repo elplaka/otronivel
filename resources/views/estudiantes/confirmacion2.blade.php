@@ -3,18 +3,11 @@
 <head>
     <meta charset="utf-8">
     <title>ALIVIAN4TE :: Información de Registro </title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-    
-    <!-- Custom styles for this template-->
-    <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    
 <?php 
     //require_once(realpath($_SERVER["DOCUMENT_ROOT"]) .'/include/funciones.php');
 
-    use SimpleSoftwareIO\QrCode\Facades\QrCode;
+    // use SimpleSoftwareIO\QrCode\Facades\QrCode;
     use Illuminate\Support\Facades\URL;
 
     $path = getcwd() . '/img/alivianate.jpg';
@@ -27,28 +20,25 @@
     $data = file_get_contents($path);
     $logo_admon = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
-    // $qrcode2 = base64_encode(QrCode::format('png')->size(50)->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
-    // $qrcode = QrCode::format('png')->size(185)->errorCorrection('H')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex);
-    $qrcode = base64_encode(\QrCode::size(1000)->errorCorrection('H')->encoding('UTF-8')->format('png')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
-    // $qrcode = base64_encode(QrCode::format('png')->size(300)->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
+    // $qrcode = base64_encode(\QrCode::size(1000)->errorCorrection('H')->encoding('UTF-8')->format('png')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
+    // Genera el código QR y guarda la imagen en la carpeta pública
+    // \QrCode::size(1000)->errorCorrection('H')->encoding('UTF-8')->format('png')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex, public_path('img/qrcodes/codigo_qr.png'));
+
 ?>
 
 <style>
-
-        body {
-    min-height: 100vh;
-    max-width: 800px;
-    margin: 0 auto;
-}
+        @page {
+            margin: 1.5cm 1.5cm 1.5cm 1.5cm !important;                   /*arriba, derecha, abajo, izquierda*/
+        }
 
 th, td {
-        font-size: 16px;
+        font-size: 12px;
       font-family: 'Montserrat', serif;
       padding-left:5px 
 }
 
 div {
-    font-size: 20px;
+    font-size: 13px;
     font-family: 'Montserrat', serif;
     padding-top: 0px;
     padding-right: 0px;
@@ -63,7 +53,7 @@ p {
   }
 
   h1{
-    font-size: 30px;
+    font-size: 20px;
     font-weight: bold;
     padding-top: 0px;
     padding-right: 0px;
@@ -74,7 +64,7 @@ p {
   }
 
   h2{
-      font-size: 22px;
+      font-size: 16px;
       font-family: 'Montserrat', serif;
   }
 
@@ -120,80 +110,24 @@ p {
     padding: 0px;
 }
 </style>
-<style>
-    .btn-dorado {
-      background-color: #b2945e;
-      color: white;
-    }
-  
-    .btn-dorado:hover {
-      background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-      color: white;
-    }
-
-    .btn-verde {
-      background-color: #3d5b4f;
-      color: white;
-    }
-  
-    .btn-verde:hover {
-      background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-      color: white;
-    }
-
-    .btn-guinda {
-      background-color: #5c2134;
-      color: white;
-    }
-  
-    .btn-guinda:hover {
-      background-color: #932f4a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-      color: white;
-    }
-
-    .btn-rojo {
-      background-color: #932f4a;
-      color: white;
-    }
-  
-    .btn-rojo:hover {
-      background-color: #5c2134; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-      color: white;
-    }
-
-    .text-rojo {
-            color: #932f4a;
-        }
-
-        .text-rojo:hover {
-            color: #5c2134;
-        }
-
-  </style>
 
 </head>
-<body>
-    <div style="text-align:center;">
-        <img src="{{ $logo_admon }}" style="width:85%">
-    </div>
-    <br>
-    <div id="logo_aliviane" style="text-align:center;">
-        <img src="{{ $logo_aliviane }}" style="width:50%;"> &nbsp;
-        <img src="data:image/png;base64, {!! $qrcode !!}" style="width:20%;">
-        
-    </div>
+{{-- <body style="font-family: 'Montserrat';  -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;"> --}}
+    <body>
+     <header>
+        <div style="text-align:center;">
+            <img src="https://alivianate.concordia.gob.mx/img/logo_escudo.jpg" style="width:75%">
+        </div>
+        <br> 
+        <div id="logo_aliviane" style="text-align:center;">
+            <img src="https://alivianate.concordia.gob.mx/img/logo_alivianate.jpg" style="width:50%;"> &nbsp;
+        </div>
+    </header>
      <br>
-     <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td class="text-center">
-                <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" class="next btn btn-rojo mt-2"><i class="fa-solid fa-download"></i> <b> Hoja de Registro </b></a> 
-            </td>
-            {{-- <td class="text-center">
-                <a href="{{ route('estudiantes.formulario_constancia', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-verde btn-md"> <b> <i class="fa-solid fa-upload"></i> Subir CONSTANCIA </b> </a>
-            </td> --}}
-        </tr>
-    </table>  
-    <br>
+    <div style="text-align:center;"> <h1> DATOS DE REGISTRO <h1> </div>
+    <div style="text-align:center;">
+       <a href="{{ url('/registro/' . $estudiante->id_hex) }}">Ver Hoja de Registro</a>
+    </div>
     <div style="text-align:center;"> <h2> INFORMACIÓN PERSONAL </h2> </div>
     <table class="center" width="100%" style="border-spacing: 0px 2px;">
         <tr style="padding-bottom:1px">
@@ -272,9 +206,8 @@ p {
                 break;
             case 6:
                 $ano_escolar = "SEXTO";
-                break;       
+                break;    
         }
-
     ?>
     <table class="center" width="100%" style="border-spacing: 0px 2px;">
         <tr style="padding-bottom:1px">
@@ -337,6 +270,5 @@ p {
             <td width="55%" style="text-align:right;"> ¿Cuánto gastas en transporte diario a la escuela? </td> <td class="celdagris" width="45%"> <b> {{ '$ ' .  number_format($estudiante->socioeconomico->gasto_transporte) . '.00' }} </b> </td>
         </tr>
     </table>
-    <br>
 </body>
 </html>

@@ -21,10 +21,10 @@
 
 <script language="JavaScript" type="text/javascript">
     // A function that disables button
-    function disableButton() {
-        document.getElementById('btnSiguiente').setAttribute("disabled","disabled");
-        document.getElementById('btnSiguiente').innerText = "Enviando...";
-    }
+    // function disableButton() {
+    //     document.getElementById('btnSiguiente').setAttribute("disabled","disabled");
+    //     document.getElementById('btnSiguiente').innerText = "Enviando...";
+    // }
 
     $(document).ready(function(){
         $(function () {
@@ -38,21 +38,45 @@
 
         var $myForm = $("#my_form");
         $myForm.submit(function(){
-            disableButton();
+            // disableButton();
             $myForm.submit(function(){
                 return false;
             });
         });
     });
-
-
 </script>
 
 <script>
-        function showDiv(divId, element)
-        {
-            document.getElementById(divId).style.display = element.value == 1 ? 'block' : 'none';
-        }
+       // showDiv('hidden_div', this)  
+        // function showDiv(divId, element)
+        // {
+        //     document.getElementById(divId).style.display = element.value == 1 ? 'block' : 'none';
+        // }
+
+        $(document).ready(function() {
+    const selectEmpleo = $('#select_empleo');
+    const divEmpleo = $('#hidden_div');
+
+    if (selectEmpleo.val() === '1') {
+        divEmpleo.show();
+    } else {
+        divEmpleo.hide();
+    }
+
+    selectEmpleo.on('change', function() {
+        showDiv('hidden_div', this);
+    });
+});
+
+function showDiv(divId, element) {
+    const div = $('#' + divId);
+
+    if ($(element).val() === '1') {
+        div.show();
+    } else {
+        div.hide();
+    }
+}
 </script>
 
 <style>
@@ -69,6 +93,27 @@
     display: none;
 }
 </style>
+
+<style>
+    .bg-rojo {
+           background-color: #892641; /* Color rojo en formato hexadecimal */
+       }
+
+   .btn-verde {
+     background-color: #3d5b4f;
+     color: white;
+   }
+ 
+   .btn-verde:hover {
+     background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+     color: white;
+   }
+
+   .btn-verde:active {
+        background-color: #5ca265; /* Cambia el color aquí al deseado cuando el botón está activado (clic) */
+        color: white;
+    }
+</style>
 </head>
 <body>
     <div class="container">
@@ -80,18 +125,22 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <form id="my_form" name="my_form" class="contact-form" method="POST" action="{{ route('estudiantes.formulario4.post') }}">
+                            <form class="contact-form" method="POST" action="{{ route('estudiantes.formulario4.post') }}">
                                 @csrf
                                 <div class="row justify-content-center mb-1">
-                                    <img src="../img/alivianate.jpg" style="width:45%">
+                                    <div class="text-center">
+                                        <a href="/2023-2024">
+                                            <img src="../img/alivianate.jpg" style="width:45%">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="row justify-content-center mb-1">
                                     <h1 class="h3 mb-4 text-gray-800"> <b>{{ __('FORMULARIO DE REGISTRO') }} </b> </h1>
                                 </div>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-primary">
-                                            <b>4. INFORMACIÓN SOCIOECONÓMICA</b>
+                                        <div class="card-header text-white bg-rojo">
+                                            <b>INFORMACIÓN SOCIOECONÓMICA</b>
                                         </div>
                                         <div>
                                             @if (session()->has('message'))
@@ -105,6 +154,9 @@
                                             @endif 
                                         </div>
                                         <div class="card-body">
+                                            <div class="row mb-3 justify-content-center" style="background-color: #f8f3ec; color: #5c2134;">
+                                                Estudiante: &nbsp; <b> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} </b>
+                                            </div>
                                             <div class="row mb-3">
                                                 <p class="text-justify px-3 mb-1">
                                                     ¿De qué material es el techo de tu vivienda?
@@ -125,7 +177,7 @@
                                                 </p>                     
                                                 <div class="col-md-3">
                                                     <input id="cuartos_vivienda" name="cuartos_vivienda" type="number" step="1" min="1" max="20" class="form-control @error('cuartos_vivienda') is-invalid @enderror" name="cuartos_vivienda" value="{{ old('cuartos_vivienda', $socioeconomico->cuartos_vivienda  ?? '') }}"  autocomplete="cuartos_vivienda" required>
-                                                    @error('cuartos_vivienda')
+                                                    @error('cuartos_vivienda')   
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
@@ -163,11 +215,14 @@
                                                 <p class="text-justify px-3 mb-1">
                                                     ¿Recibes alguna beca para apoyar tus estudios?
                                                 </p>
+                                                <?php
+                                                    $beca_estudios = isset($socioeconomico->beca_estudios) ? $socioeconomico->beca_estudios : null;
+                                                ?>
                                                 <div class="col-md-3">
                                                     <select id="beca_estudios" name="beca_estudios" class="form-control" required>
-                                                        <option value="" selected>--</option>
-                                                        <option value="1"> SÍ </option>
-                                                        <option value="0"> NO </option>
+                                                        <option value="" {{ $beca_estudios === null ? 'selected' : '' }}>--</option>
+                                                        <option value="1" {{ ($beca_estudios === '1' || $beca_estudios === 1) ? 'selected' : '' }}>SÍ</option>
+                                                        <option value="0" {{ ($beca_estudios === '0' || $beca_estudios === 0) ? 'selected' : '' }}>NO</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -175,11 +230,14 @@
                                                 <p class="text-justify px-3 mb-1">
                                                     ¿Recibes algún tipo de ayuda económica del gobierno?
                                                 </p>
+                                                <?php
+                                                    $apoyo_gobierno = isset($socioeconomico->apoyo_gobierno) ? $socioeconomico->apoyo_gobierno : null;
+                                                ?>
                                                 <div class="col-md-3">
                                                     <select id="apoyo_gobierno" name="apoyo_gobierno" class="form-control" required>
-                                                        <option value="" selected>--</option>
-                                                        <option value="1"> SÍ </option>
-                                                        <option value="0"> NO </option>
+                                                        <option value="" {{ $apoyo_gobierno === null ? 'selected' : '' }}>--</option>
+                                                        <option value="1" {{ ($apoyo_gobierno === '1' || $apoyo_gobierno === 1) ? 'selected' : '' }}>SÍ</option>
+                                                        <option value="0" {{ ($apoyo_gobierno === '0' || $apoyo_gobierno === 0) ? 'selected' : '' }}>NO</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -187,21 +245,25 @@
                                                 <p class="text-justify px-3 mb-1 col-md-10">
                                                     ¿Tienes algún empleo? 
                                                 </p>
+                                                <?php
+                                                    $empleo = isset($socioeconomico->empleo) ? $socioeconomico->empleo : null;
+                                                ?>
                                                 <div class="col-md-3">
-                                                    <select class="form-control" onchange="showDiv('hidden_div', this)" required>
-                                                        <option value="" selected>--</option>
-                                                        <option value="1"> SÍ </option>
-                                                        <option value="0"> NO </option>
+                                                    <select id="select_empleo" class="form-control" required>
+                                                        <option value="" {{ $empleo === null ? 'selected' : '' }}>--</option>
+                                                        <option value="1" {{ $empleo !== null && strlen(trim($empleo)) > 0 ? 'selected' : '' }}>SÍ</option>
+                                                        <option value="0" {{ $empleo !== null && strlen(trim($empleo)) === 0 ? 'selected' : '' }}>NO</option>
                                                     </select>
                                                 </div>
-                                                <div class="row mb-3" id="hidden_div" name="hidden_div" >
+                                                
+                                                <div class="row mb-3" id="hidden_div" name="hidden_div" style="display: {{ $empleo == '1' ? 'block' : 'none' }}">
                                                     <p class="text-justify px-3 mb-1">
                                                         Especifica:
                                                     </p>
                                                     <div class="col-md-12">
-                                                        <input id="empleo" name="empleo" type="text" class="form-control @error('empleo') is-invalid @enderror" name="empleo" value="{{ old('empleo', $socioeconomico->empleo  ?? '') }}"  autocomplete="empleo">
+                                                        <input id="empleo" name="empleo" type="text" class="form-control @error('empleo') is-invalid @enderror" name="empleo" value="{{ old('empleo', $empleo  ?? '') }}"  autocomplete="empleo" {{ $empleo == '1' ? 'required' : '' }}>
                                                     </div>
-                                                </div>
+                                                </div>                                                
                                             </div>
                                             <div class="row mb-3">
                                                 <p class="text-justify px-3 mb-1 col-md-10">
@@ -219,15 +281,33 @@
                                         </div>
                                     </div> 
                                 </div>
-                                <a href="{{ route('estudiantes.formulario3') }}" class="next btn btn-info float-left mt-2">Anterior</a>
-                                <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-info float-right mt-2">Enviar</button>
+                                <a href="{{ route('estudiantes.formulario3') }}" class="next btn btn-verde float-left mt-2">Anterior</a>
+                                <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-verde float-right mt-2">Siguiente</button>
                             </form>
+                        </div>
+                    </div>
+                    <div class="row mb-1 justify-content-center">
+                        <div class="col-12 text-center">
+                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #f8f3ec; color: #5c2134;">
+                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6941088943</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
+                                * Mayores informes en la presidencia municipal de <b> Lunes a Viernes de 8:30 a.m. a 3 p.m. </b>
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function openWhatsApp() {
+            var phoneNumber = "526941088943"; // Coloca el número de teléfono sin el signo "+"
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
+    
+            window.open(url + phoneNumber, "_blank");
+        }
+    </script>
 
     {{-- <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>

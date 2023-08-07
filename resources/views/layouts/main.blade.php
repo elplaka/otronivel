@@ -154,8 +154,8 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href={{ url('/home') }}>
                 <div>
-                    {{-- <i class="fas fa-laugh-wink"></i> --}}
-                    <img src="/img/icono.png" alt="Por tiempos mejores" style="width:50px">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                    {{-- <img src="/img/icono.png" alt="Por tiempos mejores" style="width:50px"> --}}
                 </div>
                 <div class="sidebar-brand-text mx-3">ALIVIAN4TE </div>
             </a>

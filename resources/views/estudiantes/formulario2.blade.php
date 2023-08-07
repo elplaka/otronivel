@@ -42,6 +42,27 @@
     text-align: left;
 }
 </style>
+
+<style>
+     .bg-rojo {
+            background-color: #892641; /* Color rojo en formato hexadecimal */
+        }
+
+    .btn-verde {
+      background-color: #3d5b4f;
+      color: white;
+    }
+  
+    .btn-verde:hover {
+      background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      color: white;
+    }
+
+    .btn-verde:active {
+        background-color: #5ca265; /* Cambia el color aquí al deseado cuando el botón está activado (clic) */
+        color: white;
+    }
+</style>
 </head>
 <body>
     <div class="container">
@@ -56,15 +77,19 @@
                             <form class="contact-form" method="POST" action="{{ route('estudiantes.formulario2.post') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row justify-content-center mb-1">
-                                    <img src="../img/alivianate.jpg" style="width:45%">
+                                    <div class="text-center">
+                                        <a href="/2023-2024">
+                                            <img src="../img/alivianate.jpg" style="width:45%">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="row justify-content-center mb-1">
                                     <h1 class="h3 mb-4 text-gray-800"> <b>{{ __('FORMULARIO DE REGISTRO') }} </b> </h1>
                                 </div>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-primary">
-                                            <b>2. INFORMACIÓN PERSONAL</b>
+                                        <div class="card-header text-white bg-rojo">
+                                            <b>INFORMACIÓN PERSONAL</b>
                                         </div>
                                         <br>
                                         <div>
@@ -81,10 +106,11 @@
                                             <div class="row mb-3">
                                                 <label for="curp" class="col-md-5 col-form-label text-md-right">{{ __('CURP') }}</label>
                                                 <div class="col-md-6">
-                                                    <input id="curp" type="text" class="form-control @error('curp') is-invalid @enderror" name="curp" value="{{ old('curp', $estudiante->curp) }}"  autocomplete="curp" maxlength="18" required>
+                                                    <input id="curp" type="text" class="form-control @error('curp') is-invalid @enderror" name="curp" value="{{ old('curp', $estudiante->curp) }}"  autocomplete="curp" maxlength="18" readonly>
                                                     @error('curp')
                                                         <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
+                                                            <strong>{!! $message !!}</strong>
+                                                            
                                                         </span>
                                                     @enderror
                                                 </div>
@@ -164,29 +190,37 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <label for="cve_localidad_actual" class="col-md-5 col-form-label text-md-right">{{ __('Lugar de Transporte') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>LUGAR DONDE TOMAS EL CAMIÓN</b> <br> Selecciona una localidad del municipio de Concordia desde donde partes (diariamente o semanalmente) a la universidad."><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
-                                                <div class="col-md-6">
-                                                    <select id="cve_localidad_actual" name="cve_localidad_actual" class="form-control" aria-label="Default select example">
-                                                        @foreach ($localidades as $localidad)
-                                                            <option value="{{ $localidad->cve_localidad }}" {{ $localidad->cve_localidad == $estudiante->cve_localidad_actual? 'selected' : '' }}>{{ $localidad->localidad }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>   
+                                            </div>                                            
                                         </div>
                                     </div> 
                                 </div>
-                                <a href="{{ route('estudiantes.formulario1') }}" class="next btn btn-info float-left mt-2">Anterior</a>
-                                <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-info float-right mt-2">Siguiente</button>
+                                {{-- <a href="{{ route('estudiantes.formulario-curp') }}" class="next btn btn-info float-left mt-2">Anterior</a> --}}
+                                <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-verde float-right mt-2">Siguiente</button>
                             </form>
+                        </div>
+                    </div>
+                    <div class="row mb-1 justify-content-center">
+                        <div class="col-12 text-center">
+                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #f8f3ec; color: #5c2134;">
+                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6941088943</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
+                                * Mayores informes en la presidencia municipal de <b> Lunes a Viernes de 8:30 a.m. a 3 p.m. </b>
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function openWhatsApp() {
+            var phoneNumber = "526941088943"; // Coloca el número de teléfono sin el signo "+"
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
+    
+            window.open(url + phoneNumber, "_blank");
+        }
+    </script>
 
     {{-- <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>

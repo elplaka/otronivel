@@ -9,6 +9,8 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Estudiante;
 use App\Models\DatoSocioeconomico;
 
+
+
 class EstudiantesMailable extends Mailable
 {
     use Queueable, SerializesModels;

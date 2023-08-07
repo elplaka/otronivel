@@ -123,13 +123,14 @@ p {
     </header>
     <br>
     <div id="logo_aliviane" style="text-align:center;">
-        <img src="{{ $logo_aliviane }}" style="width:40%;";>
+        <img src="{{ $logo_aliviane }}" style="width:30%;";>
     </div>
-    {{-- <div style="text-align:center;"> <h1> DATOS DE REGISTRO <h1> </div> --}}
+    <div style="text-align:center;"> <h2> CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} </h2> </div>        
+  
     <table class="center" width="100%" style="border-spacing: 0px 0px;margin:0">
         <tr>
-            <td width="80%" style="text-align:center;">  <h1> &nbsp;&nbsp;&nbsp;&nbsp; DATOS DE REGISTRO <h1> </td>
-            <td width="20%"> <img src="data:image/png;base64, {!! $qrcode !!}" style="width:95%;"> </td>
+            <td width="85%" style="text-align:center;">  <h1> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DATOS DE REGISTRO <h1> </td>
+            <td width="15%"> <img src="data:image/png;base64, {!! $qrcode !!}" style="width:95%;"> </td>
         </tr>
     </table> 
     <div style="text-align:center;"> <h2> INFORMACIÓN PERSONAL </h2> </div>

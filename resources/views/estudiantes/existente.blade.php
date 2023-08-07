@@ -81,30 +81,36 @@
             <div class="row justify-content-center">
                 <div class="col-md-7">
                     <div class="row text-center">
-                        <h2><b> FORMULARIO ENVIADO CON ÉXITO </b> </h2>
+                        <h4><b> <small>«</small> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} <small>»</small> ya se encuentra registrado(a) para el Ciclo Escolar {{ $ciclo }}</b> </h4>
                     </div>
-                    <div class="row text-justify">
-                      <p>Se te envió un correo electrónico a la dirección de e-mail que proporcionaste en el formulario recién enviado. Conserva este correo porque te servirá más adelante en este proceso.</p>
-                      <p>Asimismo, aquí podrás <b>descargar un archivo PDF</b> que contiene la información que registraste.</p>
-                      <p><strong>Importante:</strong> Por favor, revisa tu bandeja de spam o correo no deseado, ya que el correo electrónico podría llegar allí.</p>
+                    <div class="text-justify">
+                        <p> <br> Aquí se puede descargar el archivo PDF que contiene la <b> HOJA DE REGISTRO </b>. </p>
+                        <div class="text-center"> 
+                          <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-rojo"><i class="fa-solid fa-download"></i> <b> PDF </b></a>
+                      </div>
                     </div>
+                    {{-- <div class="text-justify">
+                      <p> <br> También puedes subir la <b> CONSTANCIA DE ESTUDIOS DEL PERIODO ACTUAL </b> para concluir el proceso de registro </b>. </p>
+                      <div class="text-center"> 
+                        <a href="{{ route('estudiantes.formulario_constancia', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-verde btn-md"> <b> <i class="fa-solid fa-upload"></i> Subir CONSTANCIA </b> </a>
+                    </div> --}}
+                  </div>
                 </div>
             </div>
-            <div class="row justify-content-center mb-3">
-              <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-rojo float-center"><i class="fa-solid fa-download"></i> <b> PDF </b></a>
-            </div>
-            <div class="row justify-content-center mb-4">
-                <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:35%"> &nbsp; &nbsp; &nbsp;
-                &nbsp; <img src="../img/alivianate.jpg" style="width:20%">
-            </div>          
             <div class="row justify-content-center">
-                <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Nuevo registro</a>
-            </div>
+
+                      </div> <br>
+                  <div class="row justify-content-center mb-4">
+                      <img src="{{ url('img/Logo_y_Escudo.jpg') }}" alt="Por tiempos mejores" style="width: 35%">
+                      &nbsp; &nbsp; &nbsp; &nbsp;
+                      <img src="{{ url('img/alivianate.jpg') }}" style="width: 20%">
+                  </div>
+                  <div class="row justify-content-center">
+                      <a class="btn btn-dorado" href="{{ route('estudiantes.forget') }}">Ir al Inicio</a>
+                  </div>
         </div>
     </div>
-
             
-
     <script src="{{ asset('js/jquery.js') }}"></script>
 
     <!-- Bootstrap core JavaScript-->

@@ -19,6 +19,57 @@
            <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">  
            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
+           <style>
+            .btn-dorado {
+              background-color: #b2945e;
+              color: white;
+            }
+          
+            .btn-dorado:hover {
+              background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+              color: white;
+            }
+        
+            .btn-verde {
+              background-color: #3d5b4f;
+              color: white;
+            }
+          
+            .btn-verde:hover {
+              background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+              color: white;
+            }
+        
+            .btn-guinda {
+              background-color: #5c2134;
+              color: white;
+            }
+          
+            .btn-guinda:hover {
+              background-color: #932f4a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+              color: white;
+            }
+        
+            .btn-rojo {
+              background-color: #932f4a;
+              color: white;
+            }
+          
+            .btn-rojo:hover {
+              background-color: #5c2134; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+              color: white;
+            }
+        
+            .text-rojo {
+                    color: #932f4a;
+                }
+        
+                .text-rojo:hover {
+                    color: #5c2134;
+                }
+        
+          </style>
+
 </head>
 <body>
     <div class="container">
@@ -28,17 +79,22 @@
                     <div class="row text-center">
                         <h2><b> INFORMACIÓN ACTUALIZADA CON ÉXITO </b> </h2>
                     </div>
-                    <div class="row text-justify">
+                    {{-- <div class="row text-justify">
                         Aquí podrás descargar el archivo PDF que contiene la información completa de tu registro.
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
     </div>
     <div class="container">
         <div class="card-body">
-            <div class="row justify-content-center">
-    <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-danger float-center mt-2">PDF</a>
+            <div class="row justify-content-center d-flex">
+                <div class="col text-right">
+                    <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-rojo"><i class="fa-solid fa-download"></i> Hoja de Registro</a>
+                </div>
+                <div class="col text-left">
+                    <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Ir al Inicio</a>
+                </div>
             </div>
         </div>
         <div class="row justify-content-center mb-4">

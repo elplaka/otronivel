@@ -26,15 +26,27 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+// Route::get('/2023-2024', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+// Route::get('/estudiantes/formulario-curp', [EstudianteController::class, 'formulario_curp'])->name('estudiantes.formulario-curp');
+
+
+Route::get('/2023-2024', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+
+Route::middleware('check.inicio.registro')->group(function () {
+    Route::get('/estudiantes/formulario-curp', [EstudianteController::class, 'formulario_curp'])->name('estudiantes.formulario-curp');
+});
+
+Route::post('/estudiantes/formulario-curp', [EstudianteController::class, 'formulario_curpPost'])->name('estudiantes.formulario-curp.post');
+
 // Route::middleware(['auth'])->group(function () {
-    Route::get('/estudiantes/formulario1', [EstudianteController::class, 'formulario1'])->name('estudiantes.formulario1')->middleware('admin.user');;
-    Route::post('/estudiantes/formulario1', [EstudianteController::class, 'formulario1Post'])->name('estudiantes.formulario1.post')->middleware('admin.user');    
+    Route::get('/estudiantes/formulario-documentos', [EstudianteController::class, 'formulario_documentos'])->name('estudiantes.formulario-documentos');
+    Route::post('/estudiantes/formulario-documentos', [EstudianteController::class, 'formulario_documentosPost'])->name('estudiantes.formulario-documentos.post');   
 // });
 
 Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 
 Route::get('/', function () {
-    return redirect()->route('estudiantes.forget');
+    return redirect()->route('home');
 });
 
 Route::get('/estudiantes/formulario2', [EstudianteController::class, 'formulario2'])->name('estudiantes.formulario2');
@@ -46,8 +58,8 @@ Route::post('/estudiantes/formulario3', [EstudianteController::class, 'formulari
 Route::get('/estudiantes/formulario4', [EstudianteController::class, 'formulario4'])->name('estudiantes.formulario4');
 Route::post('/estudiantes/formulario4', [EstudianteController::class, 'formulario4Post'])->name('estudiantes.formulario4.post');
 
-Route::get('/estudiantes/formulario-final/{id_hex}', [EstudianteController::class, 'formulario_final'])->name('estudiantes.formulario_final');
-Route::post('/estudiantes/formulario-final', [EstudianteController::class, 'formulario_final_post'])->name('estudiantes.formulario_final.post');
+Route::get('/estudiantes/formulario-constancia/{id_hex}', [EstudianteController::class, 'formulario_constancia'])->name('estudiantes.formulario_constancia');
+Route::post('/estudiantes/formulario-constancia', [EstudianteController::class, 'formulario_constancia_post'])->name('estudiantes.formulario_constancia.post');
 
 Route::get('/estudiantes/formulario_enviado', [EstudianteController::class, 'formulario_enviado'])->name('estudiantes.formulario_enviado');
 
@@ -70,6 +82,8 @@ Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudi
     }
     else return view('estudiantes/operacion_invalida');
 })->name('estudiantes.mail_confirmacion');
+
+Route::get('/estudiantes/existente/{id_hex}', [EstudianteController::class, 'existente'])->name('estudiantes.existente');
 
 // Route::get('/estudiantes/mail_folio/', function(){
 //     //$estudiantes = Estudiante::all();

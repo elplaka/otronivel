@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Ciclo;
 use App\Models\Localidad;
 use App\Models\DatoSocioeconomico;
 use App\Models\Escuela;
@@ -38,7 +39,8 @@ class Estudiante extends Model
         'img_identificacion',  
         'img_kardex',
         'img_constancia',
-        'cve_status'
+        'cve_status',
+        'id_hex'
     ];  
 
 
@@ -80,6 +82,11 @@ class Estudiante extends Model
     public function boletos_asignados()
     {
         return $this->hasMany(BoletoAsignado::class, 'id_estudiante');
+    }
+
+    public function ciclo()
+    {
+        return $this->belongsTo(Ciclo::class, 'id_ciclo');
     }
 
 }
