@@ -830,7 +830,7 @@ class EstudianteController extends Controller
         else return view('estudiantes/operacion_invalida');     
     }
 
-    public function registro($id_hex)
+    public function registro(Request $request, $id_hex)
     {
         $estudiante = Estudiante::where('id_hex', $id_hex)->first();
         if (isset($estudiante))
