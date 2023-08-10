@@ -152,7 +152,8 @@ p {
     </table>
     <table class="center" width="100%" style="border-spacing: 0px 2px;">
         <tr style="padding-bottom:1px">
-            <td width="20%" style="text-align:right;"> Lugar Origen: &nbsp;  </td> <td class="celdagris" width="32%"> &nbsp; <b> {{ $estudiante->localidad_origen->localidad }} </b> </td> <td width="17%" style="text-align:right;"> Lugar Transporte: &nbsp; </td> <td class="celdagris" width="31%"> &nbsp; <b> {{ $estudiante->localidad_actual->localidad }} </b> </td>
+            <td width="20%" style="text-align:right;"> Lugar Origen: &nbsp;  </td> <td class="celdagris" width="80%"> &nbsp; <b> {{ $estudiante->localidad_origen->localidad }} </b> </td> 
+            {{-- <td width="17%" style="text-align:right;"> Lugar Transporte: &nbsp; </td> <td class="celdagris" width="31%"> &nbsp; <b> {{ $estudiante->localidad_actual->localidad }} </b> </td> --}}
         </tr>
     </table>
     <div style="text-align:center;"> <h2> INFORMACIÓN ESCOLAR </h2> </div>

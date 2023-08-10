@@ -161,10 +161,10 @@ p {
             <td width="30%" align="right"><b>Lugar Origen:</b></td>
             <td width="70%">{{ $estudiante->localidad_origen->localidad }}</td>
         </tr>
-        <tr>
+        {{-- <tr>
             <td width="30%" align="right"><b>Lugar Transporte:</b></td>
             <td width="70%">{{ $estudiante->localidad_actual->localidad }}</td>
-        </tr>
+        </tr> --}}
     </table>
     <br>
     <div align="center">
