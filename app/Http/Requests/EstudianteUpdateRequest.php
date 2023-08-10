@@ -32,7 +32,7 @@ class EstudianteUpdateRequest extends FormRequest
             'celular' => ['required', 'digits:10'],
             'email' => ['required', 'max:40'],
             'cve_localidad_origen' => ['required'],
-            'cve_localidad_actual' => ['required'],
+            // 'cve_localidad_actual' => ['required'],
             'cve_ciudad_escuela' => ['required'], 
             'cve_escuela' => ['required'],        
             'cve_turno_escuela' => ['required'],  
@@ -45,7 +45,9 @@ class EstudianteUpdateRequest extends FormRequest
             'identificacion_hidden' => ['required', 'max:17'],
             'kardex_hidden' => ['required', 'max:17'],
             'constancia_hidden' => ['required', 'max:17'],
-            'img_curp' => ['max:2000']
+            // 'img_curp' => ['max:2000']
+            'observaciones_estudiante' => ['max:50'],
+            'observaciones_admin' => ['max:50'],
         ];
     }
 }

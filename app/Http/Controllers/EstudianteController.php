@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Validator;
 
 class EstudianteController extends Controller
 {
-    private $archivoCurp;
+    private $archivoCurp, $cicloR;
 
     private function calcula_ano($ano_2dig)
     {
@@ -843,6 +843,12 @@ class EstudianteController extends Controller
         else return view('estudiantes/operacion_invalida'); 
     }
 
+    public function __construct()
+    {
+        // Código a ejecutar cuando la página se carga por primera vez
+        $this->cicloR[0] = $this->getCiclo();
+    }
+
     public function index(Request $request)
     {
         $status = StatusEstudiante::all();
@@ -850,6 +856,7 @@ class EstudianteController extends Controller
         $ciudades = Ciudad::all();
         $localidades = Localidad::orderBy('localidad')->get();
         $turnos = Turno::all();
+        $ciclos = Ciclo::all();
 
         $searchR = mb_strtoupper(isset($request->search) ? $request->search: "");
         $statusR = $request->selStatus;
@@ -863,14 +870,21 @@ class EstudianteController extends Controller
         $socioeconomicaR = $request->selSocioeconomica;
         $orderBy1R = $request->selOrderBy1;
         $documentacionR = $request->selDocumentacion;
+        $cicloR = isset($request->selCiclo) ? $request->selCiclo : $this->cicloR;
 
         $totEstudiantes = Estudiante::count();
 
         $estudiantes = Estudiante::where(function($query) use($request){
-            // if (isset($request->search))
-            // {
-            //     $query->where('nombre','like',"%{$request->search}%")->orWhere('primer_apellido', 'like',"%{$request->search}%")->orWhere('segundo_apellido', 'like',"%{$request->search}%"); 
-            // }
+            if (isset($request->selCiclo))
+            {
+                $cicloR = $request->selCiclo;
+                $query->whereIn('id_ciclo', $cicloR);
+            }
+            else
+            {
+                $cicloR = $this->cicloR;
+                $query->whereIn('id_ciclo', $cicloR);
+            }
             if (isset($request->selStatus))
             {
                 $statusR = $request->selStatus;
@@ -911,7 +925,6 @@ class EstudianteController extends Controller
             if (isset($request->selDocumentacion))
             {
                 $selDocumentacion = $request->selDocumentacion;
-                //dump($selDocumentacion);
                 if ($selDocumentacion == 1)  $query->where('img_constancia', '!=', "PENDIENTE");
                 elseif ($selDocumentacion == 2)  $query->where('img_constancia', 'PENDIENTE');
             }
@@ -971,9 +984,7 @@ class EstudianteController extends Controller
                 })->whereRaw('datos_socioeconomicos.observaciones IS NOT NULL');
             }
         }
-        // dump($estudiantes->toSql());
-        // dd($estudiantes->get());
-       
+      
         //Obtiene los ids de la consulta para usarlos en el reporte PDF
         $ids_estudiantes = $estudiantes->get('id');
         $ids_reporte = $ids_estudiantes->toArray();
@@ -1022,16 +1033,37 @@ class EstudianteController extends Controller
             }
         }
 
-        //dd($estudiantes->toSql());
         $estudiantes = $estudiantes->paginate(25)->withQueryString();
 
         return view('estudiantes.index', compact(
             'estudiantes', 'totEstudiantes', 'searchR', 'status', 
             'statusR', 'escuelas', 'cve_escuelaR', 'ciudades',
             'cve_ciudadR', 'carreraR', 'localidades', 'cve_localidadOR', 
-            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R', 'documentacionR'));
+            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R', 'documentacionR', 'ciclos', 'cicloR'));
     }
 
+    public function ver_constancia(Request $request)
+    {
+        $nombreArchivo = $request->input('archivo');
+        $rutaArchivo = 'constancias/' . $nombreArchivo;
+        $clave = $request->input('key');
+    
+        // Verificar si la clave es válida
+        if ($clave !== hash('sha256', $nombreArchivo)) {
+            // Clave no válida, devolver una respuesta de error o redireccionar a una página de error
+            abort(403, 'Acceso no autorizado');
+        }
+    
+        if (Storage::exists($rutaArchivo)) {
+            $archivo = Storage::path($rutaArchivo);
+    
+            return response()->file($archivo);
+        } else {
+            // Archivo no encontrado, devolver una respuesta de error o redireccionar a una página de error
+            abort(404, 'Archivo no encontrado');
+        }
+    }
+      
     public function edit($id)
     {
         $estudiante = Estudiante::where('id', $id)->first();
@@ -1039,87 +1071,113 @@ class EstudianteController extends Controller
         $escuelas = Escuela::where('cve_escuela', '!=', '999')->orderBy('escuela_abreviatura', 'ASC')->get();
         $ciudades = Ciudad::all();
         $turnos = Turno::all();
-        return view('estudiantes.edit', compact('estudiante', 'localidades', 'escuelas', 'ciudades', 'turnos'));
+        $status = StatusEstudiante::all();
+        return view('estudiantes.edit', compact('estudiante', 'localidades', 'escuelas', 'ciudades', 'turnos', 'status'));
     }
 
     public function update(EstudianteUpdateRequest $request, $id)
     {
         $estudiante = Estudiante::findorfail($id);
 
-        $rfc = substr($request->curp, 0, 10);
+        $curpCargado = true;
+        $actaCargada = false;
+        $comprobanteCargado = false;
+        $identificacionCargada = false;
+        $kardexCargado = false;
+        $constanciaCargada = false;
 
-        $archivoCurp = $request->curp_hidden;
-        $archivoActa = $request->acta_hidden;
-        $archivoComprobante = $request->comprobante_hidden;
-        $archivoIdentificacion = $request->identificacion_hidden;
-        $archivoKardex = $request->kardex_hidden;
-        $archivoConstancia = $request->constancia_hidden;
+        $archivoConstancia = "PENDIENTE";
 
-        //Sólo se copiarán los archivos únicamente cuando estén cargados en el input
-        if (isset($request->img_curp)) 
-        {
-            $extCurp = $request->img_curp->getClientOriginalExtension();
-            $archivoCurp = 'CU_' . $rfc . '.' . $extCurp;
-            $request->img_curp->move('img/curps', $archivoCurp);
-        }
-        if (isset($request->img_acta_nac)) 
+        if (isset($request->img_acta_nac)) $actaCargada = true;
+        if (isset($request->img_comprobante_dom)) $comprobanteCargado = true;
+        if (isset($request->img_identificacion)) $identificacionCargada = true;
+        if (isset($request->img_kardex)) $kardexCargado = true;
+        if (isset($request->img_constancia)) $constanciaCargada = true;
+        
+        if ($actaCargada) 
         {
             $extActa = strtoupper($request->img_acta_nac->getClientOriginalExtension());
-            $archivoActa = 'AC_' . $rfc . '.' . $extActa;
-            $request->img_acta_nac->move('img/actas', $archivoActa);
-        } 
-        if (isset($request->img_comprobante_dom)) 
+            $newFileName = "AC_" . $estudiante->rfc . '.' . $extActa;
+            Storage::putFileAs('actas', $request->img_acta_nac, $newFileName);
+            $estudiante->img_acta_nac = $newFileName;
+            $archivoActa = $newFileName;
+        }  
+        if ($comprobanteCargado)
         {
             $extComprobante = strtoupper($request->img_comprobante_dom->getClientOriginalExtension());
-            $archivoComprobante = 'CO_' . $rfc . '.' . $extComprobante;
-            $request->img_comprobante_dom->move('img/comprobantes', $archivoComprobante);
+            $newFileName = "CO_" . $estudiante->rfc . '.' . $extComprobante;
+            Storage::putFileAs('comprobantes', $request->img_comprobante_dom, $newFileName);
+            $estudiante->img_comprobante_dom = $newFileName;
+            $archivoComprobante = $newFileName;
         }
-        if (isset($request->img_identificacion)) 
+        if ($identificacionCargada)
         {
             $extIdentificacion = strtoupper($request->img_identificacion->getClientOriginalExtension());
-            $archivoIdentificacion = 'ID_' . $rfc . '.' . $extIdentificacion;
-            $request->img_identificacion->move('img/identificaciones', $archivoIdentificacion);
+            $newFileName = "ID_" . $estudiante->rfc . '.' . $extIdentificacion;
+            Storage::putFileAs('identificaciones', $request->img_identificacion, $newFileName);
+            $estudiante->img_identificacion = $newFileName;
+            $archivoIdentificacion = $newFileName;
         }
-        if (isset($request->img_kardex)) 
+        if ($kardexCargado)
         {
             $extKardex = strtoupper($request->img_kardex->getClientOriginalExtension());
-            $archivoKardex = 'KX_' . $rfc . '.' . $extKardex;
-            $request->img_kardex->move('img/kardex', $archivoKardex);
-        } 
-        if (isset($request->img_constancia)) 
+            $newFileName = "KX_" . $estudiante->rfc . '.' . $extKardex;
+            Storage::putFileAs('kardex', $request->img_kardex, $newFileName);
+            $archivoKardex = $newFileName;
+        }
+        if ($constanciaCargada)
         {
             $extConstancia = strtoupper($request->img_constancia->getClientOriginalExtension());
-            $archivoConstancia = 'CN_' . $rfc . '.' . $extConstancia;
-            $request->img_constancia->move('img/constancias', $archivoConstancia);
-        } 
+            $newFileName = "CN_" . $estudiante->rfc . '.' . $extConstancia;
+            Storage::putFileAs('constancias', $request->img_constancia, $newFileName);
+            $archivoConstancia = $newFileName;
+        }
+
+        $observacionesEstudiante = $request->observaciones_estudiante ?? null;
+        $observacionesAdmin = $request->observaciones_admin ?? null;
+
+        $observacionesEstudiante = strlen($observacionesEstudiante) ? trim(mb_strtoupper($observacionesEstudiante)) : null;
+        $observacionesAdmin = strlen($observacionesAdmin) ? trim(mb_strtoupper($observacionesAdmin)) : null;
+
 
         $estudiante->update([
             'nombre' => trim(mb_strtoupper($request->nombre)),
             'primer_apellido' => trim(mb_strtoupper($request->primer_apellido)),
             'segundo_apellido' => trim(mb_strtoupper($request->segundo_apellido)),
-            'curp' => trim(mb_strtoupper($request->curp)),
-            'rfc' => $rfc,
+            // 'curp' => trim(mb_strtoupper($request->curp)),
+            // 'rfc' => $rfc,
             'fecha_nac' => $request->fecha_nac,
             'celular' => $request->celular,
             'email' => trim(mb_strtolower($request->email)),
             'cve_localidad_origen' => $request->cve_localidad_origen,
-            'cve_localidad_actual' => $request->cve_localidad_actual,
+            'cve_localidad_actual' => 1,
             'cve_ciudad_escuela' => $request->cve_ciudad_escuela,
             'cve_escuela' => $request->cve_escuela,
             'cve_turno_escuela' => $request->cve_turno_escuela,
             'carrera' => trim(mb_strtoupper($request->carrera)),
             'ano_escolar' => $request->ano_escolar,
             'promedio' => $request->promedio,
-            'img_curp' => $archivoCurp,
-            'img_acta_nac' => $archivoActa,
-            'img_comprobante_dom' => $archivoComprobante,
-            'img_identificacion' => $archivoIdentificacion,
-            'img_kardex' => $archivoKardex,
+            // 'img_curp' => $archivoCurp,
+            // 'img_acta_nac' => $archivoActa,
+            // 'img_comprobante_dom' => $archivoComprobante,
+            // 'img_identificacion' => $archivoIdentificacion,
+            // 'img_kardex' => $archivoKardex,
             'img_constancia' => $archivoConstancia,
+            'observaciones_estudiante' => $observacionesEstudiante,
+            'observaciones_admin' => $observacionesAdmin,
+            'cve_status' => $request->cve_status
         ]);
 
-        //return redirect()->back()->with('message', 'Información ACTUALIZADA con éxito!')->with('msg_type', 'success');
         return redirect()->route('estudiantes.index')->with('message', 'Estudiante ACTUALIZADO con éxito!')->with('msg_type', 'success');
+    }
+
+    public function getColorForOption($index) {
+        $colors = ['#f2f2f2', '#ffd700', '#7fffd4', '#8a2be2', '#008000', '#ff4500'];
+        
+        // Asegúrate de que $index esté dentro del rango de colores disponibles
+        $colorIndex = $index % count($colors);
+        
+        return $colors[$colorIndex];
     }
 
     public function edit_status($id)

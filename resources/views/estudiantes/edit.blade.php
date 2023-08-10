@@ -1,5 +1,23 @@
 @extends('layouts.main')
 
+<!-- Ventana modal para mostrar los archivos PDF -->
+<div class="modal fade" id="pdfPreviewModal" tabindex="-1" role="dialog" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfPreviewModalLabel">Vista Preliminar de Archivo PDF</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="pdfContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section('content')
 <?php 
     $nomActa = substr($estudiante->img_acta_nac,0,strlen($estudiante->img_acta_nac)-3);
@@ -22,6 +40,7 @@
     $extConstancia = strtoupper(substr(strrchr($estudiante->img_constancia, "."), 1));
     $archivoConstancia = $nomConstancia . $extConstancia;
 ?>
+
     <div class="container">
         <div class="card-body">
             <div class="row justify-content-center">
@@ -53,7 +72,7 @@
                                 </div>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-primary">
+                                        <div class="card-header text-white bg-rojo">
                                             <b>I. INFORMACIÓN PERSONAL</b>
                                         </div>
                                         <div class="card-body">
@@ -72,7 +91,7 @@
                                              <div class="row mb-3">
                                                 <label for="curp" class="col-md-5 col-form-label text-md-right">{{ __('CURP') }}</label>
                                                 <div class="col-md-6">
-                                                    <input id="curp" type="text" class="form-control @error('curp') is-invalid @enderror" name="curp" value="{{ old('curp', $estudiante->curp) }}"  autocomplete="curp" maxlength="18" required>
+                                                    <input id="curp" type="text" class="form-control @error('curp') is-invalid @enderror" name="curp" value="{{ old('curp', $estudiante->curp) }}"  autocomplete="curp" maxlength="18" required readonly>
                                                     @error('curp')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
@@ -156,7 +175,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="row mb-3">
+                                            {{-- <div class="row mb-3">
                                                 <label for="cve_localidad_actual" class="col-md-5 col-form-label text-md-right">{{ __('Lugar de Transporte') }} </label>
                                                 <div class="col-md-6">
                                                     <select id="cve_localidad_actual" name="cve_localidad_actual" class="form-control" aria-label="Default select example">
@@ -165,14 +184,14 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                            </div>   
+                                            </div>    --}}
                                         </div> 
                                     </div>
                                 </div>
                                 <br>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-primary">
+                                        <div class="card-header text-white bg-rojo">
                                             <b>II. INFORMACIÓN ESCOLAR</b>
                                         </div>
                                         <br>
@@ -272,7 +291,7 @@
                                 <br>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-primary">
+                                        <div class="card-header text-white bg-rojo">
                                             <b>III. DOCUMENTACIÓN </b>
                                         </div>
                                         <br>
@@ -281,7 +300,7 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('CURP') }} </label>
                                             <div class="col-md-6">
                                                <div>
-                                                    <a href="{{ "/img/curps/" . $estudiante->img_curp }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_curp" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                <a href="#" class="pdf-link" data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->img_curp]) }}"><b> Ver PDF </b> </a>
                                                 </div>
                                                 <div id="archivo_curp" style="font-size:13px" required></div>
                                             </div>
@@ -293,7 +312,8 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Acta de Nacimiento') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/actas/" . $archivoActa }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_acta_nac" style="cursor:pointer"  title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="#" class="pdf-link" data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->img_acta_nac]) }}"><b> Ver PDF </b> </a>
+                                                    <a id="sel_archivo_acta_nac" style="cursor:pointer"  title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                 <div id="archivo_acta_nac" style="font-size:13px" required></div>
                                             </div>
@@ -305,7 +325,8 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Comprobante Domicilio') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/comprobantes/" . $archivoComprobante }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_comprobante_dom" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="#" class="pdf-link" data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->img_comprobante_dom]) }}"><b> Ver PDF </b> </a>
+                                                    <a id="sel_archivo_comprobante_dom" style="cursor:pointer" title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                 <div id="archivo_comprobante_dom" style="font-size:13px" required></div> 
                                             </div>
@@ -317,7 +338,8 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Identificación Oficial') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/identificaciones/" . $archivoIdentificacion }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_identificacion" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="#" class="pdf-link" data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->img_identificacion]) }}"><b> Ver PDF </b> </a>
+                                                    <a id="sel_archivo_identificacion" style="cursor:pointer" title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                 <div id="archivo_identificacion" style="font-size:13px" required></div>
                                             </div>
@@ -329,7 +351,8 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Kardex') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/kardex/" . $archivoKardex }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_kardex" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="#" class="pdf-link" data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->img_kardex]) }}"><b> Ver PDF </b> </a>
+                                                    <a id="sel_archivo_kardex" style="cursor:pointer" title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                  <div id="archivo_kardex" style="font-size:13px" required></div>
                                             </div>
@@ -341,7 +364,8 @@
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Constancia de Estudios') }} </label>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <a href="{{ "/img/constancias/" . $archivoConstancia }}" title="Ver PDF" class="btn btn-danger"> <b> PDF </b></a> <a id="sel_archivo_constancia" style="cursor:pointer" title="Cargar" class="btn btn-primary"> <b> <i class="fas fa-upload"></i> </b> </i></a>
+                                                    <a href="#" class="pdf-link" data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->img_constancia]) }}"><b> Ver PDF </b> </a>
+                                                    <a id="sel_archivo_constancia" style="cursor:pointer" title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                  <div id="archivo_constancia" style="font-size:13px" required>
                                                 </div>
@@ -352,9 +376,41 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="row mb-0">
+                                <br>
+                                <div class="card">
+                                    <div class="form-section">
+                                        <div class="card-header text-white bg-rojo">
+                                            <b>IV. ADICIONAL </b>
+                                        </div>
+                                        <br>
+                                        {{-- ********************* OBSERVACIONES Y STATUS ******************** --}}
+                                        <div class="row mb-3">
+                                            <label class="col-md-5 col-form-label text-md-right">{{ __('Observaciones Estudiante') }}</label>
+                                            <div class="col-md-6">
+                                                <textarea class="form-control" id="observaciones_estudiante" name="observaciones_estudiante" rows="2">{{ old('observaciones_estudiante', $estudiante->observaciones_estudiante) }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-md-5 col-form-label text-md-right">{{ __('Observaciones Admin') }}</label>
+                                            <div class="col-md-6">
+                                                <textarea class="form-control" id="observaciones_admin" name="observaciones_admin" rows="2">{{ old('observaciones_admin', $estudiante->observaciones_admin) }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-md-5 col-form-label text-md-right">{{ __('Estatus') }} </label>
+                                            <div class="col-md-5">
+                                                <select id="cve_status" name="cve_status" class="form-control">
+                                                    @foreach ($status as $stat)
+                                                        <option value="{{ $stat->cve_status }}" {{ $stat->cve_status == $estudiante->cve_status? 'selected' : '' }}>{{ $stat->cve_status . ' - ' . $stat->descripcion }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3 mb-0">
                                     <div class="col-md-6 offset-md-4">
-                                        <button type="submit" class="btn btn-info">
+                                        <button type="submit" class="btn btn-verde">
                                             {{ __('Actualizar') }}
                                         </button>
                                     </div>
@@ -365,5 +421,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>   
 @endsection

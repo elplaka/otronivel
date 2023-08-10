@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApoyoController;
 use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EstudiantesMailable;
@@ -85,6 +86,8 @@ Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudi
 
 Route::get('/estudiantes/existente/{id_hex}', [EstudianteController::class, 'existente'])->name('estudiantes.existente');
 
+Route::get('/estudiantes/ver_constancia', [EstudianteController::class, 'ver_constancia'])->name('estudiantes.ver-constancia');
+
 // Route::get('/estudiantes/mail_folio/', function(){
 //     //$estudiantes = Estudiante::all();
 
@@ -108,8 +111,11 @@ Route::get('/estudiantes/existente/{id_hex}', [EstudianteController::class, 'exi
 //     return redirect()->route('estudiantes.folios_enviados', $folios);
 // })->name('estudiantes.mail_folio');
 
-Route::get('/estudiantes/index', [EstudianteController::class, 'index'])->name('estudiantes.index');
-Route::get('/estudiantes/edit/{id}', [EstudianteController::class, 'edit'])->name('estudiantes.edit')->middleware('admin.user');
+Route::middleware(['auth'])->get('/estudiantes/index', [EstudianteController::class, 'index'])->name('estudiantes.index');
+Route::middleware(['auth'])->get('/pdf/{filename}', [PdfController::class, 'show'])->name('pdf.show');
+
+
+Route::middleware(['auth'])->get('/estudiantes/edit/{id}', [EstudianteController::class, 'edit'])->name('estudiantes.edit')->middleware('admin.user');
 Route::post('/estudiantes/update/{id}', [EstudianteController::class, 'update'])->name('estudiantes.update')->middleware('editor.user');
 Route::get('/estudiantes/edit_status/{id}', [EstudianteController::class, 'edit_status'])->name('estudiantes.edit_status')->middleware('editor.user');
 Route::post('/estudiantes/update_status/{id}', [EstudianteController::class, 'update_status'])->name('estudiantes.update_status')->middleware('editor.user');

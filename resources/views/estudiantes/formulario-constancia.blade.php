@@ -168,14 +168,14 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="row justify-content-center mb-2">
-                        <img src="{{url('/img/Logo_y_Escudo.jpg')}}" style="width:70%" />;
-                </div>
+                        <img src="{{url('/img/Logo_y_Escudo.jpg')}}" style="width:70%" />
+                    </div>
                     <div class="card">
                         <div class="card-body">
                             <form class="contact-form" method="POST" action="{{ route('estudiantes.formulario_constancia.post') }}" enctype="multipart/form-data" novalidate>
                                 @csrf
                                 <div class="row justify-content-center mb-1">
-                                    <img src="{{url('/img/alivianate.jpg')}}" style="width:45%" />;
+                                    <img src="{{url('/img/alivianate.jpg')}}" style="width:45%" />
                                 </div>
                                 <br>
                                 <div class="row justify-content-center mb-1">
@@ -187,25 +187,24 @@
                                     </div>
                                     <table class="table-striped table-sm">
                                         <tbody>
-                                                <tr>
-                                                    <td style="text-align:right">Nombre: </td>
-                                                    <td><b>{{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} </b></td>
-                                                </tr> 
-                                                <tr>
-                                                    <td style="text-align:right">Escuela:</td>
-                                                    <td><b>{{ $estudiante->escuela->escuela }} </b></td>
-                                                </tr> 
-                                                <tr>
-                                                    <td style="text-align:right">Carrera:</td>
-                                                    <td><b>{{ $estudiante->carrera }} </b></td>
-                                                </tr> 
-                                                <tr>
-                                                    <td style="text-align:right">Ciudad Escuela:</td>
-                                                    <td><b>{{ $estudiante->ciudad->ciudad }} </b></td>
-                                                </tr> 
-                                                
+                                            <tr>
+                                                <td style="text-align:right">Nombre: </td>
+                                                <td><b>{{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} </b></td>
+                                            </tr> 
+                                            <tr>
+                                                <td style="text-align:right">Escuela:</td>
+                                                <td><b>{{ $estudiante->escuela->escuela }} </b></td>
+                                            </tr> 
+                                            <tr>
+                                                <td style="text-align:right">Carrera:</td>
+                                                <td><b>{{ $estudiante->carrera }} </b></td>
+                                            </tr> 
+                                            <tr>
+                                                <td style="text-align:right">Ciudad Escuela:</td>
+                                                <td><b>{{ $estudiante->ciudad->ciudad }} </b></td>
+                                            </tr> 
                                         </tbody>
-                                  </table>
+                                    </table>
                                 </div>
                                 <br>
                                 <div class="card">
@@ -235,17 +234,8 @@
                                                         <li>{{ $error }}</li>
                                                     @endforeach
                                                 </ul>
-                                             </div>
-                                             @endif
-                                            {{-- <div class="row mb-3">
-                                                <label class="col-md-6 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> Del Ciclo Escolar 2022-2023 en formato PDF que no pese más de 2MB"><img src="{{ url('/img/help.jpg')}}" style="width:12px;cursor:pointer;"></a></label>
-                                                <div class="col-md-5">
-                                                    <a id="sel_archivo_constancia" style="cursor:pointer" title="Cargar" class="btn btn-dorado"> Selecciona archivo<small><1M</small> <b> <i class="fas fa-upload"></i> </b> </i></a>
-                                                    <div id="archivo_constancia" style="font-size:13px">{{$estudiante->img_constancia ?? 'Sin archivo seleccionado' }}</div>
-                                                </div>
-                                                <input class='file' type="file" style="display: none" class="form-control" name="img_constancia" id="img_constancia" accept="application/pdf" required>
                                             </div>
-                                            <input id="constancia_hidden" name="constancia_hidden" type="hidden" value="{{ $estudiante->img_constancia ?? '#constancia#' }}"> --}}
+                                            @endif
                                             <div class="row mb-1">
                                                 <label class="col-md-5 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> Del Ciclo Escolar 2023-2024 en formato PDF que no pese más de 1MB"><img src="/img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
@@ -254,18 +244,25 @@
                                                         {{$estudiante->img_constancia ?? 'Sin archivo seleccionado' }}
                                                     </div>
                                                 </div>
-                                                <div id="vistaPreviaLink" name="vistaPreviaLink">
+                                                <div class="col-md-2" id="vistaPreviaLink" name="vistaPreviaLink">
                                                     <a href="#" onclick="mostrarVistaPrevia()" data-toggle="tooltip" title="Vista preliminar" style="display: inline-block; line-height: 32px; vertical-align: middle;">
                                                         <b><i class="fa-solid fa-file-pdf text-rojo" style="font-size: 24px;"></i></b>
                                                     </a>
                                                 </div>
-                                                <input class="file" type="file" style="display: none" class="form-control" name="img_constancia" id="img_constancia"  accept=".pdf, .PDF" onchange="mostrarVistaPreviaPDF(this)">
+                                                <div class="col-md-2" id="vistaPreviaPDF" name="vistaPreviaPDF">
+                                                    <a href="{{ route('estudiantes.ver-constancia', ['archivo' => $estudiante->img_constancia, 'key' => hash('sha256', $estudiante->img_constancia)]) }}" target="_blank" data-toggle="tooltip" title="Vista preliminar" style="display: inline-block; line-height: 32px; vertical-align: middle;">
+                                                        <b><i class="fa-solid fa-file-pdf text-rojo" style="font-size: 24px;"></i></b> 
+                                                    </a>
+                                                </div>
                                             </div>
-
-                                            <div class="row mb-1 justify-content-center">
-                                                 <button type="submit" id="btnSiguiente" name="btnSiguiente" class="btn btn-verde mt-2">Guardar</button>
+    
+                                            <input class="file" type="file" style="display: none" class="form-control" name="img_constancia" id="img_constancia"  accept=".pdf, .PDF" onchange="mostrarVistaPreviaPDF(this)">
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <button type="submit" id="btnSiguiente" name="btnSiguiente" class="btn btn-verde mt-2">Guardar</button>
                                             </div>
-                                        </div> 
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -275,6 +272,7 @@
             </div>
         </div>
     </div>
+    
     <script src="{{ asset('js/jquery.js') }}"></script>
 
     <!-- Bootstrap core JavaScript-->
@@ -298,8 +296,29 @@
             }
         }
 
+        function ocultarVistaPreviaLinkInicio(){
+            var archivo = document.getElementById("archivo_constancia");
+            var nombreArchivo = archivo.innerText;
+            var vistaPreviaPDF = document.getElementById("vistaPreviaPDF");
+
+            if (nombreArchivo.length >= 4) {
+                var extension = nombreArchivo.substring(nombreArchivo.length - 4).toUpperCase();
+            }
+
+            if (extension == '.PDF')
+            {
+                vistaPreviaPDF.style.display = "inline-block";
+            }
+            else
+            {
+                vistaPreviaPDF.style.display = "none";
+            }
+
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
-    ocultarVistaPreviaLink();
+            ocultarVistaPreviaLink();
+            ocultarVistaPreviaLinkInicio();
   });
         
         // Función para mostrar la vista previa del PDF en la ventana modal
@@ -320,9 +339,6 @@
                   canvas.width = viewport.width;
                   canvas.height = viewport.height;
       
-                  //page.render({ canvasContext: context, viewport: viewport });
-
-                   // Cancelar la operación anterior antes de renderizar una nueva vista previa
                 if (renderTask) {
                     renderTask.cancel();
                 }

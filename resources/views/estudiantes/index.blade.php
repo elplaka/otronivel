@@ -99,6 +99,68 @@
             });
         });    
     </script>
+
+    <style>
+    .bg-rojo {
+           background-color: #892641; /* Color rojo en formato hexadecimal */
+       }
+
+   .btn-verde {
+     background-color: #3d5b4f;
+     color: white;
+   }
+ 
+   .btn-verde:hover {
+     background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+     color: white;
+   }
+
+   .btn-verde:active {
+        background-color: #5ca265; /* Cambia el color aquí al deseado cuando el botón está activado (clic) */
+        color: white;
+    }
+
+   .btn-dorado {
+      background-color: #b2945e;
+      color: white;
+    }
+  
+    .btn-dorado:hover {
+      background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      color: white;
+    }
+
+    .btn-rojo {
+      background-color: #932f4a;
+      color: white;
+    }
+  
+    .btn-rojo:hover {
+      background-color: #5c2134; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      color: white;
+    }
+
+    .text-rojo {
+            color: #932f4a;
+        }
+
+        .text-rojo:hover {
+            color: #5c2134;
+        }
+    </style>
+
+<style>
+    .custom-pagination .pagination .page-item.active .page-link {
+        background-color: #8B0000; /* Color guinda (maroon) para el paginador activo */
+        color: white; /* Cambiar el color del texto a blanco para el paginador activo */
+        /* Ajusta otros estilos según tus preferencias */
+    }
+
+    .custom-pagination .pagination li a {
+        color: #767676; /* Cambia el color del texto a blanco */
+    }
+</style>
+
     {{-- ***********************************  Ventana MODAL  ************************************************* --}}
     <div class="modal fade" id="exampleModal" name="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -141,14 +203,20 @@
             <div class="card-header mt-0">
                 <div class="row mb-0">
                     <div class="col">
-                        
-                        <div class="d-sm-flex align-items-center justify-content-between mb-0">
-                            <h1 class="h3 mt-2 mb-0 text-gray-800"><b>
-                            Estudiantes</b></h1>@if ($usertype <= 1) <a href="{{ route("estudiantes.forget") }}" class="btn btn-success" title="Registrar estudiante"> <b> + </b> </a> @endif
+                        <div class="col d-flex align-items-center justify-content-between">
+                            <h1 class="h3 mt-2 mb-0 text-gray-800">
+                                <b>Estudiantes</b>
+                            </h1>
+                            @if ($usertype <= 1)
+                            <div class="d-flex align-items-center">
+                                <a href="{{ route('estudiantes.forget') }}" class="btn btn-verde ml-2" title="Registrar estudiante">
+                                    <b> + </b>
+                                </a>
+                            </div>
+                            @endif
                         </div>
-                        
                         <div class="card mt-3">
-                            <div class="card-header bg-info" style="color:#ffffff;padding:2px;font-size:15px">
+                            <div class="card-header bg-rojo" style="color:#ffffff;padding:2px;font-size:15px">
                                &nbsp; <i class="fas fa-search"></i> &nbsp; Parámetros de Búsqueda  &nbsp; <a data-toggle="collapse" href="#collapseExample" aria-controls="collapseExample" style="color:#ffffff"><i class="fas fa-angle-double-down"></i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fas fa-database"></i> &nbsp; Total de estudiantes registrados: <b> {{ $totEstudiantes }} </b> 
                             </div>
                             <div class="collapse" id="collapseExample">
@@ -290,10 +358,7 @@
                                             </div>
                                         </div>
                                         <div class="row mb-0">
-                                            <div class="col-md-1">
-                                                <button type="submit" class="btn btn-info btn-sm"> Buscar </button>
-                                            </div>
-                                            <div class="col-md-3 text-md-right" style="font-size:13px">
+                                            <div class="col-md-2 text-md-right" style="font-size:13px">
                                                 <label class="col-form-label" style="font-size:13px"> <b> &nbsp; Documentación </b> </label>
                                             </div>
                                             <div class="col-md-2" style="font-size:13px">
@@ -305,7 +370,19 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 text-md-right" style="font-size:13px">
+                                            <div class="col-md-1 text-md-right" style="font-size:13px">
+                                                <label class="col-form-label" style="font-size:13px"> <b> &nbsp; Ciclo </b> </label>
+                                            </div>
+                                            <div class="col-md-3" style="font-size:13px">
+                                                <div class="search_select_box">
+                                                    <select name="selCiclo[]" id="selCiclo" data-style="btn-selectpicker" title="-- TODOS --" class="form-control selectpicker w-50" data-style-base="form-control" autofocus multiple>
+                                                        @foreach ($ciclos as $ciclo)
+                                                            <option value="{{ $ciclo->id_ciclo }}" @if(in_array($ciclo->id_ciclo, $cicloR)) selected @endif>{{ $ciclo->descripcion }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 text-md-right" style="font-size:13px">
                                                 <label class="col-form-label" style="font-size:13px"> <i class="fas fa-sort"></i> <b> &nbsp; Ordenar por <i class="fas fa-angle-double-right"></i> </b> </label>
                                             </div>
                                             <div class="col-md-2" style="font-size:13px">
@@ -323,6 +400,11 @@
                                                         <option value=8 {{ $orderBy1R == 8 ? 'selected' : '' }}> LUGAR ORIGEN </option>
                                                     </select>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0 mt-3 justify-content-end"> {{-- Alineación a la derecha --}}
+                                            <div class="col-md-1">
+                                                <button type="submit" class="btn btn-verde btn-sm">Buscar</button>
                                             </div>
                                         </div>
                                     </form>
@@ -391,14 +473,14 @@
                                     <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
                                     <td style="vertical-align:middle">
                                         @if ($usertype <= 1)
-                                        <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-success btn-sm"><i class="fas fa-user-edit"></i></a>
-                                        <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-danger btn-sm"><i class="fas fa-flag"></i></a>
+                                        <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-verde btn-sm"><i class="fas fa-user-edit"></i></a>
+                                        <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-rojo btn-sm"><i class="fas fa-flag"></i></a>
                                         @endif
                                         @if ($estudiante->cve_status >= 2 && $usertype <=1)
-                                        <a href="{{ route('estudiantes.edit_se', $estudiante->id) }}" title="Censar" class="btn btn-primary btn-sm"><i class="fas fa-street-view"></i></a>
+                                        <a href="{{ route('estudiantes.edit_se', $estudiante->id) }}" title="Censar" class="btn btn-dorado btn-sm"><i class="fas fa-street-view"></i></a>
                                         @endif
                                         @if ($usertype <=3)
-                                        <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" title="Imprimir" class="btn btn-info btn-sm"><i class="fas fa-print"></i></a>
+                                        <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" title="Imprimir" class="btn btn-danger btn-sm"><i class="fas fa-print"></i></a>
                                         @endif
                                         <a href="{{ route('estudiantes.download-zip', $estudiante->id) }}" title="Descargar Documentación" class="btn btn-dark btn-sm"><i class="fas fa-download"></i></a>
                                     {{-- <a href="{{ route('estudiantes.boletos', $estudiante->id) }}" title="Boletos" class="btn btn-secondary btn-sm"><i class="fa-solid fa-ticket"></i></i></a> --}}
@@ -411,8 +493,8 @@
                     </table>
                 </div>
                 <div class="col-mx">
-                    <label class="col-form-label float-left">
-                        {{ $estudiantes->links('pagination::bootstrap-5') }} 
+                    <label class="col-form-label float-left custom-pagination">
+                        {{ $estudiantes->links('pagination::bootstrap-5') }}
                     </label>
                     <form method="GET" id="formReport" action="{{ route('estudiantes.pdf') }}">
                         <input id="tituloReporte" name="tituloReporte" type="hidden"  value="" class="form-control">

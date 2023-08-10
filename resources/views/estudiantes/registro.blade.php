@@ -188,9 +188,9 @@ p {
             <td class="text-center">
                 <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" class="next btn btn-rojo mt-2"><i class="fa-solid fa-download"></i> <b> Hoja de Registro </b></a> 
             </td>
-            {{-- <td class="text-center">
+            <td class="text-center">
                 <a href="{{ route('estudiantes.formulario_constancia', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-verde btn-md"> <b> <i class="fa-solid fa-upload"></i> Subir CONSTANCIA </b> </a>
-            </td> --}}
+            </td>
         </tr>
     </table>  
     <br>

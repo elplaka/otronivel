@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" /> --}}
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script> --}}
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 
 
     <!-- Custom styles for this template-->
@@ -143,6 +145,56 @@
         outline: 0px none #fff !important;
     }
 </style>
+
+<style>
+    .bg-rojo {
+           background-color: #892641; /* Color rojo en formato hexadecimal */
+       }
+
+   .btn-verde {
+     background-color: #3d5b4f;
+     color: white;
+   }
+ 
+   .btn-verde:hover {
+     background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+     color: white;
+   }
+
+   .btn-verde:active {
+        background-color: #5ca265; /* Cambia el color aquí al deseado cuando el botón está activado (clic) */
+        color: white;
+    }
+
+   .btn-dorado {
+      background-color: #b2945e;
+      color: white;
+    }
+  
+    .btn-dorado:hover {
+      background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      color: white;
+    }
+
+    .btn-rojo {
+      background-color: #932f4a;
+      color: white;
+    }
+  
+    .btn-rojo:hover {
+      background-color: #5c2134; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      color: white;
+    }
+
+    .text-rojo {
+            color: #932f4a;
+        }
+
+        .text-rojo:hover {
+            color: #5c2134;
+        }
+    </style>
+
 
 <body id="page-top">
 
@@ -396,6 +448,49 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"> </script>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"> </script> --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
+    <!-- JavaScript para cargar y mostrar el archivo PDF con PDF.js -->
+    <script>
+        $(document).ready(function () {
+            $('a.pdf-link').on('click', function () {
+                var pdfUrl = $(this).attr('data-pdf-url');
+                
+                pdfjsLib.getDocument(pdfUrl).promise.then(function (pdfDoc_) {
+                    var pdfDoc = pdfDoc_;
+                    var numPages = pdfDoc.numPages;
+    
+                    var container = document.getElementById('pdfContainer');
+                    container.innerHTML = '';
+    
+                    for (var pageNum = 1; pageNum <= numPages; pageNum++) {
+                        pdfDoc.getPage(pageNum).then(function (page) {
+                            var canvas = document.createElement('canvas');
+                            var context = canvas.getContext('2d');
+    
+                            // Ajustar la escala para que el PDF se adapte al ancho de la ventana modal
+                            var viewport = page.getViewport({ scale: container.clientWidth / page.getViewport({ scale: 1 }).width });
+    
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+    
+                            var renderContext = {
+                                canvasContext: context,
+                                viewport: viewport
+                            };
+    
+                            page.render(renderContext).promise.then(function () {
+                                container.appendChild(canvas);
+                            });
+                        });
+                    }
+                });
+    
+                $('#pdfPreviewModal').modal('show');
+            });
+        });
+    </script>
+    
 </body>
 
 </html>

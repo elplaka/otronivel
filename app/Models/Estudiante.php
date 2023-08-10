@@ -40,7 +40,9 @@ class Estudiante extends Model
         'img_kardex',
         'img_constancia',
         'cve_status',
-        'id_hex'
+        'id_hex',
+        'observaciones_estudiante',
+        'observaciones_admin'
     ];  
 
 
