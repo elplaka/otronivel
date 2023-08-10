@@ -451,7 +451,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 
     <!-- JavaScript para cargar y mostrar el archivo PDF con PDF.js -->
-    <script>
+    {{-- <script>
         $(document).ready(function () {
             $('a.pdf-link').on('click', function () {
                 var pdfUrl = $(this).attr('data-pdf-url');
@@ -489,7 +489,47 @@
                 $('#pdfPreviewModal').modal('show');
             });
         });
+    </script> --}}
+
+    <script>
+        $(document).ready(function () {
+            $('a.pdf-link').on('click', function () {
+                event.preventDefault();
+                var pdfUrl = $(this).attr('data-pdf-url');
+                var pdfPreviewModal = new bootstrap.Modal(document.getElementById('pdfPreviewModal'));
+    
+                pdfjsLib.getDocument(pdfUrl).promise.then(function (pdfDoc_) {
+                    var pdfDoc = pdfDoc_;
+                    var pageNum = 1; // Mostrar la primera página
+    
+                    pdfDoc.getPage(pageNum).then(function (page) {
+                        var canvas = document.createElement('canvas');
+                        var context = canvas.getContext('2d');
+    
+                        var viewport = page.getViewport({ scale: 1 });
+    
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+    
+                        var renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+    
+                        page.render(renderContext).promise.then(function () {
+                            var container = document.getElementById('pdfContainer');
+                            container.innerHTML = ''; // Limpia el contenedor
+    
+                            container.appendChild(canvas); // Agrega el canvas al contenedor
+    
+                            pdfPreviewModal.show(); // Abre la ventana modal
+                        });
+                    });
+                });
+            });
+        });
     </script>
+    
     
 </body>
 
