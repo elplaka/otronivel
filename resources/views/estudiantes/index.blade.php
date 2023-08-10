@@ -217,7 +217,13 @@
                         </div>
                         <div class="card mt-3">
                             <div class="card-header bg-rojo" style="color:#ffffff;padding:2px;font-size:15px">
-                               &nbsp; <i class="fas fa-search"></i> &nbsp; Parámetros de Búsqueda  &nbsp; <a data-toggle="collapse" href="#collapseExample" aria-controls="collapseExample" style="color:#ffffff"><i class="fas fa-angle-double-down"></i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i class="fas fa-database"></i> &nbsp; Total de estudiantes registrados: <b> {{ $totEstudiantes }} </b> 
+                               &nbsp; <i class="fas fa-search"></i> &nbsp; Parámetros de Búsqueda  &nbsp; <a data-toggle="collapse" href="#collapseExample" aria-controls="collapseExample" style="color:#ffffff"><i class="fas fa-angle-double-down"></i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+                               <i class="fas fa-database"></i> &nbsp; Total de estudiantes registrados:
+                                <b>
+                                    @foreach ($totEstudiantes as $ciclo => $total)
+                                        [ {{ $total }} ]
+                                    @endforeach
+                                </b>
                             </div>
                             <div class="collapse" id="collapseExample">
                                 <div class="card-body" style="padding-top:5px">    

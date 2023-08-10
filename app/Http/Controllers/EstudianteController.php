@@ -851,6 +851,8 @@ class EstudianteController extends Controller
 
     public function index(Request $request)
     {
+        session(['busqueda_params' => $request->all()]);
+
         $status = StatusEstudiante::all();
         $escuelas = Escuela::where('cve_escuela', '!=', 999)->orderBy('escuela_abreviatura')->get();
         $ciudades = Ciudad::all();
@@ -872,7 +874,12 @@ class EstudianteController extends Controller
         $documentacionR = $request->selDocumentacion;
         $cicloR = isset($request->selCiclo) ? $request->selCiclo : $this->cicloR;
 
-        $totEstudiantes = Estudiante::count();
+        $totEstudiantes = Estudiante::select('id_ciclo', \DB::raw('count(*) as total_estudiantes'))
+            ->whereIn('id_ciclo', $cicloR)
+            ->groupBy('id_ciclo')
+            ->get()
+            ->pluck('total_estudiantes', 'id_ciclo')
+            ->toArray();
 
         $estudiantes = Estudiante::where(function($query) use($request){
             if (isset($request->selCiclo))
@@ -1168,7 +1175,15 @@ class EstudianteController extends Controller
             'cve_status' => $request->cve_status
         ]);
 
-        return redirect()->route('estudiantes.index')->with('message', 'Estudiante ACTUALIZADO con éxito!')->with('msg_type', 'success');
+        // return redirect()->route('estudiantes.index')->with('message', 'Estudiante ACTUALIZADO con éxito!')->with('msg_type', 'success');
+
+        $busquedaParams = session('busqueda_params', []);
+
+        // Redirige de vuelta a la página de lista con los parámetros de búsqueda
+        return redirect()->route('estudiantes.index', $busquedaParams)
+            ->with('message', 'Estudiante ACTUALIZADO con éxito!')
+            ->with('msg_type', 'success');
+
     }
 
     public function getColorForOption($index) {
