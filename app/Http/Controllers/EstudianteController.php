@@ -200,7 +200,9 @@ class EstudianteController extends Controller
         else 
         {
             $fileCurp = false;
-            $extCurp = strtoupper(substr(strrchr($request->curp_hidden, "."), 1));
+            if ($request->curp_hidden) {
+                $extCurp = strtoupper(substr(strrchr($request->curp_hidden, "."), 1));
+            }
         }
 
         if (!$fileCurp)
@@ -425,7 +427,9 @@ class EstudianteController extends Controller
         ]);
 
         $validatedData = $request->except('empleo');  //Se exceptúa EMPLEO porque se va a cambiar a mayúsculas después
-        $empleo = trim(mb_strtoupper($request->empleo));
+        // $empleo = trim(mb_strtoupper($request->empleo));
+        $empleo = $request->empleo ? trim(mb_strtoupper($request->empleo)) : null;
+
         
         if(empty($request->session()->get('socioeconomico')))
         {
@@ -597,6 +601,18 @@ class EstudianteController extends Controller
         {
             return redirect()->back()->with('message', $message);
         }
+        
+        $ciclo = $request->session()->get('ciclo');
+
+        $estudianteCurp = Estudiante::where('id_ciclo', $ciclo)
+                              ->where('curp', $estudiante->curp)
+                              ->first();
+
+        if ($estudianteCurp)  //Valida que ya no se inserte dos veces un estudiante
+        {
+            $request->session()->put('existente', true);
+            return redirect()->route('estudiantes.existente', $estudianteCurp->id_hex);
+        } 
 
         //Sólo se copiarán los archivos únicamente cuando estén cargados en el input
         if ($actaCargada) 
@@ -643,8 +659,7 @@ class EstudianteController extends Controller
             $request->session()->put('estudiante', $estudiante);
             $estudiante = $request->session()->get('estudiante');
             $socioeconomico = $request->session()->get('socioeconomico');
-            $ciclo = $request->session()->get('ciclo');
-    
+                
             // Crear una nueva instancia del modelo Estudiante
             $estudianteBD = new Estudiante;
     

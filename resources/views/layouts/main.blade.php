@@ -497,6 +497,17 @@
                 event.preventDefault();
                 var pdfUrl = $(this).attr('data-pdf-url');
                 var pdfPreviewModal = new bootstrap.Modal(document.getElementById('pdfPreviewModal'));
+
+                var parts = pdfUrl.split("/");
+                var lastPart = parts[parts.length - 1];
+                var prefix = lastPart.split("_")[0];
+
+                if(prefix == 'CU') $('#pdfProcessingMessageCurp').show();
+                else if(prefix == 'AC') $('#pdfProcessingMessageActa').show();
+                else if(prefix == 'CO') $('#pdfProcessingMessageComprobante').show();
+                else if(prefix == 'ID') $('#pdfProcessingMessageIdentificacion').show();
+                else if(prefix == 'KX') $('#pdfProcessingMessageKardex').show();
+                else if(prefix == 'CN') $('#pdfProcessingMessageConstancia').show();
     
                 pdfjsLib.getDocument(pdfUrl).promise.then(function (pdfDoc_) {
                     var pdfDoc = pdfDoc_;
@@ -521,6 +532,13 @@
                             container.innerHTML = ''; // Limpia el contenedor
     
                             container.appendChild(canvas); // Agrega el canvas al contenedor
+
+                            if(prefix == 'CU') $('#pdfProcessingMessageCurp').hide();
+                            else if(prefix == 'AC') $('#pdfProcessingMessageActa').hide();
+                            else if(prefix == 'CO') $('#pdfProcessingMessageComprobante').hide();
+                            else if(prefix == 'ID') $('#pdfProcessingMessageIdentificacion').hide();
+                            else if(prefix == 'KX') $('#pdfProcessingMessageKardex').hide();
+                            else if(prefix == 'CN') $('#pdfProcessingMessageConstancia').hide();
     
                             pdfPreviewModal.show(); // Abre la ventana modal
                         });

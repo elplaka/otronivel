@@ -13,3 +13,7 @@ yarn-error.log
 /.idea
 /.vscode
 /public/img
+laravel.log
+laravel2.log
+laravel3.log
+laravel4.log

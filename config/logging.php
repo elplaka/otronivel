@@ -30,9 +30,15 @@ return [
     |
     */
 
+    // 'deprecations' => [
+    //     'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
+    //     'trace' => false,
+    // ],
     'deprecations' => [
-        'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
-        'trace' => false,
+        'driver' => 'daily', // Puedes ajustar el driver según tu preferencia
+        'path' => storage_path('logs/deprecations.log'), // Ruta del archivo de registro
+        'level' => 'warning', // Nivel de registro para las advertencias
+        'days' => 14, // Número de días para retener los registros
     ],
 
     /*

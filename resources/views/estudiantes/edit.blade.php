@@ -153,6 +153,7 @@
                                                         </span>
                                                     @enderror
                                                 </div>
+                                                <a href="javascript:void(0);" onclick="openWhatsApp({{ $estudiante->celular }})" style="color: inherit; text-decoration: none;"><i class="fab fa-whatsapp"></i></a>
                                             </div>
                                             <div class="row mb-3">
                                                 <label for="email" class="col-md-5 col-form-label text-md-right">{{ __('E-mail') }} </label>
@@ -303,10 +304,15 @@
                                                 <a href="#" class="pdf-link" data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->img_curp]) }}"><b> Ver PDF </b> </a>
                                                 </div>
                                                 <div id="archivo_curp" style="font-size:13px" required></div>
+                                                <div id="pdfProcessingMessageCurp" style="display: none; font-size:12px; color:red">
+                                                    Abriendo archivo PDF...
+                                                </div>
                                             </div>
                                             <input class='file' type="file" style="display: none " class="form-control" name="img_curp" id="img_curp" accept=".pdf,.PDF" required>
+
                                         </div>
                                         <input id="curp_hidden" name="curp_hidden" type="hidden" value="{{ $estudiante->img_curp ?? '#curp#' }}">
+
                                         {{-- ********************* ACTA ******************** --}}
                                         <div class="row mb-3">
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Acta de Nacimiento') }} </label>
@@ -316,6 +322,9 @@
                                                     <a id="sel_archivo_acta_nac" style="cursor:pointer"  title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                 <div id="archivo_acta_nac" style="font-size:13px" required></div>
+                                                <div id="pdfProcessingMessageActa" style="display: none; font-size:12px; color:red">
+                                                    Abriendo archivo PDF...
+                                                </div>
                                             </div>
                                             <input class='file' type="file" style="display: none " class="form-control" name="img_acta_nac" id="img_acta_nac" accept=".pdf,.PDF" required>
                                         </div>
@@ -328,7 +337,10 @@
                                                     <a href="#" class="pdf-link" data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->img_comprobante_dom]) }}"><b> Ver PDF </b> </a>
                                                     <a id="sel_archivo_comprobante_dom" style="cursor:pointer" title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
-                                                <div id="archivo_comprobante_dom" style="font-size:13px" required></div> 
+                                                <div id="archivo_comprobante_dom" style="font-size:13px" required></div>
+                                                <div id="pdfProcessingMessageComprobante" style="display: none; font-size:12px; color:red">
+                                                    Abriendo archivo PDF...
+                                                </div>
                                             </div>
                                             <input class='file' type="file" style="display:none " class="form-control" name="img_comprobante_dom" id="img_comprobante_dom" accept=".pdf,.PDF" required>
                                         </div>
@@ -342,6 +354,9 @@
                                                     <a id="sel_archivo_identificacion" style="cursor:pointer" title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                 <div id="archivo_identificacion" style="font-size:13px" required></div>
+                                                <div id="pdfProcessingMessageIdentificacion" style="display: none; font-size:12px; color:red">
+                                                    Abriendo archivo PDF...
+                                                </div>
                                             </div>
                                             <input class='file' type="file" style="display:none " class="form-control" name="img_identificacion" id="img_identificacion" accept=".pdf,.PDF" required>
                                         </div>
@@ -355,6 +370,9 @@
                                                     <a id="sel_archivo_kardex" style="cursor:pointer" title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                  <div id="archivo_kardex" style="font-size:13px" required></div>
+                                                 <div id="pdfProcessingMessageKardex" style="display: none; font-size:12px; color:red">
+                                                    Abriendo archivo PDF...
+                                                </div>
                                             </div>
                                             <input class='file' type="file" style="display:none " class="form-control" name="img_kardex" id="img_kardex" accept=".pdf,.PDF" required>
                                         </div>
@@ -368,6 +386,9 @@
                                                     <a id="sel_archivo_constancia" style="cursor:pointer" title="Cargar" class="btn btn-dorado btn-sm"> <b> <i class="fas fa-upload"></i> </b> </i></a>
                                                 </div>
                                                  <div id="archivo_constancia" style="font-size:13px" required>
+                                                </div>
+                                                <div id="pdfProcessingMessageConstancia" style="display: none; font-size:12px; color:red">
+                                                    Abriendo archivo PDF...
                                                 </div>
                                             </div>
                                             <input class='file' type="file" style="display:none " class="form-control" name="img_constancia" id="img_constancia" accept=".pdf, .PDF" required>
@@ -423,3 +444,12 @@
         </div>
     </div>   
 @endsection
+
+<script>
+    function openWhatsApp(phoneNumber) {
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
+
+        window.open(url + phoneNumber, "_blank");
+    }
+</script>

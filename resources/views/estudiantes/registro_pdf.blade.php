@@ -24,9 +24,11 @@
     $data = file_get_contents($path);
     $footer = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
-    // $qrcode = base64_encode(QrCode::format('svg')->size(50)->errorCorrection('H')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
-    // $qrcode = QrCode::format('svg')->size(185)->errorCorrection('H')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex);
     $qrcode = base64_encode(QrCode::format('png')->size(300)->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
+
+
+
+
 ?>
 
 <style>
