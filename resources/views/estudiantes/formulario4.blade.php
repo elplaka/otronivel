@@ -248,14 +248,20 @@ function showDiv(divId, element) {
                                                 <?php
                                                     $empleo = isset($socioeconomico->empleo) ? $socioeconomico->empleo : null;
                                                 ?>
-                                                <div class="col-md-3">
+                                                {{-- <div class="col-md-3">
                                                     <select id="select_empleo" class="form-control" required>
                                                         <option value="" {{ $empleo === null ? 'selected' : '' }}>--</option>
                                                         <option value="1" {{ $empleo !== null && strlen(trim($empleo)) > 0 ? 'selected' : '' }}>SÍ</option>
                                                         <option value="0" {{ $empleo !== null && strlen(trim($empleo)) === 0 ? 'selected' : '' }}>NO</option>
                                                     </select>
-                                                </div>
-                                                
+                                                </div> --}}
+                                                <div class="col-md-3">
+                                                    <select id="select_empleo" name="select_empleo" class="form-control" required>
+                                                        <option value="" {{ $empleo === null ? 'selected' : '' }}>--</option>
+                                                        <option value="1" {{ $empleo !== null && $empleo !== false && strlen(trim($empleo)) > 0 ? 'selected' : '' }}>SÍ</option>
+                                                        <option value="0" {{ $empleo !== null && ($empleo === false || strlen(trim($empleo)) === 0) ? 'selected' : '' }}>NO</option>
+                                                    </select>
+                                                </div>                                               
                                                 <div class="row mb-3" id="hidden_div" name="hidden_div" style="display: {{ $empleo == '1' ? 'block' : 'none' }}">
                                                     <p class="text-justify px-3 mb-1">
                                                         Especifica:

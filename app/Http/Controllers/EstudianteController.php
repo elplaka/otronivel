@@ -406,7 +406,6 @@ class EstudianteController extends Controller
         $estudiante = $request->session()->get('estudiante');
         $socioeconomico = $request->session()->get('socioeconomico');
 
-        // dd($socioeconomico);
         $techos = Techo::all();
         $montos = MontoMensual::all(); 
         if ($f4) return view('estudiantes/formulario4', compact('estudiante','socioeconomico','techos', 'montos'));
@@ -427,15 +426,14 @@ class EstudianteController extends Controller
         ]);
 
         $validatedData = $request->except('empleo');  //Se exceptúa EMPLEO porque se va a cambiar a mayúsculas después
-        // $empleo = trim(mb_strtoupper($request->empleo));
         $empleo = $request->empleo ? trim(mb_strtoupper($request->empleo)) : null;
 
-        
+        if ($request->select_empleo == 0) $empleo = '';
+
         if(empty($request->session()->get('socioeconomico')))
         {
             $socioeconomico = new DatoSocioeconomico;
             $socioeconomico->fill($validatedData);
-            // $socioeconomico->id_estudiante = $id_estudiante;
         }
         else
         {
@@ -444,7 +442,6 @@ class EstudianteController extends Controller
         }
         $socioeconomico->empleo = $empleo;
         $request->session()->put('socioeconomico', $socioeconomico);
-        //$socioeconomico->save();
 
         $request->session()->put('fdocumentos', true);
         return redirect()->route('estudiantes.formulario-documentos');

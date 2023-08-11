@@ -320,7 +320,9 @@ p {
     </table>
     <?php  
         $empleo = false;
-        if (strlen($estudiante->socioeconomico->empleo) > 0) $empleo = true;
+        if ($estudiante->socioeconomico && strlen($estudiante->socioeconomico->empleo) > 0) {
+            $empleo = true;
+        }
     ?>
     <table class="center" width="100%" style="border-spacing: 0px 2px;">
         <tr style="padding-bottom:1px">

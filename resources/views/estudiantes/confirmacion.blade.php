@@ -251,7 +251,9 @@ p {
         </tr>
         <?php  
             $empleo = false;
-            if (strlen($estudiante->socioeconomico->empleo) > 0) $empleo = true;
+            if ($estudiante->socioeconomico && strlen($estudiante->socioeconomico->empleo) > 0) {
+                $empleo = true;
+            }
         ?>
         <tr>
             <td width="55%" align="right"><b>¿Recibes alguna beca para apoyar tus estudios?</b></td>
