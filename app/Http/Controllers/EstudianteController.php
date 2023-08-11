@@ -1158,8 +1158,13 @@ class EstudianteController extends Controller
         $observacionesEstudiante = $request->observaciones_estudiante ?? null;
         $observacionesAdmin = $request->observaciones_admin ?? null;
 
-        $observacionesEstudiante = strlen($observacionesEstudiante) ? trim(mb_strtoupper($observacionesEstudiante)) : null;
-        $observacionesAdmin = strlen($observacionesAdmin) ? trim(mb_strtoupper($observacionesAdmin)) : null;
+        if ($observacionesEstudiante !== null) {
+            $observacionesEstudiante = strlen($observacionesEstudiante) ? trim(mb_strtoupper($observacionesEstudiante)) : null;
+        }
+
+        if ($observacionesAdmin !== null) {
+            $observacionesAdmin = strlen($observacionesAdmin) ? trim(mb_strtoupper($observacionesAdmin)) : null;
+        }
 
 
         $estudiante->update([
