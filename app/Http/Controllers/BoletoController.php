@@ -452,8 +452,10 @@ class BoletoController extends Controller
         return redirect()->route('boletos.tantos-index')->with('message', 'Tantos ACTUALIZADOS con éxito!')->with('tipo_msg', 'success');
     }
 
-    public function remesas_index()
+    public function remesas_index(Request $request)
     {
+        $ciclo = $request->session()->get('ciclo');
+        dd($ciclo);
         $remesas = BoletosRemesa::all();
         return view('boletos.remesas-index', compact('remesas'));
     }

@@ -422,14 +422,15 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
+                    <table class="table table-sm table-hover table-bordered" style="font-size: 10pt;">
                         <thead class="thead-light">
                         <tr>
                             <th class="col-md-auto">#</th>
                             <th class="col-md-auto">ID</th>
-                            <th class="col-sm-4">Nombre</th>
-                            <th class="col-sm-2">Escuela - Ciudad</th>
+                            <th class="col-sm-3">Nombre</th>
+                            <th class="col-sm-2">Año - Escuela - Ciudad</th>
                             <th class="col-sm-3">Carrera</th>
+                            <th class="col-sm-2">Observaciones</th>
                             <th class="col-md-auto"></th>
                         </tr>
                         </thead>
@@ -471,25 +472,25 @@
                                             break;  
                                     }
                                 ?>
-                                <tr title={{ $estudiante->status->descripcion }} style="font-size:15px">
+                                <tr title={{ $estudiante->status->descripcion }}>
                                     <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
                                     <td style="vertical-align:middle">{{ $estudiante->id }}</td>
                                     <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
-                                    <td style="vertical-align:middle">{{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
+                                    <td style="vertical-align:middle">{{ $estudiante->ano_escolar . '°' }} <i class="fas fa-university"></i> {{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
-                                    <td style="vertical-align:middle">
+                                    <td style="vertical-align:middle">{{ $estudiante->observaciones_admin }} &nbsp;</td>
+                                    <td style="vertical-align: middle;">
                                         @if ($usertype <= 1)
-                                        <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-verde btn-sm"><i class="fas fa-user-edit"></i></a>
-                                        <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-rojo btn-sm"><i class="fas fa-flag"></i></a>
+                                            <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-verde btn-sm" style="font-size: 10px;"><i class="fas fa-user-edit"></i></a>
+                                            <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-rojo btn-sm" style="font-size: 10px;"><i class="fas fa-flag"></i></a>
                                         @endif
-                                        @if ($estudiante->cve_status >= 2 && $usertype <=1)
-                                        <a href="{{ route('estudiantes.edit_se', $estudiante->id) }}" title="Censar" class="btn btn-dorado btn-sm"><i class="fas fa-street-view"></i></a>
+                                        @if ($estudiante->cve_status >= 2 && $usertype <= 1)
+                                            <a href="{{ route('estudiantes.edit_se', $estudiante->id) }}" title="Censar" class="btn btn-dorado btn-sm" style="font-size: 10px;"><i class="fas fa-street-view"></i></a>
                                         @endif
-                                        @if ($usertype <=3)
-                                        <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" title="Imprimir" class="btn btn-danger btn-sm"><i class="fas fa-print"></i></a>
+                                        @if ($usertype <= 3)
+                                            <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" title="Imprimir" class="btn btn-danger btn-sm" style="font-size: 10px;"><i class="fas fa-print"></i></a>
                                         @endif
-                                        <a href="{{ route('estudiantes.download-zip', $estudiante->id) }}" title="Descargar Documentación" class="btn btn-dark btn-sm"><i class="fas fa-download"></i></a>
-                                    {{-- <a href="{{ route('estudiantes.boletos', $estudiante->id) }}" title="Boletos" class="btn btn-secondary btn-sm"><i class="fa-solid fa-ticket"></i></i></a> --}}
+                                        <a href="{{ route('estudiantes.download-zip', $estudiante->id) }}" title="Descargar Documentación" class="btn btn-dark btn-sm" style="font-size: 10px;"><i class="fas fa-download"></i></a>
                                     </td>
                                 </tr> 
                                 <?php 

@@ -21,12 +21,21 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    
+    public function getCiclo()
+    {
+        $configFilePath = config_path('ciclo_actual.ini');
+        $config = parse_ini_file($configFilePath, true);
+
+        $cicloActual = $config['Ciclo']['CicloActual'];
+        return $cicloActual;
+    }
+             
+
     public function index(Request $request)
     {
-        //$archivo = "/sistemas/alivianate/resources/views/globales.ini";
-        //$contenido = parse_ini_file($archivo, true);
-        //$ciclo = $contenido["Ciclo Escolar"]["CicloActivo"];
-        $ciclo = "2223";
+     
+        $ciclo = $this->getCiclo();
         $request->session()->put('ciclo', $ciclo); 
 
         return view('home');
