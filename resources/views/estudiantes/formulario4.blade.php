@@ -268,6 +268,11 @@ function showDiv(divId, element) {
                                                     </p>
                                                     <div class="col-md-12">
                                                         <input id="empleo" name="empleo" type="text" class="form-control @error('empleo') is-invalid @enderror" name="empleo" value="{{ old('empleo', $empleo  ?? '') }}"  autocomplete="empleo" {{ $empleo == '1' ? 'required' : '' }}>
+                                                        @error('empleo')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                     </div>
                                                 </div>                                                
                                             </div>

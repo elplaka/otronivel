@@ -231,20 +231,46 @@
                                         </div>
                                         <div class="row mb-1 justify-content-center">
                                             <div class="col-md-11">
-                                                <label class="col-form-label mx-1 p-2" style="font-size: 10pt; text-align: justify; background-color: #f8f3ec; color: #5c2134;">
-                                                    <h4> <b>¡¡ IMPORTANTE !!</b></h4>
-                                                    * Se aceptará el <strong> archivo PDF con el formato más reciente  </strong> que puedes descargar en la página del Gobierno Federal
-                                                    <i><a href="https://www.gob.mx/curp/" target="_blank" class="text-primary">https://www.gob.mx/curp/</a></i>
-                                                    <br>
-                                                    * <b> NO imprimirlo </b>, <b> NO escanearlo </b>, <b> NO tomarle foto. </b> <br>
-                                                    * El archivo PDF del CURP será <b> tu primer requisito </b> para registrarte. <br>
-                                                    * Una vez que te hayas registrado, puedes usar el mismo archivo PDF para <b>descargar tu hoja de registro</b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
+                                                <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #f8f3ec; color: #5c2134; text-align: justify;">
+                                                    <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #f8f3ec;">
+                                                        <h4><b>¡¡ IMPORTANTE !!</b></h4>
+                                                        @if ($convocatoria_abierta)
+                                                        <li style="text-align: justify;">
+                                                            El periodo de registro comprende del <b> 7 al 28 de agosto de 2023. </b>
+                                                        </li>
+                                                        @else
+                                                        <li style="text-align: justify;">
+                                                            El periodo de registro comprendió del <b> 7 al 28 de agosto de 2023. </b>
+                                                        </li>
+                                                        <li style="text-align: justify;">
+                                                            Puedes usar el archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
+                                                        </li>
+                                                        @endif
+                                                        <li style="text-align: justify;">
+                                                            Se aceptará el <strong> archivo PDF con el formato más reciente </strong> que puedes descargar en la página del Gobierno Federal
+                                                            <i><a href="https://www.gob.mx/curp/" target="_blank" class="text-primary">https://www.gob.mx/curp/</a></i>
+                                                        </li>
+                                                        <li style="text-align: justify;">
+                                                            <b> NO imprimirlo </b>, <b> NO escanearlo </b>, <b> NO tomarle foto. </b>
+                                                        </li>
+                                                        @if ($convocatoria_abierta)
+                                                            <li style="text-align: justify;">
+                                                                El archivo PDF del CURP será <b> tu primer requisito </b> para registrarte.
+                                                            </li>
+                                                            <li style="text-align: justify;">
+                                                                Una vez que te hayas registrado, puedes usar el mismo archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
+                                                            </li>
+                                                        @else
+                                                     
+                                                        @endif
+                                                    </ul>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-verde float-right mt-2" style="border: none;">Siguiente</button>
+                                {{-- <input type="hidden" name="xt" value="{{ $xt }}"> --}}
                             </form>
                         </div>
                     </div>

@@ -244,7 +244,7 @@
                                         <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
                                         <td style="vertical-align:middle">
                                         @if ($id_remesa != 0 && $cve_ciudad != 0)    
-                                            {{ $monto_asignado = monto_asignado($estudiante->id_remesa, $estudiante->id) }}
+                                            {{ $monto_asignado = monto_asignado($estudiante->apoyosMontos->id_remesa, $estudiante->id) }}
                                         @endif
                                         &nbsp;</td>
                                         @if ($usertype == 1)
@@ -279,7 +279,7 @@
                             <form method="POST" action="{{ route('apoyos.asignacion-crea', $id_remesa) }}">
                                     @csrf
                                     <div class="col-md-0 float-right">
-                                        <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-primary btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
+                                        <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-verde btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
                                     </div>
                             </form>
                             @endif
@@ -289,7 +289,7 @@
                                 <input id="idRemesa" name="idRemesa" type="hidden"  value="{{ $id_remesa }}" class="form-control">
                                 <input id="cveCiudad" name="cveCiudad" type="hidden"  value="{{ $cve_ciudad }}" class="form-control">
                                     <div class="col-md-2 float-right">
-                                        <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> Lista de Raya </b> </button>
+                                        <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-rojo btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> Lista de Raya </b> </button>
                                     </div>
                             </form>
                         </div>

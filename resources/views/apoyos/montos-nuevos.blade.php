@@ -49,7 +49,7 @@
     }
 ?>
 <div class="row">
-    <div class="card mx-auto">
+    <div class="card mx-auto w-50">
         <div>
             @if (session()->has('message'))
                 <?php 
@@ -86,10 +86,11 @@
                         <select id="id_remesa" name="id_remesa" class="form-control" @error('id_remesa') is-invalid @enderror required>
                             <option value=''>-- SELECCIONA REMESA --</option>
                             @foreach ($remesas as $remesa)
-                                <option value="{{ $remesa->id_remesa }}">{{ formato_fecha_espanol_corta($remesa->fecha) . ' :: ' .$remesa->descripcion }}</option>
+                                <option value="{{ $remesa->id_remesa }}" @if ($remesa->id_remesa == $id_remesa) selected @endif>
+                                    {{ formato_fecha_espanol_corta($remesa->fecha) . ' :: ' .$remesa->descripcion }}
+                                </option>
                             @endforeach
                         </select>
-                        
                         @error('id_remesa')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -103,7 +104,7 @@
                         <select id="cve_ciudad" name="cve_ciudad" class="form-control" @error('id_remesa') is-invalid @enderror aria-label="Default select example">
                             <option value=''>-- SELECCIONA CIUDAD --</option>
                             @foreach ($ciudades as $ciudad)
-                                <option value="{{ $ciudad->cve_ciudad }}">{{ $ciudad->ciudad }}</option>
+                                <option value="{{ $ciudad->cve_ciudad }}" @if ($ciudad->cve_ciudad == $cve_ciudad) selected @endif>{{ $ciudad->ciudad }}</option>
                             @endforeach
                         </select>
                         
@@ -129,7 +130,7 @@
                 </div>
                 <div class="row mb-0">
                     <div class="col-md-6 offset-md-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-verde">
                             {{ __('Guardar') }}
                         </button>
                     </div>

@@ -25,7 +25,7 @@
         <div class="card-header">
              <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-0 text-gray-800"> <b> Nueva Remesa de Boletos </b></h1> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <h1 class="h3 mb-0 text-gray-800"> <b> Editar Remesa de Boletos </b></h1> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                 <a href="{{ route('boletos.remesas-index') }}" class="float-right"> Atrás</a>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <form method="POST" action="{{ route('boletos.remesas-actualizar', $remesa->id_remesa) }}">
                 @csrf
                 <div class="row mb-3">
-                    <label for="fecha" class="col-md-4 col-form-label text-md-right">{{ __('Fecha') }}</label>
+                    <label for="fecha" class="col-md-5 col-form-label text-md-right">{{ __('Fecha') }}</label>
 
                     <div class="col-md-5">
                         <input id="fecha" type="date" class="form-control @error('fecha') is-invalid @enderror" name="fecha" value="{{ old('fecha', $remesa->fecha) }}" required autocomplete="fecha" autofocus>
@@ -46,8 +46,8 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label for="descripcion" class="col-md-4 col-form-label text-md-right">{{ __('Descripción') }}</label>
-                    <div class="col-md-7">
+                    <label for="descripcion" class="col-md-5 col-form-label text-md-right">{{ __('Descripción') }}</label>
+                    <div class="col-md-6">
                         <input id="descripcion" type="text" class="form-control @error('descripcion') is-invalid @enderror" name="descripcion" value="{{ old('descripcion', $remesa->descripcion) }}" required autocomplete="descripcion" autofocus>
 
                         @error('descripcion')
@@ -58,7 +58,19 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label for="realizada" class="col-md-4 col-form-label text-md-right">{{ __('Realizada') }}</label>
+                    <label for="descripcion_apoyos" class="col-md-5 col-form-label text-md-right">{{ __('Descripción Apoyos') }}</label>
+                    <div class="col-md-6">
+                        <input id="descripcion_apoyos" type="text" class="form-control @error('descripcion_apoyos') is-invalid @enderror" name="descripcion_apoyos" value="{{ old('descripcion_apoyos', $remesa->descripcion_apoyos) }}" required autocomplete="descripcion_apoyos" autofocus>
+
+                        @error('descripcion_apoyos')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="realizada" class="col-md-5 col-form-label text-md-right">{{ __('Realizada') }}</label>
                     <div class="col-md-3">
                         <select id="realizada" name="realizada" class="form-control" aria-label="Default select example">
                             <option value="1" {{ $remesa->realizada == 1 ? 'selected' : '' }}> SÍ</option>
@@ -74,7 +86,7 @@
                 </div>
                 <div class="row mb-0">
                     <div class="col-md-6 offset-md-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-verde">
                             {{ __('Guardar') }}
                         </button>
                     </div>

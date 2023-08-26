@@ -71,12 +71,13 @@
             @endif              
         </div>
         <div class="card-header">
-             <!-- Page Heading -->
-            <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-0 text-gray-800"> <b> Remesas de Boletos </b></h1> &nbsp;&nbsp;
-                <a href="{{ route('boletos.remesas-nuevo') }}" title="Nueva Remesa" class="btn btn-primary mb-2"> +</a>
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                <h1 class="h3 mb-0 text-gray-800"><b>Remesas de Boletos</b></h1> &nbsp;&nbsp;
+                <a href="{{ route('boletos.remesas-nuevo') }}" title="Nueva Remesa" class="btn btn-primary mb-2">+</a>
             </div>
         </div>
+        
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-sm table-hover table-bordered">
@@ -97,7 +98,7 @@
                                 <td>{{ $remesa->descripcion }}</td>
                                 <td>{{ $remesa->realizada == 0 ? 'NO' : 'SÍ'  }}</td>
                                 <td>
-                                    <a href="{{ route('boletos.remesas-editar', $remesa->id_remesa) }}" class="btn-sm btn-success"> <i class="fa-solid fa-pen-to-square"></i> </a>
+                                    <a href="{{ route('boletos.remesas-editar', $remesa->id_remesa) }}" class="btn-sm btn-dorado"> <i class="fa-solid fa-pen-to-square"></i> </a>
                                 </td>
                             </tr>                            
                         @endforeach 

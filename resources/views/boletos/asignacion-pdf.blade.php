@@ -116,6 +116,7 @@
                                 if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
                                 elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
                         ?>
+                        @if ($estudiante->cantidad_folios > 0)
                         <tr>
                             <td style="text-align:center">{{ $i++ }}</th>
                             <td style="text-align:center">{{ $estudiante->id }}</th>
@@ -125,7 +126,8 @@
                             <td>{{ $estudiante->cantidad_folios }}</td>
                             <td>{{ folios_asignados($estudiante->id_remesa, $estudiante->id) }}</td>
                             <td style="width:8cm"></td>
-                         </tr>                     
+                         </tr>
+                         @endif                   
                     @endforeach 
                 </tbody>
             </table>  

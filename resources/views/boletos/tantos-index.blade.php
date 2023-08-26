@@ -73,7 +73,7 @@
              <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800"> <b> Tantos de Boletos </b></h1> &nbsp;&nbsp;
-                <a href="{{ route('boletos.tantos-nuevos') }}" title="Nuevos Tantos" class="btn btn-primary mb-2"> +</a>
+                <a href="{{ route('boletos.tantos-nuevos', $id_remesa) }}" title="Nuevos Tantos" class="btn btn-verde mb-2"> +</a>
             </div>
         </div>
         <div class="card-body">
@@ -110,14 +110,14 @@
                     <tbody>
                         @foreach ($tantos as $tanto)
                             <tr>
-                                <td scope="row">{{ isset($tanto->id_remesa) ? $tanto->descripcion: "N/A" }}</td>
-                                <td>{{ $tanto->escuela_abreviatura }}</td>
+                                <td scope="row">{{ isset($tanto->id_remesa) ? $tanto->boleto_remesa->descripcion: "N/A" }}</td>
+                                <td>{{ $tanto->escuela->escuela_abreviatura }}</td>
                                 <td>{{ isset($tanto->id_remesa) ? $tanto->cantidad_folios : "N/A" }}</td>                               
                                 <td>
                                     @if (isset($tanto->id_remesa))
-                                    <a href="{{ route('boletos.tantos-editar', [$tanto->id_remesa, $tanto->cve_escuela]) }}" class="btn-sm btn-success"> <i class="fa-solid fa-pen-to-square"></i> </a>
+                                    <a href="{{ route('boletos.tantos-editar', [$tanto->id_remesa, $tanto->cve_escuela]) }}" class="btn-sm btn-dorado"> <i class="fa-solid fa-pen-to-square"></i> </a>
                                     @else
-                                    <a href="{{ route('boletos.tantos-nuevo-uno', $tanto->cve_escuela) }}" class="btn-sm btn-success"> <i class="fa-solid fa-square-plus"></i> </a>
+                                    <a href="{{ route('boletos.tantos-nuevo-uno', $tanto->cve_escuela) }}" class="btn-sm btn-dorado"> <i class="fa-solid fa-square-plus"></i> </a>
                                     @endif
                                 </td>
                             </tr>                            

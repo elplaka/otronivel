@@ -209,6 +209,9 @@
                             </h1>
                             @if ($usertype <= 1)
                             <div class="d-flex align-items-center">
+                                <a href="{{ route('estudiantes.nuevo-xt') }}" class="btn btn-dorado ml-2" title="Nuevo extemporáneo" style="font-size:11pt">
+                                    <b> <i class="fa-solid fa-user-clock"></i> </b>
+                                </a>
                                 <a href="{{ route('estudiantes.forget') }}" class="btn btn-verde ml-2" title="Registrar estudiante">
                                     <b> + </b>
                                 </a>
@@ -422,15 +425,15 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered" style="font-size: 10pt;">
+                    <table class="table table-sm table-hover table-bordered" style="font-size: 9pt;">
                         <thead class="thead-light">
                         <tr>
                             <th class="col-md-auto">#</th>
                             <th class="col-md-auto">ID</th>
                             <th class="col-sm-3">Nombre</th>
                             <th class="col-sm-2">Año - Escuela - Ciudad</th>
-                            <th class="col-sm-3">Carrera</th>
-                            <th class="col-sm-2">Observaciones</th>
+                            <th class="col-sm-auto">Carrera</th>
+                            @if ($usertype <= 1) <th class="col-sm-2">Observaciones</th> @endif
                             <th class="col-md-auto"></th>
                         </tr>
                         </thead>
@@ -478,7 +481,7 @@
                                     <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->ano_escolar . '°' }} <i class="fas fa-university"></i> {{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
-                                    <td style="vertical-align:middle">{{ $estudiante->observaciones_admin }} &nbsp;</td>
+                                    @if ($usertype <= 1) <td style="vertical-align:middle">{{ $estudiante->observaciones_admin }} &nbsp;</td> @endif
                                     <td style="vertical-align: middle;">
                                         @if ($usertype <= 1)
                                             <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-verde btn-sm" style="font-size: 10px;"><i class="fas fa-user-edit"></i></a>

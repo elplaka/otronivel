@@ -25,11 +25,6 @@ class BoletoAsignado extends Model
         'entregados',
     ]; 
 
-    public function estudiante()
-    {
-        return $this->belongsTo(Estudiante::class, 'id_estudiante');
-    }
-
     public function ciclo()
     {
         return $this->belongsTo(Ciclo::class);
@@ -43,6 +38,11 @@ class BoletoAsignado extends Model
     public function boleto_paquete()
     {
         return $this->belongsTo(BoletosPaquete::class, 'id_paquete');
+    }
+
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiante::class, 'id_estudiante', 'id');
     }
 
 }

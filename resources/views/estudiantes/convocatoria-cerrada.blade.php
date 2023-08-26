@@ -79,7 +79,7 @@
     <div class="container">
         <div class="card-body">
             <div class="row justify-content-center">
-                <div class="col-md-7">
+                {{-- <div class="col-md-7">
                     <div class="text-center">
                         <h4 style="text-align: center;"><b> Hola <small>«</small> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} <small>»</small> </b> </h4>
                     </div>
@@ -95,10 +95,9 @@
                         <a href="{{ route('estudiantes.formulario_constancia', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-verde btn-md"> <b> <i class="fa-solid fa-upload"></i> Subir CONSTANCIA </b> </a>
                     </div>
                   </div>
-                </div>
+                </div> --}}
             </div>
             <div class="row justify-content-center">
-
                       </div> <br>
                   <div class="row justify-content-center mb-4">
                       <img src="{{ url('img/Logo_y_Escudo.jpg') }}" alt="Por tiempos mejores" style="width: 35%">

@@ -86,7 +86,7 @@
                         <select id="id_remesa" name="id_remesa" class="form-control" @error('id_remesa') is-invalid @enderror required>
                             <option value=''>-- SELECCIONA REMESA --</option>
                             @foreach ($remesas as $remesa)
-                                <option value="{{ $remesa->id_remesa }}">{{ formato_fecha_espanol_corta($remesa->fecha) . ' :: ' .$remesa->descripcion }}</option>
+                                <option value="{{ $remesa->id_remesa }}" {{ $remesa->id_remesa == $id_remesa? 'selected' : '' }}>{{ $remesa->descripcion . ' :: ' . formato_fecha_espanol_corta($remesa->fecha) }}</option>
                             @endforeach
                         </select>
                         
@@ -131,7 +131,7 @@
                 </div>
                 <div class="row mb-0">
                     <div class="col-md-6 offset-md-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-verde">
                             {{ __('Guardar') }}
                         </button>
                     </div>

@@ -9,6 +9,7 @@ use App\Models\BoletosTanto;
 use App\Models\BoletoAsignado;
 use App\Models\Estudiante;
 use App\Models\Escuela;
+use App\Models\Ciclo;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Dompdf\Dompdf;  
@@ -16,12 +17,12 @@ use DOMDocument;
 
 class BoletoController extends Controller
 {
+    
+    
     public function asignacion_borra(Request $request, $id_remesa, $id_estudiante)
     {
 
-        $ciclo = $request->session()->get('ciclo');
         $asignados = BoletoAsignado::where('id_remesa', $id_remesa)
-        ->where('id_ciclo', $ciclo)
         ->where('id_estudiante', $id_estudiante);
 
         $reasignados = $asignados->get();
@@ -33,7 +34,6 @@ class BoletoController extends Controller
             {
                 $total_folios = $reasignado->folio_final - $reasignado->folio_inicial + 1;
                 BoletosPaquete::create([
-                    'id_ciclo' => $request->session()->get('ciclo'),
                     'folio_inicial' => $reasignado->folio_inicial,
                     'folio_final' => $reasignado->folio_final,
                     'ult_folio_asignado' => 0,
@@ -81,7 +81,7 @@ class BoletoController extends Controller
 
         if ($remesa_realizada)
         {
-            $boletos_asignados = BoletoAsignado::where('id_ciclo',$ciclo)->where('id_remesa', $id_remesa)->orderBy(Estudiante::select('primer_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('segundo_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('nombre')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc');
+            $boletos_asignados = BoletoAsignado::where('id_remesa', $id_remesa)->orderBy(Estudiante::select('primer_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('segundo_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('nombre')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc');
 
             $ids_estudiantes = $boletos_asignados->pluck('id_estudiante');
             $ids_asignar = $ids_estudiantes->toArray();
@@ -93,34 +93,34 @@ class BoletoController extends Controller
         }
         else
         {
-            $estudiantes = Estudiante::select('estudiantes.id as id', 'estudiantes.nombre as nombre', 'estudiantes.primer_apellido as primer_apellido', 'estudiantes.segundo_apellido', 'estudiantes.cve_ciudad_escuela as cve_ciudad_escuela', 'estudiantes.carrera as carrera', 'estudiantes.cve_status as cve_status', 'boletos_tantos.id_remesa as id_remesa', 'escuelas.escuela_abreviatura as escuela_abreviatura', 'boletos_tantos.cantidad_folios as cantidad_folios')
-            //->leftjoin('boletos_asignados', 'estudiantes.id', '=', 'boletos_asignados.id_estudiante')
-            ->leftjoin('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela' )
-            ->leftjoin('boletos_tantos', 'estudiantes.cve_escuela', '=', 'boletos_tantos.cve_escuela')
-            ->where('id_remesa', $id_remesa)
-            ->where('cve_ciudad_escuela', 1)->where('cve_status', 6)
-            ->orderBy('estudiantes.primer_apellido')
-            ->orderBy('estudiantes.segundo_apellido')
-            ->orderBy('estudiantes.nombre');
+            $estudiantesQuery = Estudiante::with(['escuela', 'boletosTantos' => function ($query) use ($id_remesa) {
+                $query->where('id_remesa', $id_remesa);
+            }])
+                ->whereHas('boletosTantos', function ($query) use ($id_remesa) {
+                    $query->where('id_remesa', $id_remesa);
+                })
+                ->where('id_ciclo', $ciclo)
+                ->where('cve_ciudad_escuela', 1)
+                ->where('cve_status', 6)
+                ->orderBy('primer_apellido')
+                ->orderBy('segundo_apellido')
+                ->orderBy('nombre');
 
+            $estudiantes = $estudiantesQuery->paginate(25)->withQueryString();
+            
             $ids_estudiantes = $estudiantes->pluck('id');
             $ids_asignar = $ids_estudiantes->toArray();
             $request->session()->put('ids_asignar', $ids_asignar);
-    
-            $cant_folios = $estudiantes->pluck('cantidad_folios');
-            $cantidad_folios = $cant_folios->toArray();
-            $request->session()->put('cantidad_folios', $cantidad_folios);
-    
-            $estudiantes = $estudiantes->paginate(25)->withQueryString();
-
+            
             return view('boletos.asignacion-nueva', compact('remesas', 'estudiantes', 'id_remesa', 'ciclo'));
         }
     }
 
-    private function regresa_paquetes_requeridos($ciclo, $cantidad_folios)
+    private function regresa_paquetes_requeridos($cantidad_folios)
     {
+        if ($cantidad_folios == 0) return null; 
         //Necesito saber los folios disponibles de cada paquete
-       $paquetes = BoletosPaquete::where('id_ciclo', $ciclo)->where('folios_disponibles', '>', 0)->orderBy('folios_disponibles')->get();
+       $paquetes = BoletosPaquete::where('folios_disponibles', '>', 0)->orderBy('folios_disponibles')->get();
 
        $j = 0; //Controla el índice del array que contiene los paquetes requeridos
        $sigue = true; 
@@ -146,7 +146,7 @@ class BoletoController extends Controller
 
                 $folios_disponibles = $paquetes->get($j)->folio_final - $ult_folio_asignado;
 
-                $paquetesU = BoletosPaquete::where('id_paquete', $paquetes->get($j)->id_paquete)->where('id_ciclo', $ciclo);
+                $paquetesU = BoletosPaquete::where('id_paquete', $paquetes->get($j)->id_paquete);
                 $paquetesU->update(['ult_folio_asignado' => $ult_folio_asignado, 'folios_disponibles' => $folios_disponibles]);
 
                 $sigue = false;
@@ -164,12 +164,10 @@ class BoletoController extends Controller
 
                 $ult_folio_asignado = $paquetes->get($j)->folio_final;
 
-                $paquetesU = BoletosPaquete::where('id_paquete', $paquetes->get($j)->id_paquete)->where('id_ciclo', $ciclo);
+                $paquetesU = BoletosPaquete::where('id_paquete', $paquetes->get($j)->id_paquete);
                 $paquetesU->update(['ult_folio_asignado' => $ult_folio_asignado, 'folios_disponibles' => 0]);
 
                 $cantidad_folios = $cantidad_folios - ($folio_final_asignado - $folio_inicial_asignado) - 1;
-
-                //if ($cantidad_folios == 0) $sigue = false; //ESTO LO PUSE PARA PROBARd
 
                 $j++;
 
@@ -178,10 +176,9 @@ class BoletoController extends Controller
        return $paquetes_req;
     }
 
-    private function se_ha_asignado($id_remesa, $ciclo, $id_estudiante)
+    private function se_ha_asignado($id_remesa, $id_estudiante)
     {
         $boletos_asignados = BoletoAsignado::where('id_remesa', $id_remesa)
-        ->where('id_ciclo', $ciclo)
         ->where('id_estudiante', $id_estudiante)->get();
 
         return $boletos_asignados->count() > 0 ? true : false;
@@ -247,15 +244,25 @@ class BoletoController extends Controller
         return $pdf->stream();
     }
 
+    public function regresa_cantidad_folios($id_remesa, $id_estudiante)
+    {
+        $estudiante = Estudiante::find($id_estudiante);
+
+        $cantidad_folios = 0;
+
+        if ($estudiante) {
+            $cantidad_folios = $estudiante->boletosTantos()->where('id_remesa', $id_remesa)->value('cantidad_folios');
+        }
+
+        return $cantidad_folios;
+    }
+
     public function asignacion_crea($id_remesa, Request $request)
     {
         $ciclo = $request->session()->get('ciclo');
         $ids_asignar = $request->session()->get('ids_asignar');
-        $cantidad_folios = $request->session()->get('cantidad_folios');
         $i = 0;
         $estudiantes_asignacion = 0;
-
-        //$folios_requeridos = array_sum($cantidad_folios);   //Cantidad de folios que se ocuparán para asignar
 
         $folios_requeridos =  Estudiante::select('boletos_tantos.cantidad_folios')
         ->leftjoin('boletos_tantos', 'boletos_tantos.cve_escuela', '=', 'estudiantes.cve_escuela')
@@ -274,28 +281,26 @@ class BoletoController extends Controller
         {
             foreach($ids_asignar as $id_estudiante)  //Recorre todos los estudiantes
             {
-                if (!$this->se_ha_asignado($id_remesa, $ciclo, $id_estudiante))
+                if (!$this->se_ha_asignado($id_remesa, $id_estudiante))
                 {
-                    $paquetes_requeridos = $this->regresa_paquetes_requeridos($ciclo, $cantidad_folios[$i]);
-                    foreach($paquetes_requeridos as $id_paq)  //Recorre los paquetes requeridos para la asignación
-                    {     
-                        BoletoAsignado::create([
-                        'id_remesa' => $id_remesa,
-                        'id_paquete' => $id_paq[0],
-                        'id_ciclo' => $request->session()->get('ciclo'),
-                        'id_estudiante' => $id_estudiante,
-                        'folio_inicial' => $id_paq[1],
-                        'folio_final' => $id_paq[2],
-                        'entregados' => 0,
-                        ]);
+                    $paquetes_requeridos = $this->regresa_paquetes_requeridos($this->regresa_cantidad_folios($id_remesa, $id_estudiante));
+                    if ($paquetes_requeridos !== null)
+                    {
+                        foreach($paquetes_requeridos as $id_paq)  //Recorre los paquetes requeridos para la asignación
+                        {     
+                            BoletoAsignado::create([
+                            'id_remesa' => $id_remesa,
+                            'id_paquete' => $id_paq[0],
+                            'id_estudiante' => $id_estudiante,
+                            'folio_inicial' => $id_paq[1],
+                            'folio_final' => $id_paq[2],
+                            'entregados' => 0,
+                            ]);
+                        }
+                        $estudiantes_asignacion++;
                     }
-                    $estudiantes_asignacion++;
                 }
-                $i++;
             }
-
-            // $remesaU = BoletosRemesa::where('id_remesa', $id_remesa)->where('id_ciclo', $ciclo);
-            // $remesaU->update(['realizada' => 1]);  //Pone como REALIZADA la remesa
 
             DB::commit();
             if ($estudiantes_asignacion == 0)   //No hubo ningún estudiante con asignación porque ya tenía una
@@ -317,17 +322,16 @@ class BoletoController extends Controller
         if (!isset($id_remesa)) $id_remesa = 0;
         $remesas = BoletosRemesa::where('id_ciclo', $ciclo)->get();
 
-        $tantos = Estudiante::select('bt.id_remesa','br.descripcion', 'es.escuela_abreviatura', 'estudiantes.cve_escuela', 'bt.cantidad_folios')->distinct()
-        ->leftjoin('boletos_tantos as bt', 'estudiantes.cve_escuela', '=', 'bt.cve_escuela' )
-        ->leftjoin('boletos_remesas as br', 'bt.id_remesa', '=', 'br.id_remesa')
-        ->leftjoin('escuelas as es', 'estudiantes.cve_escuela', '=', 'es.cve_escuela')
-        ->where('estudiantes.id_ciclo', $ciclo)
-        ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 6)
-        ->where('br.id_remesa', $id_remesa)
-        ->get();
-        // ->orderBy('estudiantes.primer_apellido')
-        // ->orderBy('estudiantes.segundo_apellido')
-        // ->orderBy('estudiantes.nombre');
+        // $tantos = Estudiante::select('bt.id_remesa','br.descripcion', 'es.escuela_abreviatura', 'estudiantes.cve_escuela', 'bt.cantidad_folios')->distinct()
+        // ->leftjoin('boletos_tantos as bt', 'estudiantes.cve_escuela', '=', 'bt.cve_escuela' )
+        // ->leftjoin('boletos_remesas as br', 'bt.id_remesa', '=', 'br.id_remesa')
+        // ->leftjoin('escuelas as es', 'estudiantes.cve_escuela', '=', 'es.cve_escuela')
+        // ->where('estudiantes.id_ciclo', $ciclo)
+        // ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 6)
+        // ->where('br.id_remesa', $id_remesa)
+        // ->get();
+
+        $tantos = BoletosTanto::where('id_remesa', $id_remesa)->get();
 
         return view('boletos.tantos-index', compact('tantos', 'id_remesa', 'remesas'));
     }
@@ -342,12 +346,12 @@ class BoletoController extends Controller
         return view('boletos.tantos-nuevo-uno', compact('remesas', 'escuela'));
     }
 
-    public function tantos_nuevos(Request $request)
+    public function tantos_nuevos(Request $request, $id_remesa)
     {
         $ciclo = $request->session()->get('ciclo');
         $remesas = BoletosRemesa::where('id_ciclo', $ciclo)
         ->where('realizada', 0)->get();
-        return view('boletos.tantos-nuevos', compact('remesas'));
+        return view('boletos.tantos-nuevos', compact('remesas', 'id_remesa'));
     }
 
     public function tantos_crea_uno(Request $request)
@@ -384,8 +388,18 @@ class BoletoController extends Controller
         }
     }
 
+    public function tiene_boletos_escuela($id_remesa, $cve_escuela)
+    {
+        $tantos = BoletosTanto::where('id_remesa', $id_remesa)->where('cve_escuela', $cve_escuela)->exists();
+
+        return $tantos ? true : false;
+    }
+
     public function tantos_crea(Request $request)
     {
+        $ciclo = $request->session()->get('ciclo');
+        $id_remesa = $request->id_remesa;
+
         $validatedData = $request->validate([
             'id_remesa' => ['required'],
             'cantidad_folios_uas' => ['required', 'max:4'],
@@ -395,31 +409,36 @@ class BoletoController extends Controller
         DB::beginTransaction();
         try
         {
-            //Tantos de boletos de la UAS
-            BoletosTanto::create([
-                'id_remesa' => $request->id_remesa,
-                'id_ciclo' => $request->session()->get('ciclo'),
-                'cve_escuela' => 1,
-                'cantidad_folios' => $request->cantidad_folios_uas,
-            ]);
+            if (!$this->tiene_boletos_escuela($id_remesa, 1))
+            {
+                //Tantos de boletos de la UAS
+                BoletosTanto::create([
+                    'id_remesa' => $request->id_remesa,
+                    'cve_escuela' => 1,
+                    'cantidad_folios' => $request->cantidad_folios_uas,
+                ]);
+            }
 
-            $cves_escuelas = Escuela::whereIn('cve_escuela', function($query){
+            $cves_escuelas = Escuela::whereIn('cve_escuela', function($query) use($ciclo){
                 $query->select('cve_escuela')
                 ->from(with(new Estudiante)->getTable())
+                ->where('id_ciclo', $ciclo)
                 ->where('cve_status', 6)
                 ->where('cve_ciudad_escuela', 1)
                 ->where('cve_escuela', '!=', 1);
             })->get();
-            
+
             //Tantos de boletos NO UAS
             foreach ($cves_escuelas as $cve_escuela)
             {
-                BoletosTanto::create([
-                    'id_remesa' => $request->id_remesa,
-                    'id_ciclo' => $request->session()->get('ciclo'),
-                    'cve_escuela' => $cve_escuela->cve_escuela,
-                    'cantidad_folios' => $request->cantidad_folios,
-                ]);
+                if (!$this->tiene_boletos_escuela($id_remesa, $cve_escuela->cve_escuela))
+                {
+                    BoletosTanto::create([
+                        'id_remesa' => $request->id_remesa,
+                        'cve_escuela' => $cve_escuela->cve_escuela,
+                        'cantidad_folios' => $request->cantidad_folios,
+                    ]);
+                }
             }
 
             BoletosRemesa::where('id_remesa',$request->id_remesa)
@@ -437,8 +456,7 @@ class BoletoController extends Controller
 
     public function tantos_editar($id_remesa, $cve_escuela, Request $request)
     {
-        $ciclo = $request->session()->get('ciclo');
-        $tanto = BoletosTanto::where('id_remesa',$id_remesa)->where('id_ciclo', $ciclo)->where('cve_escuela', $cve_escuela)->first();
+        $tanto = BoletosTanto::where('id_remesa',$id_remesa)->where('cve_escuela', $cve_escuela)->first();
         $remesas = BoletosRemesa::all();
 
         return view('boletos.tantos-editar', compact('tanto', 'remesas'));
@@ -446,21 +464,25 @@ class BoletoController extends Controller
 
     public function tantos_actualizar(Request $request, $id_remesa, $cve_escuela)
     {
-        $ciclo = $request->session()->get('ciclo');
-        $tanto = BoletosTanto::where('id_remesa',$id_remesa)->where('id_ciclo', $ciclo)->where('cve_escuela', $cve_escuela)->update(['cantidad_folios' => $request->cantidad_folios]);
+        $tanto = BoletosTanto::where('id_remesa',$id_remesa)->where('cve_escuela', $cve_escuela)->update(['cantidad_folios' => $request->cantidad_folios]);
 
         return redirect()->route('boletos.tantos-index')->with('message', 'Tantos ACTUALIZADOS con éxito!')->with('tipo_msg', 'success');
+    }
+
+    public function getCicloEscolar($id_ciclo)
+    {
+        $ciclo_escolar = Ciclo::where('id_ciclo', $id_ciclo)->first();
+        return $ciclo_escolar->descripcion;
     }
 
     public function remesas_index(Request $request)
     {
         $ciclo = $request->session()->get('ciclo');
-        dd($ciclo);
-        $remesas = BoletosRemesa::all();
+        $remesas = BoletosRemesa::where('id_ciclo', $ciclo)->get();
         return view('boletos.remesas-index', compact('remesas'));
     }
 
-    public function remesas_nuevo()
+    public function remesas_nuevo(Request $request)
     {
         return view('boletos.remesas-nuevo');
     }
@@ -470,12 +492,14 @@ class BoletoController extends Controller
         $validatedData = $request->validate([
             'fecha' => ['required', 'max:10'],
             'descripcion' => ['required', 'max:50'],
+            'descripcion_apoyos' => ['required', 'max:50'],
         ]);
 
         BoletosRemesa::create([
             'id_ciclo' => $request->session()->get('ciclo'),
             'fecha' => $request->fecha,
             'descripcion' => trim(mb_strtoupper($request->descripcion)),
+            'descripcion_apoyos' => trim(mb_strtoupper($request->descripcion_apoyos)),
         ]);
 
         return redirect()->route('boletos.remesas-index')->with('message', 'Remesa GUARDADA con éxito!')->with('tipo_msg', 'success');
@@ -497,6 +521,7 @@ class BoletoController extends Controller
         $remesa->update([
             'fecha' => $request->fecha,
             'descripcion' => trim(mb_strtoupper($request->descripcion)),
+            'descripcion_apoyos' => trim(mb_strtoupper($request->descripcion_apoyos)),
             'realizada' => $request->realizada
         ]);
 
@@ -505,9 +530,7 @@ class BoletoController extends Controller
 
     public function paquetes_index(Request $request)
     {
-        $ciclo = $request->session()->get('ciclo');
-
-        $paquetes = BoletosPaquete::where('id_ciclo', $ciclo)->orderBy('folio_final')->get();
+        $paquetes = BoletosPaquete::where('folios_disponibles', '>', 0)->orderBy('folio_final')->get();
         return view('boletos.paquetes-index', compact('paquetes'));
     }
 

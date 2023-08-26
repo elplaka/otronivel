@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Estudiante;
+use App\Models\EstudianteXT;
 use App\Models\Ciclo;
 use App\Models\Localidad;
 use App\Models\Escuela;
@@ -91,11 +92,21 @@ class EstudianteController extends Controller
                 break;
             case 33:
                 $curp = $parr[11];
-                $nombre_pdf = $parr[12];
+                if ($this->esCURP($curp)) $nombre_pdf = $parr[12];
+                else
+                {
+                    $curp = $parr[10];
+                    $nombre_pdf = $parr[8];
+                }
                 break;
+            case 34:
+                $curp = $parr[11];
+                $nombre_pdf = $parr[9];
+                break;   
         }
 
         $this->rfc = substr($curp, 0, 10);
+        
         if ($this->esCURP($curp)) 
         {
             $estudiante = Estudiante::where('curp', $curp)->orderByDesc('id_ciclo')->first();
@@ -156,28 +167,75 @@ class EstudianteController extends Controller
 
     public function formulario_curp(Request $request)
     {
-        // $request->session()->forget('estudiante');
-        // $request->session()->forget('socioeconomico');
-        // $request->session()->forget('existente');
-        // $request->session()->put('fdocumentos', false);
-        // $request->session()->put('f2', false);
-        // $request->session()->put('f3', false);
-        // $request->session()->put('f3OK', false);
-        // $request->session()->put('f4', false);
-        // $request->session()->put('fin', false);
-
         $ciclo = $this->getCiclo();
 
         $request->session()->put('ciclo', $ciclo);
 
         $fcurp = $request->session()->get('fcurp');
 
+        $convocatoria_abierta = $this->convocatoria_abierta($ciclo);
+
         if ($fcurp)
         {
             $estudiante = $request->session()->get('estudiante');
-            return view('estudiantes/formulario-curp',compact('estudiante'));
+            return view('estudiantes/formulario-curp',compact('estudiante', 'convocatoria_abierta'));
+
         }
         else return view('estudiantes/operacion_invalida');
+    }
+
+    public function nuevo_xt(Request $request)
+    {
+        $ciclo = $request->session()->get('ciclo');
+
+        $estudiantes_xt = EstudianteXT::where('id_ciclo', $ciclo)->get();
+
+        return view('estudiantes/nuevo_xt', compact('estudiantes_xt'));
+    }
+
+    public function existe_xt($id_ciclo, $curp)
+    {
+        $estudiante_xt = EstudianteXT::where('id_ciclo', $id_ciclo)->where('curp',$curp)->exists();
+
+        return $estudiante_xt;
+    }
+
+    public function crea_xt(Request $request)
+    {
+        $ciclo = $request->session()->get('ciclo');
+
+        $validatedData = $request->validate([
+            'curp' => 'required|string|size:18',
+        ]);
+
+        $curp = trim(strtoupper($request->curp));
+
+        if ($this->esCURP($curp)) 
+        {
+            if ($this->existe_xt($ciclo, $curp))
+            {
+                return redirect()->back()->with('message', 'CURP ya existe en el ciclo actual.')->with('tipo_msg', 'danger');
+            }
+            else
+            {
+                $estudianteXT = EstudianteXT::create([
+                    'id_ciclo' => $ciclo,
+                    'curp' => $curp,
+                ]);
+                return redirect()->back()->with('message', 'CURP agregado con éxito a los estudiantes extemporáneos.')->with('tipo_msg', 'success');
+            }
+        }
+        else 
+        {
+            return redirect()->back()->with('message', 'El CURP no es válido.')->with('tipo_msg', 'danger');
+        }
+    }
+
+    public function convocatoria_abierta($id_ciclo)
+    {
+        $ciclo = Ciclo::where('id_ciclo', $id_ciclo)->first();
+
+        return $ciclo->convocatoria_abierta;
     }
 
     public function formulario_curpPost(Request $request)
@@ -213,9 +271,7 @@ class EstudianteController extends Controller
         }
 
         $errorCurp = false;
-
         if ($extCurp != "PDF") $errorCurp = true;
-
         if ($errorCurp)
         {
             $message = $message . "<li>El archivo del <b>CURP</b> debe ser PDF.</li>";
@@ -230,10 +286,10 @@ class EstudianteController extends Controller
             $message = $message . "</ul>";
             return redirect()->back()->with('message', $message);
         }
+
         $this->archivoCurp = $request->img_curp;
-
         $ciclo = $request->session()->get('ciclo');
-
+        $convocatoria_abierta = $this->convocatoria_abierta($ciclo);
 
         if ($ciclo == $estudiante->id_ciclo)   //YA EXISTE EN EL CICLO ACTUAL
         {
@@ -241,19 +297,26 @@ class EstudianteController extends Controller
             return redirect()->route('estudiantes.existente', $estudiante->id_hex);
         }
 
-        $request->session()->put('fcurp', false);
-        $request->session()->put('f2', true);
+        if ($convocatoria_abierta || $this->existe_xt($ciclo, $estudiante->curp))
+        {
+            $request->session()->put('fcurp', false);
+            $request->session()->put('f2', true);
 
-        // COPIAR ARCHIVO A STORAGE
-        $fileExtension = $request->img_curp->getClientOriginalExtension();
-        $newFileName = "CU_" . $estudiante->rfc . '.' . $fileExtension;
-        Storage::putFileAs('tmp', $request->img_curp, $newFileName);
+            // COPIAR ARCHIVO A STORAGE
+            $fileExtension = $request->img_curp->getClientOriginalExtension();
+            $newFileName = "CU_" . $estudiante->rfc . '.' . $fileExtension;
+            Storage::putFileAs('tmp', $request->img_curp, $newFileName);
 
-        $estudiante->img_curp = $newFileName;
+            $estudiante->img_curp = $newFileName;
 
-        $request->session()->put('estudiante', $estudiante);         
+            $request->session()->put('estudiante', $estudiante);         
 
-        return redirect()->route('estudiantes.formulario2');  
+            return redirect()->route('estudiantes.formulario2'); 
+        }
+        else
+        {
+            return view('estudiantes.convocatoria-cerrada'); 
+        }
     }
 
     public function existente(Request $request, $id_hex)

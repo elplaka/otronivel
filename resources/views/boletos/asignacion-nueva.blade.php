@@ -348,10 +348,10 @@
                                             <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
                                             <td style="vertical-align:middle">{{ $estudiante->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
                                             <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
-                                            <td style="vertical-align:middle">{{ $estudiante->cantidad_folios }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $estudiante->boletosTantos->cantidad_folios }} &nbsp;</td>
                                             <td style="vertical-align:middle">
                                             @if ($id_remesa != 0)
-                                                {{ $folios_asignados = folios_asignados($estudiante->id_remesa, $estudiante->id) }}
+                                                {{ $folios_asignados = folios_asignados($estudiante->boletosTantos->id_remesa, $estudiante->id) }}
                                             @endif
                                             </td>
                                             @if ($usertype == 1)
@@ -360,7 +360,7 @@
                                                 <form method="GET" action="{{ route('boletos.asignacion-borra', [$id_remesa,$estudiante->id]) }}" >
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button>
+                                                    <button class="btn btn-rojo btn-sm"><i class="fa-solid fa-trash-can"></i></button>
                                                 </form>  
                                                 @endif
                                             </td> 
@@ -391,7 +391,7 @@
                             <form method="POST" action="{{ route('boletos.asignacion-crea', $id_remesa) }}">
                                     @csrf
                                     <div class="col-md-0 float-right">
-                                        <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-primary btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
+                                        <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-verde btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
                                     </div>
                             </form>
                             @endif
@@ -401,7 +401,7 @@
                                 <input id="letraInicial" name="letraInicial" type="hidden"  value="" class="form-control">
                                 <input id="letraFinal" name="letraFinal" type="hidden"  value="" class="form-control">
                                     <div class="col-md-1 float-right">
-                                        <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> PDF </b> </button>
+                                        <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-rojo btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> PDF </b> </button>
                                     </div>
                             </form>
                         </div>

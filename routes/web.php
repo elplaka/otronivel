@@ -27,11 +27,12 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// Route::get('/2023-2024', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
-// Route::get('/estudiantes/formulario-curp', [EstudianteController::class, 'formulario_curp'])->name('estudiantes.formulario-curp');
-
-
 Route::get('/2023-2024', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+// Route::get('/2023-2024/xt', [EstudianteController::class, 'forget_xt'])->name('estudiantes.forget_xt');
+
+Route::middleware(['auth'])->get('/estudiantes/nuevo-xt', [EstudianteController::class, 'nuevo_xt'])->name('estudiantes.nuevo-xt')->middleware('admin.user');
+Route::middleware(['auth'])->post('/estudiantes/crea-xt', [EstudianteController::class, 'crea_xt'])->name('estudiantes.crea-xt')->middleware('admin.user');
+
 
 Route::middleware('check.inicio.registro')->group(function () {
     Route::get('/estudiantes/formulario-curp', [EstudianteController::class, 'formulario_curp'])->name('estudiantes.formulario-curp');
@@ -88,29 +89,6 @@ Route::get('/estudiantes/existente/{id_hex}', [EstudianteController::class, 'exi
 
 Route::get('/estudiantes/ver_constancia', [EstudianteController::class, 'ver_constancia'])->name('estudiantes.ver-constancia');
 
-// Route::get('/estudiantes/mail_folio/', function(){
-//     //$estudiantes = Estudiante::all();
-
-//     $estudiantes = Estudiante::whereBetween('id', [1,4])->get();
-
-//     //dd($estudiantes);
-//     $folios = '';
-
-//     foreach ($estudiantes as $estudiante)
-//     {
-//         $id_estudiante = $estudiante->id;
-//         $correo = new EstudiantesFolioMailable($id_estudiante);
-//         $estudiante = Estudiante::where('id', $id_estudiante)->first();
-//         if($estudiante->count() > 0)
-//         {
-//             $email = $estudiante->email;
-//             Mail::to($email)->send($correo);
-//             $folios = $folios . ',' . $email;
-//         }
-//     }
-//     return redirect()->route('estudiantes.folios_enviados', $folios);
-// })->name('estudiantes.mail_folio');
-
 Route::middleware(['auth'])->get('/estudiantes/index', [EstudianteController::class, 'index'])->name('estudiantes.index');
 Route::middleware(['auth'])->get('/pdf/{filename}', [PdfController::class, 'show'])->name('pdf.show');
 
@@ -126,42 +104,42 @@ Route::get('/estudiantes/download-zip/{id}', [EstudianteController::class, 'down
 
 Route::resource('usuarios', UsuarioController::class);
 
-Route::get('/boletos/paquetes-index', [BoletoController::class, 'paquetes_index'])->name('boletos.paquetes-index')->middleware('admin.user');
-Route::get('/boletos/paquetes-nuevo', [BoletoController::class, 'paquetes_nuevo'])->name('boletos.paquetes-nuevo')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/paquetes-index', [BoletoController::class, 'paquetes_index'])->name('boletos.paquetes-index')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/paquetes-nuevo', [BoletoController::class, 'paquetes_nuevo'])->name('boletos.paquetes-nuevo')->middleware('admin.user');
 Route::post('/boletos/paquetes-crea', [BoletoController::class, 'paquetes_crea'])->name('boletos.paquetes-crea')->middleware('admin.user');
-Route::get('/boletos/paquetes-editar/{id}', [BoletoController::class, 'paquetes_editar'])->name('boletos.paquetes-editar')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/paquetes-editar/{id}', [BoletoController::class, 'paquetes_editar'])->name('boletos.paquetes-editar')->middleware('admin.user');
 Route::post('/boletos/paquetes-actualizar/{id}', [BoletoController::class, 'paquetes_actualizar'])->name('boletos.paquetes-actualizar')->middleware('admin.user');
 
-Route::get('/boletos/remesas-index', [BoletoController::class, 'remesas_index'])->name('boletos.remesas-index')->middleware('admin.user');
-Route::get('/boletos/remesas-nuevo', [BoletoController::class, 'remesas_nuevo'])->name('boletos.remesas-nuevo')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/remesas-index', [BoletoController::class, 'remesas_index'])->name('boletos.remesas-index')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/remesas-nuevo', [BoletoController::class, 'remesas_nuevo'])->name('boletos.remesas-nuevo')->middleware('admin.user');
 Route::post('/boletos/remesas-crea', [BoletoController::class, 'remesas_crea'])->name('boletos.remesas-crea')->middleware('admin.user');
-Route::get('/boletos/remesas-editar/{id}', [BoletoController::class, 'remesas_editar'])->name('boletos.remesas-editar')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/remesas-editar/{id}', [BoletoController::class, 'remesas_editar'])->name('boletos.remesas-editar')->middleware('admin.user');
 Route::post('/boletos/remesas-actualizar/{id}', [BoletoController::class, 'remesas_actualizar'])->name('boletos.remesas-actualizar')->middleware('admin.user');
 
-Route::get('/boletos/tantos-index', [BoletoController::class, 'tantos_index'])->name('boletos.tantos-index')->middleware('admin.user');
-Route::get('/boletos/tantos-nuevos', [BoletoController::class, 'tantos_nuevos'])->name('boletos.tantos-nuevos')->middleware('admin.user');
-Route::get('/boletos/tantos-nuevo-uno/{cve_escuela}', [BoletoController::class, 'tantos_nuevo_uno'])->name('boletos.tantos-nuevo-uno')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/tantos-index', [BoletoController::class, 'tantos_index'])->name('boletos.tantos-index')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/tantos-nuevos/{id_remesa}', [BoletoController::class, 'tantos_nuevos'])->name('boletos.tantos-nuevos')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/tantos-nuevo-uno/{cve_escuela}', [BoletoController::class, 'tantos_nuevo_uno'])->name('boletos.tantos-nuevo-uno')->middleware('admin.user');
 Route::post('/boletos/tantos-crea', [BoletoController::class, 'tantos_crea'])->name('boletos.tantos-crea')->middleware('admin.user');
 Route::post('/boletos/tantos-crea-uno', [BoletoController::class, 'tantos_crea_uno'])->name('boletos.tantos-crea-uno')->middleware('admin.user');
-Route::get('/boletos/tantos-editar/{id_remesa}/{cve_escuela}', [BoletoController::class, 'tantos_editar'])->name('boletos.tantos-editar')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/tantos-editar/{id_remesa}/{cve_escuela}', [BoletoController::class, 'tantos_editar'])->name('boletos.tantos-editar')->middleware('admin.user');
 Route::post('/boletos/tantos-actualizar/{id_remesa}/{cve_escuela}', [BoletoController::class, 'tantos_actualizar'])->name('boletos.tantos-actualizar')->middleware('admin.user');
-Route::get('/boletos/asignacion-nueva', [BoletoController::class, 'asignacion_nueva'])->name('boletos.asignacion-nueva')->middleware('responsable.user');
+Route::middleware(['auth'])->get('/boletos/asignacion-nueva', [BoletoController::class, 'asignacion_nueva'])->name('boletos.asignacion-nueva')->middleware('responsable.user');
 Route::post('/boletos/asignacion-crea/{id_remesa}', [BoletoController::class, 'asignacion_crea'])->name('boletos.asignacion-crea')->middleware('admin.user');
-Route::get('/boletos/asignacion-pdf/', [BoletoController::class, 'asignacion_pdf'])->name('boletos.asignacion-pdf')->middleware('responsable.user');
-Route::get('/boletos/asignacion-borra/{id_remesa}/{id_estudiante}', [BoletoController::class, 'asignacion_borra'])->name('boletos.asignacion-borra')->middleware('admin.user');
-Route::get('/boletos/asignados/{id_remesa}', [BoletoController::class, 'asignados'])->name('boletos.asignados')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/asignacion-pdf/', [BoletoController::class, 'asignacion_pdf'])->name('boletos.asignacion-pdf')->middleware('responsable.user');
+Route::middleware(['auth'])->get('/boletos/asignacion-borra/{id_remesa}/{id_estudiante}', [BoletoController::class, 'asignacion_borra'])->name('boletos.asignacion-borra')->middleware('admin.user');
+Route::middleware(['auth'])->get('/boletos/asignados/{id_remesa}', [BoletoController::class, 'asignados'])->name('boletos.asignados')->middleware('admin.user');
 
-Route::get('/apoyos/montos-index', [ApoyoController::class, 'montos_index'])->name('apoyos.montos-index')->middleware('admin.user');
-Route::get('/apoyos/montos-nuevos', [ApoyoController::class, 'montos_nuevos'])->name('apoyos.montos-nuevos')->middleware('admin.user');
-Route::get('/apoyos/montos-nuevo-uno/{id_remesa}/{cve_ciudad_escuela}/{cve_escuela}', [ApoyoController::class, 'montos_nuevo_uno'])->name('apoyos.montos-nuevo-uno')->middleware('admin.user');
+Route::middleware(['auth'])->get('/apoyos/montos-index', [ApoyoController::class, 'montos_index'])->name('apoyos.montos-index')->middleware('admin.user');
+Route::middleware(['auth'])->get('/apoyos/montos-nuevos/{id_remesa}/{cve_ciudad_escuela}', [ApoyoController::class, 'montos_nuevos'])->name('apoyos.montos-nuevos')->middleware('admin.user');
+Route::middleware(['auth'])->get('/apoyos/montos-nuevo-uno/{id_remesa}/{cve_ciudad_escuela}/{cve_escuela}', [ApoyoController::class, 'montos_nuevo_uno'])->name('apoyos.montos-nuevo-uno')->middleware('admin.user');
 Route::post('/apoyos/montos-crea-uno', [ApoyoController::class, 'montos_crea_uno'])->name('apoyos.montos-crea-uno');
 Route::post('/apoyos/montos-crea', [ApoyoController::class, 'montos_crea'])->name('apoyos.montos-crea')->middleware('admin.user');
-Route::get('/apoyos/monto-editar/{id_remesa}/{cve_ciudad_escuela}/{cve_escuela}', [ApoyoController::class, 'monto_editar'])->name('apoyos.monto-editar')->middleware('admin.user');
+Route::middleware(['auth'])->get('/apoyos/monto-editar/{id_remesa}/{cve_ciudad_escuela}/{cve_escuela}', [ApoyoController::class, 'monto_editar'])->name('apoyos.monto-editar')->middleware('admin.user');
 Route::post('/apoyos/monto-actualizar/{id_remesa}/{cve_ciudad_escuela}/{cve_escuela}', [ApoyoController::class, 'monto_actualizar'])->name('apoyos.monto-actualizar')->middleware('admin.user');
-Route::get('/apoyos/asignacion', [ApoyoController::class, 'asignacion'])->name('apoyos.asignacion')->middleware('responsable.user')->middleware('responsable.user');
+Route::middleware(['auth'])->get('/apoyos/asignacion', [ApoyoController::class, 'asignacion'])->name('apoyos.asignacion')->middleware('responsable.user')->middleware('responsable.user');
 Route::post('/apoyos/asignacion-crea/{id_remesa}', [ApoyoController::class, 'asignacion_crea'])->name('apoyos.asignacion-crea')->middleware('admin.user');
-Route::get('/apoyos/asignacion-borra/{id_remesa}/{id_estudiante}', [ApoyoController::class, 'asignacion_borra'])->name('apoyos.asignacion-borra')->middleware('admin.user');
-Route::get('/apoyos/asignacion-pdf/', [ApoyoController::class, 'asignacion_pdf'])->name('apoyos.asignacion-pdf')->middleware('responsable.user');
+Route::middleware(['auth'])->get('/apoyos/asignacion-borra/{id_remesa}/{id_estudiante}', [ApoyoController::class, 'asignacion_borra'])->name('apoyos.asignacion-borra')->middleware('admin.user');
+Route::middleware(['auth'])->get('/apoyos/asignacion-pdf/', [ApoyoController::class, 'asignacion_pdf'])->name('apoyos.asignacion-pdf')->middleware('responsable.user');
 
 // Route::get('/estudiantes', function () {
 // })->middleware(ChecaTipoUsuario::class);

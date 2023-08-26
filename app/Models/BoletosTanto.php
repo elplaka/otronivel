@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Ciclo;
 use App\Models\BoletosRemesa;
 use App\Models\Escuela;
+use App\Models\Estudiante;
 
 class BoletosTanto extends Model
 {
@@ -14,21 +15,14 @@ class BoletosTanto extends Model
 
     
     protected $table = "boletos_tantos";
-    //protected $primaryKey = 'id_remesa';
-    protected $uniqueKey = ['id_remesa', 'id_ciclo', 'cve_escuela'];
+    protected $uniqueKey = ['id_remesa', 'cve_escuela'];
 
     protected $fillable = [
         'id_remesa',
-        'id_ciclo',
         'cve_escuela',
         'cantidad_folios',
     ]; 
     
-    public function ciclo()
-    {
-        return $this->belongsTo(Ciclo::class);
-    }
-
     public function boleto_remesa()
     {
         return $this->belongsTo(BoletosRemesa::class, 'id_remesa');
@@ -36,6 +30,11 @@ class BoletosTanto extends Model
 
     public function escuela()
     {
-        return $this->belongsTo(Escuela::class, 'cve_escuela');
+        return $this->belongsTo(Escuela::class, 'cve_escuela', 'cve_escuela');
+    }
+
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiante::class, 'cve_escuela', 'cve_escuela');
     }
 }

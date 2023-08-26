@@ -195,6 +195,20 @@
         }
     </style>
 
+    <?php 
+        use App\Models\Ciclo;
+
+        $configFilePath = config_path('ciclo_actual.ini');
+        $config = parse_ini_file($configFilePath, true);
+
+        $cicloActual = $config['Ciclo']['CicloActual'];
+
+        $anoInicio = substr($cicloActual, 0, 2);
+        $anoFin = substr($cicloActual, 2, 2);
+
+        $ciclo_escolar = "20" . $anoInicio . "-20" . $anoFin; 
+    ?>
+
 
 <body id="page-top">
 
@@ -202,21 +216,24 @@
     <div id="wrapper">
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href={{ url('/home') }}>
                 <div>
                     <i class="fa-solid fa-book-open-reader"></i>
-                    {{-- <img src="/img/icono.png" alt="Por tiempos mejores" style="width:50px"> --}}
                 </div>
-                <div class="sidebar-brand-text mx-3">ALIVIAN4TE </div>
+                <div class="sidebar-brand-text mx-3">ALIVIAN4TE </div>                
             </a>
 
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}" style="margin-top: -30px;">
+                <div style="font-size: 11px; margin-left: 4px; font-weight: normal">Ciclo Escolar <br> {{ $ciclo_escolar }}</div>
+            </a>
+            
+
             <!-- Divider -->
-            <hr class="sidebar-divider my-0">
+            {{-- <hr class="sidebar-divider my-0"> --}}
 
            <!-- Divider -->
-            <hr class="sidebar-divider">
+            <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Estudiantes -->
             @if (Auth::user()->usertype >= 1)  
@@ -257,7 +274,7 @@
 
             @if (Auth::user()->usertype == 1 || Auth::user()->usertype == 3)  
             <!-- Divider -->
-           <hr class="sidebar-divider"> 
+           <hr class="sidebar-divider my-0"> 
            <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSystem2"
             aria-expanded="true" aria-controls="collapseSystem2">
@@ -279,7 +296,7 @@
 
            @if (Auth::user()->usertype == 1 || Auth::user()->usertype == 3)  
            <!-- Divider -->
-          <hr class="sidebar-divider"> 
+          <hr class="sidebar-divider my-0"> 
           <li class="nav-item">
            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSystem3"
            aria-expanded="true" aria-controls="collapseSystem3">
@@ -302,7 +319,7 @@
 
             @if (Auth::user()->usertype == 1)  
              <!-- Divider -->
-            <hr class="sidebar-divider"> 
+            <hr class="sidebar-divider my-0"> 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('usuarios.index') }}">
                     <i class="fas fa-user-cog"></i>

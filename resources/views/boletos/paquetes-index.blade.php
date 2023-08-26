@@ -25,7 +25,7 @@
              <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800"> <b> Paquetes de Boletos </b></h1>
-                <a href="{{ route('boletos.paquetes-nuevo') }}" title="Nuevo Paquete" class="btn btn-primary mb-2">+</a>
+                <a href="{{ route('boletos.paquetes-nuevo') }}" title="Nuevo Paquete" class="btn btn-verde mb-1s">+</a>
             </div>
         </div>
         <div class="card-body">
@@ -51,7 +51,7 @@
                                 <td>{{ $paquete->folios_disponibles }}</td>
                                 <td>
                                     @if ($paquete->ult_folio_asignado == 0)
-                                    <a href="{{ route('boletos.paquetes-editar', $paquete->id_paquete) }}" class="btn-sm btn-success"> <i class="fa-solid fa-pen-to-square"></i> </a>
+                                    <a href="{{ route('boletos.paquetes-editar', $paquete->id_paquete) }}" class="btn-sm btn-dorado"> <i class="fa-solid fa-pen-to-square"></i> </a>
                                     @endif
                                 </td>
                             </tr>                            

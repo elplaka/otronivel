@@ -11,6 +11,8 @@ use App\Models\Escuela;
 use App\Models\Ciudad;
 use App\Models\StatusEstudiante;
 use App\Models\BoletoAsignado;
+use App\Models\BoletosTanto;
+use App\Models\ApoyosMonto;
 
 class Estudiante extends Model
 {
@@ -63,7 +65,7 @@ class Estudiante extends Model
 
     public function escuela()
     {
-        return $this->belongsTo(Escuela::class, 'cve_escuela');
+        return $this->belongsTo(Escuela::class, 'cve_escuela', 'cve_escuela');
     }
 
     public function ciudad()
@@ -81,9 +83,19 @@ class Estudiante extends Model
         return $this->belongsTo(StatusEstudiante::class, 'cve_status');
     }
 
-    public function boletos_asignados()
+    public function boletosTantos()
     {
-        return $this->hasMany(BoletoAsignado::class, 'id_estudiante');
+        return $this->hasOne(BoletosTanto::class, 'cve_escuela', 'cve_escuela');
+    }
+
+    public function boletosAsignados()
+    {
+        return $this->hasOne(BoletoAsignado::class, 'id_estudiante', 'id');
+    }
+
+    public function apoyosMontos()
+    {
+        return $this->hasOne(ApoyosMonto::class, 'cve_escuela', 'cve_escuela');
     }
 
     public function ciclo()
