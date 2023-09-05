@@ -622,9 +622,6 @@ class EstudianteController extends Controller
 
         $message = $message . "</ul>";
 
-        // dump(isset($request->img_acta_nac));
-        // dd($request->img_acta_nac);
-
         if ($errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia)
         {
             return redirect()->back()->with('message', $message);
@@ -1306,7 +1303,6 @@ class EstudianteController extends Controller
 
     public function censar(Request $request, $id)
     {
-        // dd($request);
         $validatedData = $request->validate([
             'observaciones' => ['max:255'], 
         ]);
@@ -1392,35 +1388,76 @@ class EstudianteController extends Controller
         return $pdf->stream();
     }
 
+    // public function download_zip(Request $request, $id)
+    // {
+    //     $zip = new ZipArchive;
+   
+    //     $estudiante = Estudiante::findorfail($id);
+
+    //     $fileName = $estudiante->primer_apellido . '_' . $estudiante->segundo_apellido . '_' .$estudiante->nombre . '_docs_' . $id . '.zip';
+   
+    //     if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
+    //     {
+    //         $files[0] = $_SERVER['DOCUMENT_ROOT'] . '/img/curps/' . $estudiante->img_curp;
+    //         $files[1] = $_SERVER['DOCUMENT_ROOT'] . '/img/actas/' . substr($estudiante->img_acta_nac, 0, strlen($estudiante->img_acta_nac) - 3) . strtoupper(substr($estudiante->img_acta_nac, strlen($estudiante->img_acta_nac) - 3,3));
+    //         $files[2] = $_SERVER['DOCUMENT_ROOT'] . '/img/comprobantes/' . substr($estudiante->img_comprobante_dom, 0, strlen($estudiante->img_comprobante_dom) - 3) . strtoupper(substr($estudiante->img_comprobante_dom, strlen($estudiante->img_comprobante_dom) - 3,3));
+    //         $files[3] = $_SERVER['DOCUMENT_ROOT'] . '/img/identificaciones/' . substr($estudiante->img_identificacion, 0, strlen($estudiante->img_identificacion) - 3) . strtoupper(substr($estudiante->img_identificacion, strlen($estudiante->img_identificacion) - 3,3));
+    //         $files[4] = $_SERVER['DOCUMENT_ROOT'] . '/img/kardex/' . substr($estudiante->img_kardex, 0, strlen($estudiante->img_kardex) - 3) . strtoupper(substr($estudiante->img_kardex, strlen($estudiante->img_kardex) - 3,3));
+    //         if ($estudiante->img_constancia != "PENDIENTE") $files[5] = $_SERVER['DOCUMENT_ROOT'] . '/img/constancias/' . $estudiante->img_constancia;
+
+    //         $i = 1;
+    //         foreach ($files as $key => $value) {
+    //             $relativeNameInZipFile = basename($value);
+    //             $zip->addFile($value, $relativeNameInZipFile);
+    //             $i++;
+    //         }
+             
+    //         $zip->close();
+    //     }
+    
+    //     return response()->download(public_path($fileName));
+    // }
+
+  
+
     public function download_zip(Request $request, $id)
     {
         $zip = new ZipArchive;
-   
-        $estudiante = Estudiante::findorfail($id);
-
+        
+        $estudiante = Estudiante::findOrFail($id);
+    
         $fileName = $estudiante->primer_apellido . '_' . $estudiante->segundo_apellido . '_' .$estudiante->nombre . '_docs_' . $id . '.zip';
-   
-        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
+    
+        $zipFilePath = public_path($fileName);
+    
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE)
         {
-            $files[0] = $_SERVER['DOCUMENT_ROOT'] . '/img/curps/' . $estudiante->img_curp;
-            $files[1] = $_SERVER['DOCUMENT_ROOT'] . '/img/actas/' . substr($estudiante->img_acta_nac, 0, strlen($estudiante->img_acta_nac) - 3) . strtoupper(substr($estudiante->img_acta_nac, strlen($estudiante->img_acta_nac) - 3,3));
-            $files[2] = $_SERVER['DOCUMENT_ROOT'] . '/img/comprobantes/' . substr($estudiante->img_comprobante_dom, 0, strlen($estudiante->img_comprobante_dom) - 3) . strtoupper(substr($estudiante->img_comprobante_dom, strlen($estudiante->img_comprobante_dom) - 3,3));
-            $files[3] = $_SERVER['DOCUMENT_ROOT'] . '/img/identificaciones/' . substr($estudiante->img_identificacion, 0, strlen($estudiante->img_identificacion) - 3) . strtoupper(substr($estudiante->img_identificacion, strlen($estudiante->img_identificacion) - 3,3));
-            $files[4] = $_SERVER['DOCUMENT_ROOT'] . '/img/kardex/' . substr($estudiante->img_kardex, 0, strlen($estudiante->img_kardex) - 3) . strtoupper(substr($estudiante->img_kardex, strlen($estudiante->img_kardex) - 3,3));
-            if ($estudiante->img_constancia != "PENDIENTE") $files[5] = $_SERVER['DOCUMENT_ROOT'] . '/img/constancias/' . $estudiante->img_constancia;
-
-            $i = 1;
-            foreach ($files as $key => $value) {
-                $relativeNameInZipFile = basename($value);
-                //if ($i == 3) dd($value);
-                $zip->addFile($value, $relativeNameInZipFile);
-                //if ($i == 5) dd('Bien');
-                $i++;
+            $files = [
+                'curps/' . $estudiante->img_curp,
+                'actas/' . substr($estudiante->img_acta_nac, 0, -3) . strtoupper(substr($estudiante->img_acta_nac, -3)),
+                'comprobantes/' . substr($estudiante->img_comprobante_dom, 0, -3) . strtoupper(substr($estudiante->img_comprobante_dom, -3)),
+                'identificaciones/' . substr($estudiante->img_identificacion, 0, -3) . strtoupper(substr($estudiante->img_identificacion, -3)),
+                'kardex/' . substr($estudiante->img_kardex, 0, -3) . strtoupper(substr($estudiante->img_kardex, -3)),
+            ];
+    
+            if ($estudiante->img_constancia != "PENDIENTE") {
+                $files[] = 'constancias/' . $estudiante->img_constancia;
             }
-             
+    
+            foreach ($files as $file) {
+                    // Obtén el contenido del archivo desde el disco local
+                    $fileContents = Storage::disk('local')->get($file);
+
+                    // Si el archivo tiene contenido, agrégalo al archivo ZIP
+                    if (!empty($fileContents)) {
+                        $relativeNameInZipFile = basename($file);
+                        $zip->addFromString($relativeNameInZipFile, $fileContents);
+                    }
+            }
+    
             $zip->close();
         }
     
-        return response()->download(public_path($fileName));
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);;
     }
- }
+}  
