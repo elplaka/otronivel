@@ -32,5 +32,9 @@ class BoletosRemesa extends Model
         return $this->hasMany(BoletosTanto::class);
     }
 
+    public function boletosAsignados()
+    {
+        return $this->hasMany(BoletoAsignado::class, 'id_remesa');
+    }
     
 }

@@ -12,6 +12,7 @@ use App\Models\Ciudad;
 use App\Models\StatusEstudiante;
 use App\Models\BoletoAsignado;
 use App\Models\BoletosTanto;
+use App\Models\BoletosRemesa;
 use App\Models\ApoyosMonto;
 
 class Estudiante extends Model
@@ -90,7 +91,12 @@ class Estudiante extends Model
 
     public function boletosAsignados()
     {
-        return $this->hasOne(BoletoAsignado::class, 'id_estudiante', 'id');
+        return $this->hasMany(BoletoAsignado::class, 'id_estudiante', 'id');
+    }
+
+    public function apoyosAsignados()
+    {
+        return $this->hasMany(ApoyoAsignado::class, 'id_estudiante', 'id');
     }
 
     public function apoyosMontos()
@@ -103,4 +109,8 @@ class Estudiante extends Model
         return $this->belongsTo(Ciclo::class, 'id_ciclo');
     }
 
+    public function boletos_remesas()
+    {
+        return $this->belongsToMany(BoletosRemesa::class, 'boletos_asignados', 'id_estudiante', 'id_remesa');
+    }
 }

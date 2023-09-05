@@ -248,6 +248,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            @if ($usertype <= 1)
                                             <div class="col-md-2">  
                                                 <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Estatus </b> </label>
                                                 <div class="search_select_box">
@@ -290,6 +291,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            @endif
                                             <div class="col-md-3">
                                                 <label class="col-form-label text-md-left" style="font-size:13px"> <b> &nbsp; Información Socioeconómica </b> </label>
                                                 <div class="search_select_box">
@@ -379,6 +381,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            @if ($usertype <= 1)
                                             <div class="col-md-1 text-md-right" style="font-size:13px">
                                                 <label class="col-form-label" style="font-size:13px"> <b> &nbsp; Ciclo </b> </label>
                                             </div>
@@ -391,6 +394,7 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            @endif
                                             <div class="col-md-2 text-md-right" style="font-size:13px">
                                                 <label class="col-form-label" style="font-size:13px"> <i class="fas fa-sort"></i> <b> &nbsp; Ordenar por <i class="fas fa-angle-double-right"></i> </b> </label>
                                             </div>
@@ -475,8 +479,8 @@
                                             break;  
                                     }
                                 ?>
-                                <tr title={{ $estudiante->status->descripcion }}>
-                                    <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
+                                <tr  @if ($usertype <= 1) title={{ $estudiante->status->descripcion }} @endif>
+                                    <td scope="row" style="border-left: 4px solid @if ($usertype <= 1) {{ $color }} @endif; vertical-align:middle">{{ $i++ }}</td>
                                     <td style="vertical-align:middle">{{ $estudiante->id }}</td>
                                     <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
                                     <td style="vertical-align:middle">{{ $estudiante->ano_escolar . '°' }} <i class="fas fa-university"></i> {{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>

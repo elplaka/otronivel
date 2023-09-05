@@ -1,3 +1,22 @@
+@php
+    use App\Utils\HelperFunctions;
+    use App\Models\BoletoAsignado;
+    use App\Models\BoletosRemesa;
+
+    if (isset(auth()->user()->usertype))
+    {
+        $usertype = auth()->user()->usertype;
+    }
+    else 
+    {
+        return redirect()->to('/');
+    }
+
+    $i = 1;
+    $estudiantes_sin_boletos = 0;
+    $id_partida_select = $id_partida;
+@endphp
+
 @extends('layouts.main')
 @section('content')
     <!-- Page Heading -->
@@ -76,84 +95,34 @@
             </div>
         </div>
     </div>
-<?php 
 
-    use App\Models\BoletoAsignado;
-    use App\Models\BoletosRemesa;
+    <!-- Modal de confirmación -->
+<div class="modal fade" id="confirmarModal" tabindex="-1" role="dialog" aria-labelledby="confirmarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmarModalLabel">Confirmar Nueva Partida</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Deseas crear una nueva partida?
+            </div>
+            <div class="modal-footer">
+                <form method="POST" action="{{ route('boletos.asignacion-crea', ['id_remesa' => $id_remesa, 'tipo_partida' => 2]) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-verde">Crear Nueva Partida</button>
+                </form>
+                <form method="POST" action="{{ route('boletos.asignacion-crea', ['id_remesa' => $id_remesa, 'tipo_partida' => 3]) }}">
+                    @csrf
+                    <button type="submit" class="btn btn-rojo">Con la misma partida</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    function formato_fecha_espanol_corta($fecha)
-    {
-        $fecha2 = strtotime($fecha);
-        $dia = date('d', $fecha2);
-        $mes_numero = date('m', $fecha2);
-        switch ($mes_numero)
-        {
-            case 1:
-                $mes = "ENE";
-                break;
-            case 2:
-                $mes = "FEB";
-                break;
-            case 3:
-                $mes = "MAR";
-                break;
-            case 4:
-                $mes = "ABR";
-                break;
-            case 5:
-                $mes = "MAY";
-                break;
-            case 6:
-                $mes = "JUN";
-                break;
-            case 7:
-                $mes = "JUL";
-                break;
-            case 8:
-                $mes = "AGO";
-                break;
-            case 9:
-                $mes = "SEP";
-                break;
-            case 10:
-                $mes = "OCT";
-                break;
-            case 11:
-                $mes = "NOV";
-                break;
-            case 12:
-                $mes = "DIC";
-                break;
-        }
-        return $dia . '-' . $mes . '-' . date('Y', $fecha2);
-    }
-
-    function folios_asignados($id_remesa, $id_estudiante)
-    {
-        $folios_asignados = "";
-        $asignados = BoletoAsignado::where('id_remesa', $id_remesa)->where('id_estudiante', $id_estudiante)->get();
-
-        if ($asignados->count() == 0) return "N/A";
-        foreach($asignados as $asignado)
-        {
-            if ($asignado->folio_inicial == $asignado->folio_final) $folios_asignados = $folios_asignados . " [ " . $asignado->folio_inicial . " ] "; 
-            else $folios_asignados = $folios_asignados . " [ " . $asignado->folio_inicial . " - " . $asignado->folio_final . " ] "; 
-        }
-
-        return $folios_asignados;
-    }
-
-    if (isset(auth()->user()->usertype))
-    {
-        $usertype = auth()->user()->usertype;
-    }
-    else 
-    {
-        return redirect()->to('/');
-    }
-
-    $i = 1;
-?>
 <div class="container-fluid">
     <div class="card mx-auto">
         <div>
@@ -191,20 +160,15 @@
                         <select id="id_remesa" name="id_remesa" class="form-control" @error('id_remesa') is-invalid @enderror aria-label="Default select example" onchange="this.form.submit()">
                             <option value=''>-- SELECCIONA REMESA --</option>
                             @foreach ($remesas as $remesa)
-                                <option value="{{ $remesa->id_remesa }}" {{ $remesa->id_remesa == $id_remesa? 'selected' : '' }}>{{ $remesa->descripcion . ' :: ' . formato_fecha_espanol_corta($remesa->fecha) }}</option>
+                                <option value="{{ $remesa->id_remesa }}" {{ $remesa->id_remesa == $id_remesa? 'selected' : '' }}>{{ $remesa->descripcion . ' :: ' . HelperFunctions::formato_fecha_espanol_corta($remesa->fecha) }}</option>
                             @endforeach
                         </select>
-                        
-                        @error('id_remesa')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
                     </div>
                     <?php
                         $remesa = BoletosRemesa::where('id_remesa', $id_remesa)->first();
                         if(!isset($remesa)) $remesa_realizada = 0;
                         else $remesa_realizada = $remesa->realizada;
+                        $i=1;
                     ?>
                     <div>
                         <table>
@@ -215,17 +179,23 @@
                             </tr>
                         </table>
                     </div>
-                    {{-- @if ($usertype == 1 && $id_remesa > 0)
-                    <div class="col-md-4">
-                        <a href="{{ route('boletos.asignados', $id_remesa) }}" class="btn btn-sm btn-danger float-right"><i class="fa-solid fa-ticket"></i></a>
+                    <label for="id_partida" class="col-md-2 col-form-label text-md-right">{{ __('Partida') }} </label>
+                    <div class="col-md-2">
+                        <select id="id_partida" name="id_partida" class="form-control" @error('id_partida') is-invalid @enderror aria-label="Default select example" onchange="this.form.submit()">
+                            <option value='-1'>-- TODAS --</option>
+                            @foreach ($partidas as $partida)
+                                <option value="{{ $partida }}" {{ $id_partida == $partida ? 'selected' : '' }}>
+                                    {{ $partida }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    @endif --}}
                 </div>
             </form>
             {{-- <form>   --}}
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover table-bordered">
+                        <table class="table table-sm table-hover table-bordered" style="font-size: 9pt;">
                             <thead class="thead-light">
                             <tr>
                                 <th class="col-md-auto">#</th>
@@ -234,7 +204,7 @@
                                 <th class="col-md-auto">Escuela - Ciudad</th>
                                 <th class="col-md-auto">Carrera</th>
                                 <th class="col-md-auto">Cant. Folios</th>
-                                <th class="col-md-auto">Folios</th>
+                                <th class="col-md-auto">Partida/Folios</th>
                                 @if ($usertype == 1) <th class="col-md-auto"></th> @endif
                             </tr>
                             </thead>
@@ -277,7 +247,7 @@
                                             }
 
                                             $cantidad_folios = $boletos->folio_final - $boletos->folio_inicial + 1;
-                                        ?>                
+                                         ?>                
                                         <tr style="font-size:15px">
                                             <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
                                             <td style="vertical-align:middle">{{ $boletos->estudiante->id }}</td>
@@ -287,7 +257,7 @@
                                             <td style="vertical-align:middle">{{ $cantidad_folios }} &nbsp;</td>
                                             <td style="vertical-align:middle">
                                             @if ($id_remesa != 0)
-                                                {{ $folios_asignados = folios_asignados($boletos->id_remesa, $boletos->estudiante->id) }}
+                                                {{ $boletos->id_partida . ' :: ' . $folios_asignados = HelperFunctions::folios_asignados($boletos->id_remesa, $boletos->estudiante->id) }}
                                             @endif
                                             </td>
                                             @if ($usertype == 1)
@@ -342,16 +312,26 @@
                                                     break;  
                                             }
                                         ?>                
-                                        <tr style="font-size:15px">
+                                       <tr style="font-size:15px">
                                             <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
                                             <td style="vertical-align:middle">{{ $estudiante->id }}</td>
                                             <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
-                                            <td style="vertical-align:middle">{{ $estudiante->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
+                                            <td style="vertical-align:middle">{{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
                                             <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
                                             <td style="vertical-align:middle">{{ $estudiante->boletosTantos->cantidad_folios }} &nbsp;</td>
                                             <td style="vertical-align:middle">
                                             @if ($id_remesa != 0)
-                                                {{ $folios_asignados = folios_asignados($estudiante->boletosTantos->id_remesa, $estudiante->id) }}
+                                                 @php
+                                                    $boletos = $estudiante->boletosAsignados()
+                                                                ->where('id_remesa', $id_remesa)
+                                                                ->first();
+                                                    $id_partida = is_null($boletos) ? '' : $boletos->id_partida . ' :: ';
+                                                    $folios_asignados = HelperFunctions::folios_asignados($estudiante->boletosTantos->id_remesa, $estudiante->id);
+                                                    
+                                                    if ($folios_asignados == 'N/A') $estudiantes_sin_boletos++;
+                                                 @endphp
+
+                                                {{ $id_partida . $folios_asignados }}
                                             @endif
                                             </td>
                                             @if ($usertype == 1)
@@ -365,7 +345,7 @@
                                                 @endif
                                             </td> 
                                             @endif                                  
-                                        </tr> 
+                                        </tr>  
                                     @endforeach
                                 </tbody>
                             @endif
@@ -388,11 +368,19 @@
                                 </label>
                             @endif
                             @if ($usertype == 1)
-                            <form method="POST" action="{{ route('boletos.asignacion-crea', $id_remesa) }}">
+                            <form method="POST" action="{{ route('boletos.asignacion-crea', ['id_remesa' => $id_remesa, 'tipo_partida' => 1]) }}">
                                     @csrf
-                                    <div class="col-md-0 float-right">
-                                        <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-verde btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
-                                    </div>
+                                    @if($id_partida_select == -1)
+                                        @if ($estudiantes_sin_boletos == $i-1)
+                                        <div class="col-md-0 float-right">
+                                            <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-verde btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
+                                        </div>
+                                        @else
+                                        <div class="col-md-0 float-right">
+                                            <button id="btnAbrirModal" type="button" class="btn btn-dorado btn-sm" data-toggle="modal" data-target="#confirmarModal"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
+                                        </div>
+                                        @endif
+                                    @endif
                             </form>
                             @endif
                             <form method="GET" id="formReport" action="{{ route('boletos.asignacion-pdf') }}">
@@ -401,7 +389,7 @@
                                 <input id="letraInicial" name="letraInicial" type="hidden"  value="" class="form-control">
                                 <input id="letraFinal" name="letraFinal" type="hidden"  value="" class="form-control">
                                     <div class="col-md-1 float-right">
-                                        <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-rojo btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> PDF </b> </button>
+                                        <button id="btnImprimir" name="btnImprimir" type="button" class="btn btn-rojo btn-sm" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-file-export"></i> <b> PDF </b> </button> 
                                     </div>
                             </form>
                         </div>

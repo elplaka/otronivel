@@ -18,7 +18,6 @@ class ApoyosMonto extends Model
 
     protected $fillable = [
         'id_remesa',
-        'id_ciclo',
         'cve_ciudad_escuela',
         'cve_escuela',
         'monto',

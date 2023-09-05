@@ -17,8 +17,6 @@ use DOMDocument;
 
 class BoletoController extends Controller
 {
-    
-    
     public function asignacion_borra(Request $request, $id_remesa, $id_estudiante)
     {
 
@@ -68,11 +66,22 @@ class BoletoController extends Controller
         return $pdf->stream();
     }
 
+
     public function asignacion_nueva(Request $request)
     {
         $ciclo = $request->session()->get('ciclo');
+
         $id_remesa = $request->id_remesa;
         if (!isset($id_remesa)) $id_remesa = 0;
+
+        $id_partida = $request->id_partida;
+        if ($id_remesa != $request->session()->get('id_remesa')) {
+                $id_partida = 1;
+        }
+
+        if (!isset($id_partida)) $id_partida = 1;
+        
+        $request->session()->put('id_remesa', $id_remesa);
         $remesas = BoletosRemesa::where('id_ciclo', $ciclo)->get();
         
         $remesa = BoletosRemesa::where('id_remesa', $id_remesa)->first();
@@ -81,7 +90,14 @@ class BoletoController extends Controller
 
         if ($remesa_realizada)
         {
-            $boletos_asignados = BoletoAsignado::where('id_remesa', $id_remesa)->orderBy(Estudiante::select('primer_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('segundo_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('nombre')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc');
+            if ($id_partida > 0)
+            {
+                $boletos_asignados = BoletoAsignado::where('id_remesa', $id_remesa)->where('id_partida', $id_partida)->orderBy(Estudiante::select('primer_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('segundo_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('nombre')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc');
+            }
+            else
+            {
+                $boletos_asignados = BoletoAsignado::where('id_remesa', $id_remesa)->orderBy(Estudiante::select('primer_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('segundo_apellido')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc')->orderBy(Estudiante::select('nombre')->whereColumn('estudiantes.id', 'boletos_asignados.id_estudiante'),'asc');
+            }
 
             $ids_estudiantes = $boletos_asignados->pluck('id_estudiante');
             $ids_asignar = $ids_estudiantes->toArray();
@@ -89,30 +105,47 @@ class BoletoController extends Controller
 
             $boletos_asignados = $boletos_asignados->paginate(25)->withQueryString();
 
-            return view('boletos.asignacion-nueva', compact('remesas', 'boletos_asignados', 'id_remesa', 'ciclo'));
+            return view('boletos.asignacion-nueva', compact('remesas', 'boletos_asignados', 'id_remesa', 'ciclo', 'id_partida'));
         }
         else
         {
             $estudiantesQuery = Estudiante::with(['escuela', 'boletosTantos' => function ($query) use ($id_remesa) {
                 $query->where('id_remesa', $id_remesa);
             }])
-                ->whereHas('boletosTantos', function ($query) use ($id_remesa) {
-                    $query->where('id_remesa', $id_remesa);
-                })
-                ->where('id_ciclo', $ciclo)
-                ->where('cve_ciudad_escuela', 1)
-                ->where('cve_status', 6)
-                ->orderBy('primer_apellido')
-                ->orderBy('segundo_apellido')
-                ->orderBy('nombre');
+            ->whereHas('boletosTantos', function ($query) use ($id_remesa) {
+                $query->where('id_remesa', $id_remesa);
+            })
+             ->where('id_ciclo', $ciclo)
+            ->where('cve_ciudad_escuela', 1)
+            ->where('cve_status', 6)
+            ->orderBy('primer_apellido')
+            ->orderBy('segundo_apellido')
+            ->orderBy('nombre');
 
+            if ($id_partida > 0)
+            {
+                $estudiantesQuery = $estudiantesQuery->whereHas('boletosAsignados', function ($query) use ($id_partida) {
+                    if ($id_partida !== null) {
+                        $query->where('id_partida', $id_partida);
+                    }
+                });
+            }
+        
             $estudiantes = $estudiantesQuery->paginate(25)->withQueryString();
             
             $ids_estudiantes = $estudiantes->pluck('id');
             $ids_asignar = $ids_estudiantes->toArray();
             $request->session()->put('ids_asignar', $ids_asignar);
-            
-            return view('boletos.asignacion-nueva', compact('remesas', 'estudiantes', 'id_remesa', 'ciclo'));
+
+            $partidas = BoletoAsignado::where('id_remesa', $id_remesa)
+            ->orderBy('id_partida')
+            ->pluck('id_partida')
+            ->unique()
+            ->toArray();
+
+            // dd($estudiantesQuery->get());
+
+            return view('boletos.asignacion-nueva', compact('remesas', 'partidas', 'estudiantes', 'id_remesa', 'id_partida'));
         }
     }
 
@@ -257,12 +290,37 @@ class BoletoController extends Controller
         return $cantidad_folios;
     }
 
-    public function asignacion_crea($id_remesa, Request $request)
+    public function regresa_sig_partida($id_remesa)
+    {
+        $sig_partida = BoletoAsignado::where('id_remesa', $id_remesa)->max('id_partida');
+
+        $sig_partida++;
+
+        return $sig_partida;
+
+    }
+
+    public function hay_boletos_remesa($id_remesa)
+    {
+        $boletos_asignados = BoletoAsignado::where('id_remesa', $id_remesa)->exists();
+
+        if ($boletos_asignados)
+        {
+            return $this->regresa_sig_partida($id_remesa);
+        }
+        else return 1;   //No hay boletos en la remesa
+    }
+
+    public function asignacion_crea($id_remesa, $tipo_partida, Request $request)
     {
         $ciclo = $request->session()->get('ciclo');
         $ids_asignar = $request->session()->get('ids_asignar');
-        $i = 0;
+        $i = 0; 
         $estudiantes_asignacion = 0;
+
+        if ($tipo_partida == 1) $id_partida = 1;   //Es la primer partida
+        elseif ($tipo_partida == 2) $id_partida = $this->hay_boletos_remesa($id_remesa);  //Es nueva partida cuando hay partidas creadas
+        elseif ($tipo_partida == 3) $id_partida = $this->hay_boletos_remesa($id_remesa) - 1;  //Es la misma partida cuando hay partidas creadas
 
         $folios_requeridos =  Estudiante::select('boletos_tantos.cantidad_folios')
         ->leftjoin('boletos_tantos', 'boletos_tantos.cve_escuela', '=', 'estudiantes.cve_escuela')
@@ -291,6 +349,7 @@ class BoletoController extends Controller
                             BoletoAsignado::create([
                             'id_remesa' => $id_remesa,
                             'id_paquete' => $id_paq[0],
+                            'id_partida' => $id_partida,
                             'id_estudiante' => $id_estudiante,
                             'folio_inicial' => $id_paq[1],
                             'folio_final' => $id_paq[2],
@@ -301,7 +360,6 @@ class BoletoController extends Controller
                     }
                 }
             }
-
             DB::commit();
             if ($estudiantes_asignacion == 0)   //No hubo ningún estudiante con asignación porque ya tenía una
                 return redirect()->route('boletos.asignacion-nueva')->with('message', 'No se realizó NINGUNA ASIGNACIÓN.')->with('tipo_msg', 'danger');

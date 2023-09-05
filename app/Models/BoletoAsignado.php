@@ -18,7 +18,7 @@ class BoletoAsignado extends Model
     protected $fillable = [
         'id_remesa',
         'id_paquete',
-        'id_ciclo',
+        'id_partida',
         'id_estudiante',
         'folio_inicial',
         'folio_final',

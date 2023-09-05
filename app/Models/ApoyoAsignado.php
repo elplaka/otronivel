@@ -18,8 +18,8 @@ class ApoyoAsignado extends Model
 
     protected $fillable = [
         'id_remesa',
-        'id_ciclo',
         'id_estudiante',
+        'id_partida',
         'monto',
         'entregados',
     ]; 

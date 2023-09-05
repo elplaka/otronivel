@@ -101,28 +101,68 @@ class ApoyoController extends Controller
         }
     }
 
-    public function asignacion_crea($id_remesa, Request $request)
+    public function regresa_sig_partida($id_remesa, $cve_ciudad)
+    {
+        // $sig_partida = ApoyoAsignado::where('id_remesa', $id_remesa)->max('id_partida');
+
+        $sig_partida = ApoyoAsignado::where('id_remesa', $id_remesa)
+        ->whereHas('estudiante', function ($query) use ($cve_ciudad) {
+            $query->where('cve_ciudad_escuela', $cve_ciudad);
+        })
+        ->max('id_partida');
+
+        $sig_partida++;
+
+        return $sig_partida;
+
+    }
+
+    public function hay_apoyos_remesa($id_remesa, $cve_ciudad)
+    {
+        $apoyos_asignados = ApoyoAsignado::where('id_remesa', $id_remesa)
+        ->whereHas('estudiante', function ($query) use ($cve_ciudad) {
+            $query->where('cve_ciudad_escuela', $cve_ciudad);
+        })->exists();
+
+        if ($apoyos_asignados)
+        {
+            return $this->regresa_sig_partida($id_remesa, $cve_ciudad);
+        }
+        else return 1;   //No hay boletos en la remesa
+    }
+
+    public function asignacion_crea($id_remesa, $cve_ciudad, $tipo_partida, Request $request)
     {
         $ids_asignar = $request->session()->get('ids_asignar');
         $montos = $request->session()->get('montos');
         $i = 0;
         $estudiantes_asignacion = 0;
 
+        if ($tipo_partida == 1) $id_partida = 1;   //Es la primer partida
+        elseif ($tipo_partida == 2) $id_partida = $this->hay_apoyos_remesa($id_remesa, $cve_ciudad);  //Es nueva partida cuando hay partidas creadas
+        elseif ($tipo_partida == 3) $id_partida = $this->hay_apoyos_remesa($id_remesa, $cve_ciudad) - 1;  //Es la misma partida cuando hay partidas creadas
+
         DB::beginTransaction();
         try
         {
+            // $id_partida = $this->hay_apoyos_remesa($id_remesa, $cve_ciudad);
             foreach($ids_asignar as $id_estudiante)  //Recorre todos los estudiantes
             {
                 if (!$this->se_ha_asignado($id_remesa, $id_estudiante))
                 {
+                    if (!is_null($montos[$i]))
+                    {
                         ApoyoAsignado::create([
                         'id_remesa' => $id_remesa,
                         'id_estudiante' => $id_estudiante,
+                        'id_partida' => $id_partida,
                         'monto' => $montos[$i],
                         'entregado' => 0,
                         ]);
+
+                        $estudiantes_asignacion++;
+                    }
                 }
-                $estudiantes_asignacion++;
                 $i++;
             }
 
@@ -144,41 +184,87 @@ class ApoyoController extends Controller
         $ciclo = $request->session()->get('ciclo');
         $id_remesa = $request->id_remesa;
         if (!isset($id_remesa)) $id_remesa = 0;
+
+        $id_partida = $request->id_partida;
+        if ($id_remesa != $request->session()->get('id_remesa')) {
+                $id_partida = 1;
+        }
+        if (!isset($id_partida)) $id_partida = 1;
+
+        $request->session()->put('id_remesa', $id_remesa);
+
         $cve_ciudad = $request->cve_ciudad;
         if (!isset($cve_ciudad)) $cve_ciudad = 0;
 
+        if ($cve_ciudad != $request->session()->get('cve_ciudad')) {
+            $id_partida = 1;
+         }
+        $request->session()->put('cve_ciudad', $cve_ciudad);
+
         $remesas = BoletosRemesa::where('id_ciclo', $ciclo)->get();
         $ciudades = Ciudad::all();
+
+        $partidas = ApoyoAsignado::where('id_remesa', $id_remesa)
+        ->whereHas('estudiante', function ($query) use ($cve_ciudad) {
+            $query->where('cve_ciudad_escuela', $cve_ciudad);
+        })
+        ->orderBy('id_partida')
+        ->pluck('id_partida')
+        ->unique()
+        ->toArray();
+
+        if (empty($partidas)) {
+                $id_partida = null;
+        }
 
         if ($cve_ciudad == 1)  //MAZATLÁN ESPECIALES
         {
             $estudiantesQuery = Estudiante::with(['escuela', 'apoyosMontos' => function ($query) use ($id_remesa) {
                 $query->where('id_remesa', $id_remesa);
             }])
-                ->whereHas('apoyosMontos', function ($query) use ($id_remesa) {
-                    $query->where('id_remesa', $id_remesa);
-                })
                 ->where('id_ciclo', $ciclo)
                 ->where('cve_ciudad_escuela', 1)
                 ->where('cve_status', 7)
                 ->orderBy('primer_apellido')
                 ->orderBy('segundo_apellido')
                 ->orderBy('nombre');
+
+                if ($id_partida > 0)
+                {
+                    $estudiantesQuery = $estudiantesQuery->whereHas('apoyosMontos', function ($query) use ($id_remesa) {
+                        $query->where('id_remesa', $id_remesa);
+                    })
+                    ->whereHas('apoyosAsignados', function ($query) use ($id_partida) {
+                        if ($id_partida !== null) {
+                            $query->where('id_partida', $id_partida);
+                        }
+                    });
+                }
+
         }
         else if ($cve_ciudad == 2)  //CULIACÁN ACEPTADOS
         {
             $estudiantesQuery = Estudiante::with(['escuela', 'apoyosMontos' => function ($query) use ($id_remesa) {
                 $query->where('id_remesa', $id_remesa);
             }])
-                ->whereHas('apoyosMontos', function ($query) use ($id_remesa) {
-                    $query->where('id_remesa', $id_remesa);
-                })
                 ->where('id_ciclo', $ciclo)
                 ->where('cve_ciudad_escuela', 2)
                 ->where('cve_status', 6)
                 ->orderBy('primer_apellido')
                 ->orderBy('segundo_apellido')
                 ->orderBy('nombre');
+
+                if ($id_partida > 0)
+                {
+                    $estudiantesQuery = $estudiantesQuery->whereHas('apoyosMontos', function ($query) use ($id_remesa) {
+                    $query->where('id_remesa', $id_remesa);
+                    })
+                    ->whereHas('apoyosAsignados', function ($query) use ($id_partida) {
+                        if ($id_partida !== null) {
+                            $query->where('id_partida', $id_partida);
+                        }
+                    });
+                }
         }
         else
         {
@@ -187,6 +273,11 @@ class ApoyoController extends Controller
             }])
                 ->whereHas('apoyosMontos', function ($query) use ($id_remesa) {
                     $query->where('id_remesa', $id_remesa);
+                })
+                ->whereHas('apoyosAsignados', function ($query) use ($id_partida) {
+                    if ($id_partida !== null) {
+                        $query->where('id_partida', $id_partida);
+                    }
                 })
                 ->where('id_ciclo', $ciclo)
                 ->where('cve_ciudad_escuela', 0)
@@ -212,8 +303,7 @@ class ApoyoController extends Controller
         $montos = $montos_estudiantes->toArray();
         $request->session()->put('montos', $montos);
 
-
-        return view('apoyos.asignacion', compact('remesas', 'ciudades', 'estudiantes', 'id_remesa', 'cve_ciudad', 'ciclo', 'periodo'));
+        return view('apoyos.asignacion', compact('remesas', 'ciudades', 'estudiantes', 'id_remesa', 'cve_ciudad', 'ciclo', 'periodo', 'id_partida', 'partidas'));
     }
 
     public function montos_index(Request $request)
@@ -231,7 +321,6 @@ class ApoyoController extends Controller
         if ($cve_ciudad == 1)  //MAZATLAN ESPECIALES
         {
             $montos = Estudiante::select('br.id_remesa','br.descripcion', 'es.escuela_abreviatura', 'estudiantes.cve_escuela', 'estudiantes.cve_ciudad_escuela', 'am.monto')->distinct()
-            //->leftjoin('apoyos_montos as am', 'estudiantes.cve_ciudad_escuela', '=', 'am.cve_ciudad_escuela')
             ->leftJoin('apoyos_montos as am', function($join)
             {
                 $join->on('estudiantes.cve_ciudad_escuela', '=', 'am.cve_ciudad_escuela');
@@ -248,6 +337,7 @@ class ApoyoController extends Controller
             ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)
             ->where('br.id_remesa', $id_remesa)
             ->get();
+
         }
         else //CULIACÁN ACEPTADOS
         {

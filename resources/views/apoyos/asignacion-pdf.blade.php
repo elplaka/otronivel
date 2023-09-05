@@ -179,6 +179,7 @@
                                 $apoyo = ApoyoAsignado::where('id_remesa', $estudiante->id_remesa)->where('id_estudiante', $estudiante->id)->first();
                                 $suma_montos += isset($apoyo->monto) ? $apoyo->monto : 0;
                         ?>
+                        @if ($estudiante->monto > 0)
                         <tr>
                             <td style="text-align:center;width:0.15cm">{{ $i++ }}</th>
                             <td style="text-align:center;width:0.15cm">{{ $estudiante->id }}</th>
@@ -188,7 +189,8 @@
                             <td>{{ $estudiante->carrera }}</td>
                             <td style="text-align:right">{{ $monto_asignado }}</td>
                             <td style="width:6cm"></td>
-                         </tr>                     
+                         </tr>   
+                         @endif                  
                     @endforeach 
                     <tr>
                             <td colspan="6" style="text-align:center"> <b> SUMAS : </b> </th>
@@ -198,7 +200,7 @@
                 </tbody>
             </table>  
             
-            <br>
+            {{-- <br>
             <table class="table overflow-scroll table-striped table-bordered table-sm"  >
                 <tr style="background:white">
                     <td>
@@ -213,7 +215,7 @@
                         AUTORIZÓ: R.D.B.
                     </td>
                 </tr>
-            </table>
+            </table> --}}
             {{-- <div style="page-break-after:always">        
             </div>                --}}
         {{-- </div>                

@@ -14,7 +14,6 @@ class BoletosPaquete extends Model
     protected $table = "boletos_paquetes";
 
     protected $fillable = [
-        'id_ciclo',
         'folio_inicial',
         'folio_final',
         'ult_folio_asignado',

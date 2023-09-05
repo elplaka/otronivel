@@ -236,11 +236,11 @@
                                                         <h4><b>¡¡ IMPORTANTE !!</b></h4>
                                                         @if ($convocatoria_abierta)
                                                         <li style="text-align: justify;">
-                                                            El periodo de registro comprende del <b> 7 al 28 de agosto de 2023. </b>
+                                                            El periodo de registro comprende del <b> 7 al 27 de agosto de 2023. </b>
                                                         </li>
                                                         @else
                                                         <li style="text-align: justify;">
-                                                            El periodo de registro comprendió del <b> 7 al 28 de agosto de 2023. </b>
+                                                            El periodo de registro comprendió del <b> 7 al 27 de agosto de 2023. </b>
                                                         </li>
                                                         <li style="text-align: justify;">
                                                             Puedes usar el archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
