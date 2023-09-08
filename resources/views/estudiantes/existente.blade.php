@@ -102,7 +102,7 @@
                       @elseif ($estudiante->cve_status == 3)
                       <div style="background-color: #cce5ff; border: 2px solid #0000cc; padding: 10px;">
                           <p>
-                            TU DOCUMENTACIÓN <b>ESTÁ INCOMPLETA</b>. CONSULTA AL ADMINISTRADOR DEL SISTEMA PARA MAYOR INFORMACIÓN.
+                            TU DOCUMENTACIÓN <b>ESTÁ INCOMPLETA O TIENE INCONSISTENCIAS</b>. CONSULTA AL ADMINISTRADOR DEL SISTEMA PARA MAYOR INFORMACIÓN.
                             <b><a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">
                               <i class="fab fa-whatsapp" style="color: #0000cc;"></i> Contactar por WhatsApp
                             </a></b>

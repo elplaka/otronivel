@@ -1177,7 +1177,7 @@ class EstudianteController extends Controller
         if (isset($request->img_identificacion)) $identificacionCargada = true;
         if (isset($request->img_kardex)) $kardexCargado = true;
         if (isset($request->img_constancia)) $constanciaCargada = true;
-        
+
         if ($actaCargada) 
         {
             $extActa = strtoupper($request->img_acta_nac->getClientOriginalExtension());
@@ -1251,7 +1251,7 @@ class EstudianteController extends Controller
             // 'img_comprobante_dom' => $archivoComprobante,
             // 'img_identificacion' => $archivoIdentificacion,
             // 'img_kardex' => $archivoKardex,
-            //'img_constancia' => $archivoConstancia,
+            'img_constancia' => $archivoConstancia,
             'observaciones_estudiante' => $observacionesEstudiante,
             'observaciones_admin' => $observacionesAdmin,
             'cve_status' => $request->cve_status
