@@ -293,8 +293,12 @@ class EstudianteController extends Controller
 
         if ($ciclo == $estudiante->id_ciclo)   //YA EXISTE EN EL CICLO ACTUAL
         {
+            if ($estudiante->cve_status == 1 || $estudiante->cve_status == 2 || $estudiante->cve_status == 3 || $estudiante->cve_status == 6 || $estudiante->cve_status == 7)
+            {
             $request->session()->put('existente', true);
             return redirect()->route('estudiantes.existente', $estudiante->id_hex);
+            }
+            else return view('estudiantes.convocatoria-cerrada'); 
         }
 
         if ($convocatoria_abierta || $this->existe_xt($ciclo, $estudiante->curp))
@@ -1165,6 +1169,7 @@ class EstudianteController extends Controller
         $kardexCargado = false;
         $constanciaCargada = false;
 
+
         $archivoConstancia = "PENDIENTE";
 
         if (isset($request->img_acta_nac)) $actaCargada = true;
@@ -1246,7 +1251,7 @@ class EstudianteController extends Controller
             // 'img_comprobante_dom' => $archivoComprobante,
             // 'img_identificacion' => $archivoIdentificacion,
             // 'img_kardex' => $archivoKardex,
-            'img_constancia' => $archivoConstancia,
+            //'img_constancia' => $archivoConstancia,
             'observaciones_estudiante' => $observacionesEstudiante,
             'observaciones_admin' => $observacionesAdmin,
             'cve_status' => $request->cve_status
@@ -1387,38 +1392,6 @@ class EstudianteController extends Controller
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream();
     }
-
-    // public function download_zip(Request $request, $id)
-    // {
-    //     $zip = new ZipArchive;
-   
-    //     $estudiante = Estudiante::findorfail($id);
-
-    //     $fileName = $estudiante->primer_apellido . '_' . $estudiante->segundo_apellido . '_' .$estudiante->nombre . '_docs_' . $id . '.zip';
-   
-    //     if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
-    //     {
-    //         $files[0] = $_SERVER['DOCUMENT_ROOT'] . '/img/curps/' . $estudiante->img_curp;
-    //         $files[1] = $_SERVER['DOCUMENT_ROOT'] . '/img/actas/' . substr($estudiante->img_acta_nac, 0, strlen($estudiante->img_acta_nac) - 3) . strtoupper(substr($estudiante->img_acta_nac, strlen($estudiante->img_acta_nac) - 3,3));
-    //         $files[2] = $_SERVER['DOCUMENT_ROOT'] . '/img/comprobantes/' . substr($estudiante->img_comprobante_dom, 0, strlen($estudiante->img_comprobante_dom) - 3) . strtoupper(substr($estudiante->img_comprobante_dom, strlen($estudiante->img_comprobante_dom) - 3,3));
-    //         $files[3] = $_SERVER['DOCUMENT_ROOT'] . '/img/identificaciones/' . substr($estudiante->img_identificacion, 0, strlen($estudiante->img_identificacion) - 3) . strtoupper(substr($estudiante->img_identificacion, strlen($estudiante->img_identificacion) - 3,3));
-    //         $files[4] = $_SERVER['DOCUMENT_ROOT'] . '/img/kardex/' . substr($estudiante->img_kardex, 0, strlen($estudiante->img_kardex) - 3) . strtoupper(substr($estudiante->img_kardex, strlen($estudiante->img_kardex) - 3,3));
-    //         if ($estudiante->img_constancia != "PENDIENTE") $files[5] = $_SERVER['DOCUMENT_ROOT'] . '/img/constancias/' . $estudiante->img_constancia;
-
-    //         $i = 1;
-    //         foreach ($files as $key => $value) {
-    //             $relativeNameInZipFile = basename($value);
-    //             $zip->addFile($value, $relativeNameInZipFile);
-    //             $i++;
-    //         }
-             
-    //         $zip->close();
-    //     }
-    
-    //     return response()->download(public_path($fileName));
-    // }
-
-  
 
     public function download_zip(Request $request, $id)
     {
