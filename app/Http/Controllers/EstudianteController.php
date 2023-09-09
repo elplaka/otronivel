@@ -119,6 +119,7 @@ class EstudianteController extends Controller
                 $estudiante->img_identificacion = null;
                 $estudiante->img_kardex = null;
                 $estudiante->img_constancia = null;
+                $estudiante->rfc = substr($curp, 0, 10);
                 return $estudiante;
             }
             else 
@@ -1170,7 +1171,7 @@ class EstudianteController extends Controller
         $constanciaCargada = false;
 
 
-        $archivoConstancia = "PENDIENTE";
+        $archivoConstancia = $estudiante->img_constancia;
 
         if (isset($request->img_acta_nac)) $actaCargada = true;
         if (isset($request->img_comprobante_dom)) $comprobanteCargado = true;
@@ -1227,7 +1228,6 @@ class EstudianteController extends Controller
         if ($observacionesAdmin !== null) {
             $observacionesAdmin = strlen($observacionesAdmin) ? trim(mb_strtoupper($observacionesAdmin)) : null;
         }
-
 
         $estudiante->update([
             'nombre' => trim(mb_strtoupper($request->nombre)),

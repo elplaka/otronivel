@@ -66,7 +66,7 @@
                         @foreach ($estudiantes_xt as $estudiante_xt)
                             <tr>
                                 <td scope="row">{{ $estudiante_xt->curp }}</td>
-                                <td>{{ $estudiante_xt->registrado == 1 ? 'SÍ' : 'NO' }}</td>
+                                <td>{{ !is_null($estudiante_xt->estudiante()) ? 'SÍ' : 'NO' }}</td>
                             </tr>                            
                         @endforeach 
                     </tbody>

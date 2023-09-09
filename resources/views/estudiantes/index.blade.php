@@ -491,9 +491,9 @@
                                             <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-verde btn-sm" style="font-size: 10px;"><i class="fas fa-user-edit"></i></a>
                                             <a href="{{ route('estudiantes.edit_status', $estudiante->id) }}" title="Cambiar estatus" class="btn btn-rojo btn-sm" style="font-size: 10px;"><i class="fas fa-flag"></i></a>
                                         @endif
-                                        @if ($estudiante->cve_status >= 2 && $usertype <= 1)
+                                        {{-- @if ($estudiante->cve_status >= 2 && $usertype <= 1)
                                             <a href="{{ route('estudiantes.edit_se', $estudiante->id) }}" title="Censar" class="btn btn-dorado btn-sm" style="font-size: 10px;"><i class="fas fa-street-view"></i></a>
-                                        @endif
+                                        @endif --}}
                                         @if ($usertype <= 3)
                                             <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" title="Imprimir" class="btn btn-danger btn-sm" style="font-size: 10px;"><i class="fas fa-print"></i></a>
                                         @endif

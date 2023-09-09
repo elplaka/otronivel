@@ -420,12 +420,38 @@
                                         <div class="row mb-3">
                                             <label class="col-md-5 col-form-label text-md-right">{{ __('Estatus') }} </label>
                                             <div class="col-md-5">
-                                                <select id="cve_status" name="cve_status" class="form-control">
+                                                <select id="cve_status" name="cve_status" data-style="btn-selectpicker" class="form-control selectpicker" data-style-base="form-control">
                                                     @foreach ($status as $stat)
-                                                        <option value="{{ $stat->cve_status }}" {{ $stat->cve_status == $estudiante->cve_status? 'selected' : '' }}>{{ $stat->cve_status . ' - ' . $stat->descripcion }}</option>
+                                                        <?php
+                                                            switch ($stat->cve_status)
+                                                            {
+                                                                case 1:   //RECIBIDO
+                                                                    $color = "#9944d9"; 
+                                                                    break;
+                                                                case 2:  //REVISADO
+                                                                    $color = "#0071bc";
+                                                                    break; 
+                                                                case 3: //CENSADO
+                                                                    $color = "#7dc3f5";
+                                                                    break; 
+                                                                case 4: //RECHAZADO
+                                                                    $color = "#ff0000";
+                                                                    break;
+                                                                case 5: //PENDIENTE
+                                                                    $color = "#ffe26e";
+                                                                    break; 
+                                                                case 6: //ACEPTADO
+                                                                    $color = "#00ff00";
+                                                                    break;
+                                                                case 7: //ESPECIAL
+                                                                    $color = "#ff00ff";
+                                                                    break;
+                                                              }
+                                                        ?>
+                                                        <option style="background: {{ $color }}; color: #ffffff; font-weight: bold" value="{{ $stat->cve_status }}" {{ $stat->cve_status == $estudiante->cve_status? 'selected' : '' }}>{{ $stat->cve_status . ' - ' . $stat->descripcion }}</option>
                                                     @endforeach
                                                 </select>
-                                            </div>
+                                            </div> 
                                         </div>
                                     </div>
                                 </div>
