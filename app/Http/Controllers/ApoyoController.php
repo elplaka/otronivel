@@ -499,4 +499,19 @@ class ApoyoController extends Controller
 
         return redirect()->route('apoyos.montos-index')->with('message', 'Monto ACTUALIZADO con éxito!')->with('tipo_msg', 'success');
     }
+
+    public function asignacion_editar_estudiante(Request $request, $id_estudiante, $id_remesa)
+    {
+        $apoyo_asignado = ApoyoAsignado::where('id_remesa', $id_remesa)->where('id_estudiante',$id_estudiante)->first();
+
+        return view('apoyos.asignacion-editar-estudiante', compact('apoyo_asignado'));
+    }
+
+    public function asignacion_actualizar_estudiante(Request $request, $id_estudiante, $id_remesa)
+    {
+        $apoyo_asignado = ApoyoAsignado::where('id_remesa',$id_remesa)->where('id_estudiante', $id_estudiante)->first();
+        $monto = ApoyoAsignado::where('id_remesa',$id_remesa)->where('id_estudiante', $id_estudiante)->update(['monto' => $request->monto]);
+
+        return redirect()->route('apoyos.asignacion', ['id_remesa'=>$id_remesa, 'cve_ciudad'=> $apoyo_asignado->estudiante->cve_ciudad_escuela])->with('message', 'Monto asignado ACTUALIZADO con éxito!')->with('tipo_msg', 'success');
+    }
 }

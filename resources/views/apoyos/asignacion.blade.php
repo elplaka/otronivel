@@ -165,15 +165,15 @@
                     <div class="table-responsive">
                         <table class="table table-sm table-hover table-bordered">
                             <thead class="thead-light">
-                            <tr>
-                                <th class="col-md-auto">#</th>
-                                <th class="col-md-auto">ID</th>
-                                <th class="col-md-auto">Nombre</th>
-                                <th class="col-md-auto">Escuela - Ciudad</th>
-                                <th class="col-md-auto">Carrera</th>
-                                <th class="col-md-auto">Partida/Monto</th>
-                                @if ($usertype == 1) <th class="col-md-auto"></th> @endif
-                            </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Escuela - Ciudad</th>
+                                    <th>Carrera</th>
+                                    <th>Partida/Monto</th>
+                                    @if ($usertype == 1) <th></th> @endif
+                                </tr>
                             </thead>
                             <tbody>
                                 @foreach ($estudiantes as $estudiante)
@@ -212,7 +212,7 @@
                                                 break;  
                                         }
                                     ?>                
-                                    <tr style="font-size:15px">
+                                    <tr style="font-size:13px">
                                         <td scope="row" style="border-left: 4px solid {{ $color }}; vertical-align:middle">{{ $i++ }}</td>
                                         <td style="vertical-align:middle">{{ $estudiante->id }}</td>
                                         <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
@@ -235,14 +235,15 @@
                                         &nbsp;</td>
                                         @if ($usertype == 1)
                                         <td style="vertical-align:middle">
-                                            @if (isset($estudiante->monto))
-                                            <form method="GET" action="{{ route('apoyos.asignacion-borra', [$id_remesa,$estudiante->id]) }}" >
+                                            @if (isset($monto_asignado))
+                                            <form method="GET" action="{{ route('apoyos.asignacion-borra', [$id_remesa, $estudiante->id]) }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button>
-                                            </form>  
+                                                <a href="{{ route('apoyos.asignacion-editar-estudiante', ['id_estudiante' => $estudiante->id, 'id_remesa' => $id_remesa]) }}" title="Editar" class="btn btn-verde btn-sm" style="font-size: 10px;"><i class="fas fa-edit"></i></a>
+                                                <button class="btn btn-danger btn-sm" style="font-size: 10px;"><i class="fa-solid fa-trash-can"></i></button>
+                                            </form>
                                             @endif
-                                        </td> 
+                                        </td>
                                         @endif                                  
                                     </tr> 
                                 @endforeach

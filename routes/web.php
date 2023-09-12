@@ -140,6 +140,8 @@ Route::middleware(['auth'])->get('/apoyos/asignacion', [ApoyoController::class, 
 Route::post('/apoyos/asignacion-crea/{id_remesa}/{cve_ciudad}/{tipo_partida}', [ApoyoController::class, 'asignacion_crea'])->name('apoyos.asignacion-crea')->middleware('admin.user');
 Route::middleware(['auth'])->get('/apoyos/asignacion-borra/{id_remesa}/{id_estudiante}', [ApoyoController::class, 'asignacion_borra'])->name('apoyos.asignacion-borra')->middleware('admin.user');
 Route::middleware(['auth'])->get('/apoyos/asignacion-pdf/', [ApoyoController::class, 'asignacion_pdf'])->name('apoyos.asignacion-pdf')->middleware('responsable.user');
+Route::middleware(['auth'])->get('/apoyos/asignacion-editar-estudiante/{id_estudiante}/{id_remesa}', [ApoyoController::class, 'asignacion_editar_estudiante'])->name('apoyos.asignacion-editar-estudiante')->middleware('responsable.user');
+Route::middleware(['auth'])->post('/apoyos/asignacion-actualizar-estudiante/{id_estudiante}/{id_remesa}', [ApoyoController::class, 'asignacion_actualizar_estudiante'])->name('apoyos.asignacion-actualizar-estudiante')->middleware('responsable.user');
 
 // Route::get('/estudiantes', function () {
 // })->middleware(ChecaTipoUsuario::class);
