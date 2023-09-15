@@ -174,8 +174,10 @@
                         <div class="card-body">
                             <form class="contact-form" method="POST" action="{{ route('estudiantes.formulario_constancia.post') }}" enctype="multipart/form-data" novalidate>
                                 @csrf
-                                <div class="row justify-content-center mb-1">
-                                    <img src="{{url('/img/alivianate.jpg')}}" style="width:45%" />
+                                <div class="text-center">
+                                    <a href="/2023-2024">
+                                        <img src="/img/alivianate.jpg" style="width:45%">
+                                    </a>
                                 </div>
                                 <br>
                                 <div class="row justify-content-center mb-1">

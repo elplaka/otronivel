@@ -92,7 +92,7 @@
                           <i class="fas fa-check-circle" style="color: green;"></i>
                         </p>
                       </div>                      
-                      @elseif ($estudiante->cve_status == 1 || $estudiante->cve_status == 2)
+                      @elseif ($estudiante->cve_status == 2)
                       <div style="background-color: #ffffcc; border: 2px solid yellow; padding: 10px;">
                         <p>
                           TU REGISTRO PARA EL PERIODO ACTUAL <b>ESTÁ A PUNTO DE COMPLETARSE</b>. TU DOCUMENTACIÓN ESTÁ COMPLETA Y EN PROCESO DE REVISIÓN.

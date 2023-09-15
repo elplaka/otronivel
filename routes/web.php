@@ -60,9 +60,6 @@ Route::post('/estudiantes/formulario3', [EstudianteController::class, 'formulari
 Route::get('/estudiantes/formulario4', [EstudianteController::class, 'formulario4'])->name('estudiantes.formulario4');
 Route::post('/estudiantes/formulario4', [EstudianteController::class, 'formulario4Post'])->name('estudiantes.formulario4.post');
 
-Route::get('/estudiantes/formulario-constancia/{id_hex}', [EstudianteController::class, 'formulario_constancia'])->name('estudiantes.formulario_constancia');
-Route::post('/estudiantes/formulario-constancia', [EstudianteController::class, 'formulario_constancia_post'])->name('estudiantes.formulario_constancia.post');
-
 Route::get('/estudiantes/formulario_enviado', [EstudianteController::class, 'formulario_enviado'])->name('estudiantes.formulario_enviado');
 
 Route::get('/estudiantes/folios_enviados/{folios}', [EstudianteController::class, 'folios_enviados'])->name('estudiantes.folios_enviados');
@@ -87,11 +84,13 @@ Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudi
 
 Route::get('/estudiantes/existente/{id_hex}', [EstudianteController::class, 'existente'])->name('estudiantes.existente');
 
+Route::get('/estudiantes/formulario-constancia/{id_hex}', [EstudianteController::class, 'formulario_constancia'])->name('estudiantes.formulario_constancia');
+Route::post('/estudiantes/formulario-constancia', [EstudianteController::class, 'formulario_constancia_post'])->name('estudiantes.formulario_constancia.post');
+
 Route::get('/estudiantes/ver_constancia', [EstudianteController::class, 'ver_constancia'])->name('estudiantes.ver-constancia');
 
 Route::middleware(['auth'])->get('/estudiantes/index', [EstudianteController::class, 'index'])->name('estudiantes.index');
 Route::middleware(['auth'])->get('/pdf/{filename}', [PdfController::class, 'show'])->name('pdf.show');
-
 
 Route::middleware(['auth'])->get('/estudiantes/edit/{id}', [EstudianteController::class, 'edit'])->name('estudiantes.edit')->middleware('admin.user');
 Route::post('/estudiantes/update/{id}', [EstudianteController::class, 'update'])->name('estudiantes.update')->middleware('editor.user');

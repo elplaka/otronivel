@@ -791,8 +791,9 @@ class EstudianteController extends Controller
         $request->session()->put('estudiante', $estudiante);
         $fconstancia = $request->session()->get('fconstancia');
         if ($fconstancia) return view('estudiantes/formulario-constancia',compact('estudiante'));
-        else return view('estudiantes/operacion_invalida');
+        else return redirect()->route('estudiantes.forget');
         $request->session()->put('ff', true);
+        $request->session()->put('fconstancia', false);
     }
     
     public function formulario_constancia_post(Request $request)
