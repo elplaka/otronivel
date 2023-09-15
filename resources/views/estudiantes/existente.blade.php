@@ -85,13 +85,76 @@
                     </div>
                     @if($estudiante->img_constancia != 'PENDIENTE')
                     <div class="text-justify">
+                    @php
+                        if (isset($prox_remesa))
+                        {
+                          $fecha = \Carbon\Carbon::createFromFormat('Y-m-d', $prox_remesa->fecha);
+                          $mes = $fecha->format('n'); // Obtener el número del mes (1-12)
+                          $anio = $fecha->format('Y');
+                          $dia = $fecha->format('d');
+
+                          $nombre_mes = '';
+                          switch ($mes) {
+                              case 1:
+                                  $nombre_mes = 'ENERO';
+                                  break;
+                              case 2:
+                                  $nombre_mes = 'FEBRERO';
+                                  break;
+                              case 3:
+                                  $nombre_mes = 'MARZO';
+                                  break;
+                              case 4:
+                                  $nombre_mes = 'ABRIL';
+                                  break;
+                              case 5:
+                                  $nombre_mes = 'MAYO';
+                                  break;
+                              case 6:
+                                  $nombre_mes = 'JUNIO';
+                                  break;
+                              case 7:
+                                  $nombre_mes = 'JULIO';
+                                  break;
+                              case 8:
+                                  $nombre_mes = 'AGOSTO';
+                                  break;
+                              case 9:
+                                  $nombre_mes = 'SEPTIEMBRE';
+                                  break;
+                              case 10:
+                                  $nombre_mes = 'OCTUBRE';
+                                  break;
+                              case 11:
+                                  $nombre_mes = 'NOVIEMBRE';
+                                  break;
+                              case 12:
+                                  $nombre_mes = 'DICIEMBRE';
+                                  break;
+                              default:
+                                  $nombre_mes = '';
+                                  break;
+                          }
+                        }
+                    @endphp
+
+
                       @if ($estudiante->cve_status == 6 || $estudiante->cve_status == 7)
-                      <div style="background-color: #e5f7e1; border: 2px solid green; padding: 10px;">
+                      @if (isset($prox_remesa))
+                      <div style="background-color: #a62828; border: 2px solid #800000; color: white; padding: 7px; text-align: center; display: flex; justify-content: center; align-items: center;">
                         <p>
+                            FECHA DE ENTREGA DE BECA: <b>{{  $dia }}-{{ $nombre_mes }}-{{ $anio }}</b>
+                        </p>
+                      </div>
+                      {{-- <br> --}}
+                      @else
+                      <div style="background-color: #e5f7e1; border: 2px solid green; padding: 10px;">
+                           <p>
                           TU REGISTRO PARA EL PERIODO ACTUAL <b>HA SIDO COMPLETADO</b>. TU DOCUMENTACIÓN YA SE VALIDÓ Y ESTÁ EN ORDEN.
                           <i class="fas fa-check-circle" style="color: green;"></i>
                         </p>
-                      </div>                      
+                      </div>
+                      @endif                     
                       @elseif ($estudiante->cve_status == 2)
                       <div style="background-color: #ffffcc; border: 2px solid yellow; padding: 10px;">
                         <p>

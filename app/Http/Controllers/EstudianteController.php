@@ -14,7 +14,7 @@ use App\Models\Techo;
 use App\Models\MontoMensual;
 use App\Models\DatoSocioeconomico;
 use App\Models\StatusEstudiante;
-use App\Models\Boleto;
+use App\Models\BoletosRemesa;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use PDF;
@@ -333,9 +333,10 @@ class EstudianteController extends Controller
             if (isset($estudiante))  //EXISTE EL ESTUDIANTE EN EL CICLO ACTUAL
             {
                 $ciclo = $this->getCicloDescripcion($request->session()->get('ciclo'));
+                $prox_remesa = BoletosRemesa::where('id_ciclo', $request->session()->get('ciclo'))->orderBy('fecha', 'desc')->first();
                 $request->session()->put('estudiante', $estudiante);
                 $request->session()->put('fconstancia', true);
-                return view('estudiantes/existente', compact('ciclo', 'estudiante'));
+                return view('estudiantes/existente', compact('ciclo', 'estudiante', 'prox_remesa'));
             }
             else return view('estudiantes/operacion_invalida');
         }
@@ -799,7 +800,7 @@ class EstudianteController extends Controller
     public function formulario_constancia_post(Request $request)
     {
         $validatedData = $request->validate([
-            'img_constancia' => ['required_with:alpha_dash', 'max:2000'],
+            'img_constancia' => ['required_with:alpha_dash', 'max:1024'],
         ]);
 
         $constanciaCargada = false;
@@ -824,7 +825,6 @@ class EstudianteController extends Controller
             $errorConstancia = true;
         }
 
-
         if ($extConstancia != "PDF")
         {
             $message = $message . "<li>El archivo de la <b>CONSTANCIA DE ESTUDIOS</b> debe ser PDF.</li>";
@@ -835,15 +835,15 @@ class EstudianteController extends Controller
 
         $rfc = $estudiante->rfc;
 
+        if ($errorConstancia) return redirect()->back()->with('message', $message);
+
         if ($constanciaCargada)
         {
             $newFileName = "CN_" . $estudiante->rfc . '.' . $extConstancia;
             Storage::putFileAs('constancias', $request->img_constancia, $newFileName);
             $estudiante->img_constancia = $newFileName;
         }
-        if ($errorConstancia) return redirect()->back()->with('message', $message);
-
-   
+        
         $estudiante->img_constancia = $newFileName;
         $estudiante->save();
         
