@@ -950,6 +950,7 @@ class EstudianteController extends Controller
         $socioeconomicaR = $request->selSocioeconomica;
         $orderBy1R = $request->selOrderBy1;
         $documentacionR = $request->selDocumentacion;
+        $observacionesAdminR = $request->observacionesAdmin;
         $cicloR = isset($request->selCiclo) ? $request->selCiclo : $this->cicloR;
 
         $totEstudiantes = Estudiante::select('id_ciclo', \DB::raw('count(*) as total_estudiantes'))
@@ -1013,6 +1014,10 @@ class EstudianteController extends Controller
                 if ($selDocumentacion == 1)  $query->where('img_constancia', '!=', "PENDIENTE");
                 elseif ($selDocumentacion == 2)  $query->where('img_constancia', 'PENDIENTE');
             }
+            if (isset($request->observacionesAdmin))
+            {
+                $query->where('observaciones_admin','like',"%{$request->observacionesAdmin}%"); 
+            }
          });
 
          if (isset($request->search))
@@ -1021,6 +1026,7 @@ class EstudianteController extends Controller
                 $query->where('nombre','like',"%{$request->search}%")->orWhere('primer_apellido', 'like',"%{$request->search}%")->orWhere('segundo_apellido', 'like',"%{$request->search}%"); 
             });
         }
+
 
          if (isset($request->selPromedio))
          {
@@ -1124,7 +1130,7 @@ class EstudianteController extends Controller
             'estudiantes', 'totEstudiantes', 'searchR', 'status', 
             'statusR', 'escuelas', 'cve_escuelaR', 'ciudades',
             'cve_ciudadR', 'carreraR', 'localidades', 'cve_localidadOR', 
-            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R', 'documentacionR', 'ciclos', 'cicloR'));
+            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R', 'documentacionR', 'ciclos', 'cicloR', 'observacionesAdminR'));
     }
 
     public function ver_constancia(Request $request)
@@ -1203,6 +1209,7 @@ class EstudianteController extends Controller
             Storage::putFileAs('identificaciones', $request->img_identificacion, $newFileName);
             $estudiante->img_identificacion = $newFileName;
             $archivoIdentificacion = $newFileName;
+            //cómo regresar una vista?
         }
         if ($kardexCargado)
         {

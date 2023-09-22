@@ -415,7 +415,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row mb-0 mt-3 justify-content-end"> {{-- Alineación a la derecha --}}
+                                        <div class="row mb-0 mt-3 justify-content-end">
+                                            <div class="col-md-4 d-flex align-items-center"> 
+                                                <label class="col-form-label text-md-left" style="font-size:13px; width: 350px;"><b>&nbsp; Observaciones Admin.</b></label>
+                                                <input type="search" name="observacionesAdmin" class="form-control mb-2" id="inlineFormInput" value="{{ old('observacionesAdmin', $observacionesAdminR) }}" style="font-size:12px" autofocus>
+                                            </div>
                                             <div class="col-md-1">
                                                 <button type="submit" class="btn btn-verde btn-sm">Buscar</button>
                                             </div>
