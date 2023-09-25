@@ -153,7 +153,9 @@ class BoletoController extends Controller
     {
         if ($cantidad_folios == 0) return null; 
         //Necesito saber los folios disponibles de cada paquete
-       $paquetes = BoletosPaquete::where('folios_disponibles', '>', 0)->orderBy('folios_disponibles')->get();
+    //    $paquetes = BoletosPaquete::where('folios_disponibles', '>', 0)->orderBy('folios_disponibles')->get();
+       $paquetes = BoletosPaquete::where('folios_disponibles', '>', 0)->orderBy('folios_disponibles', 'asc')->get();
+
 
        $j = 0; //Controla el índice del array que contiene los paquetes requeridos
        $sigue = true; 
@@ -605,23 +607,20 @@ class BoletoController extends Controller
         return view('boletos.paquetes-editar', compact('paquete'));
     }
 
-    public function se_traslapan($ciclo, $folio_inicial, $folio_final)
+    public function se_traslapan($folio_inicial, $folio_final)
     {
-        $paquetes = BoletosPaquete::where(function($query) use ($ciclo, $folio_inicial, $folio_final)
+        $paquetes = BoletosPaquete::where(function($query) use ($folio_inicial, $folio_final)
         {
-            $query->where('id_ciclo', $ciclo);
             $query->where('folio_inicial', '<=', $folio_inicial);
             $query->where('folio_final', '>=', $folio_inicial);
         })
-        ->orWhere(function($query) use($ciclo, $folio_inicial, $folio_final)
+        ->orWhere(function($query) use($folio_inicial, $folio_final)
         {
-            $query->where('id_ciclo', $ciclo);
             $query->where('folio_inicial', '<=', $folio_final);
             $query->where('folio_final', '>=', $folio_final);
         })
-        ->orWhere(function($query) use($ciclo, $folio_inicial, $folio_final)
+        ->orWhere(function($query) use($folio_inicial, $folio_final)
         {
-            $query->where('id_ciclo', $ciclo);
             $query->where('folio_inicial', '>=', $folio_inicial);
             $query->where('folio_final', '<=', $folio_final);
         });
@@ -629,26 +628,23 @@ class BoletoController extends Controller
         return $paquetes->count() > 0 ? true : false; 
     }
 
-    public function se_traslapan_al_actualizar($id, $ciclo, $folio_inicial, $folio_final)
+    public function se_traslapan_al_actualizar($id, $folio_inicial, $folio_final)
     {
-        $paquetes = BoletosPaquete::where(function($query) use ($id, $ciclo, $folio_inicial, $folio_final)
+        $paquetes = BoletosPaquete::where(function($query) use ($id, $folio_inicial, $folio_final)
         {
             $query->where('id_paquete', '!=' , $id);
-            $query->where('id_ciclo', $ciclo);
             $query->where('folio_inicial', '<=', $folio_inicial);
             $query->where('folio_final', '>=', $folio_inicial);
         })
-        ->orWhere(function($query) use($id, $ciclo, $folio_inicial, $folio_final)
+        ->orWhere(function($query) use($id, $folio_inicial, $folio_final)
         {
             $query->where('id_paquete', '!=' , $id);
-            $query->where('id_ciclo', $ciclo);
             $query->where('folio_inicial', '<=', $folio_final);
             $query->where('folio_final', '>=', $folio_final);
         })
-        ->orWhere(function($query) use($id, $ciclo, $folio_inicial, $folio_final)
+        ->orWhere(function($query) use($id, $folio_inicial, $folio_final)
         {
             $query->where('id_paquete', '!=' , $id);
-            $query->where('id_ciclo', $ciclo);
             $query->where('folio_inicial', '>=', $folio_inicial);
             $query->where('folio_final', '<=', $folio_final);
         });
@@ -667,13 +663,13 @@ class BoletoController extends Controller
         $folio_inicial = $request->folio_inicial;
         $folio_final = $request->folio_final;
 
-        if ($this->se_traslapan($ciclo, $folio_inicial, $folio_final))
+        if ($this->se_traslapan($folio_inicial, $folio_final))
         {
             return redirect()->back()->with('message', 'Los FOLIOS del paquete se TRASLAPAN. Intenta con otro rango de FOLIOS.')->with('tipo_msg', 'danger');
         }
 
         BoletosPaquete::create([
-            'id_ciclo' => $request->session()->get('ciclo'),
+            // 'id_ciclo' => $request->session()->get('ciclo'),
             'folio_inicial' => $request->folio_inicial,
             'folio_final' => $request->folio_final,
             'ult_folio_asignado' => 0,
@@ -695,12 +691,12 @@ class BoletoController extends Controller
         $folio_final = $request->folio_final;
       
 
-        if ($this->se_traslapan_al_actualizar($id, $ciclo, $folio_inicial, $folio_final))
+        if ($this->se_traslapan_al_actualizar($id, $folio_inicial, $folio_final))
         {
             return redirect()->back()->with('message', 'Los FOLIOS del paquete se TRASLAPAN. Intenta con otro rango de FOLIOS.')->with('tipo_msg', 'danger');
         }
 
-        $paquete = BoletosPaquete::where('id_paquete',$id)->where('id_ciclo', $ciclo)->first();
+        $paquete = BoletosPaquete::where('id_paquete',$id)->first();
 
         $paquete->update([
             'folio_inicial' => $request->folio_inicial,
