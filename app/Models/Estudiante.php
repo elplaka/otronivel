@@ -99,10 +99,18 @@ class Estudiante extends Model
         return $this->hasMany(ApoyoAsignado::class, 'id_estudiante', 'id');
     }
 
+    // public function apoyosMontos()
+    // {
+    //     return $this->hasOne(ApoyosMonto::class, 'cve_escuela', 'cve_escuela');
+        
+    // }
+
     public function apoyosMontos()
     {
-        return $this->hasOne(ApoyosMonto::class, 'cve_escuela', 'cve_escuela');
+        return $this->hasMany(ApoyosMonto::class, 'cve_escuela', 'cve_escuela')
+                ->whereColumn('cve_ciudad_escuela', 'apoyos_montos.cve_ciudad_escuela');
     }
+
 
     public function ciclo()
     {

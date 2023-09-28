@@ -83,7 +83,6 @@ class ApoyoController extends Controller
     {
         $ciclo = $request->session()->get('ciclo');
         $asignados = ApoyoAsignado::where('id_remesa', $id_remesa)
-        ->where('id_ciclo', $ciclo)
         ->where('id_estudiante', $id_estudiante);
 
         DB::beginTransaction();
@@ -287,6 +286,7 @@ class ApoyoController extends Controller
                 ->orderBy('nombre');
         }
 
+        $estudiantesId = $estudiantesQuery->get();
         $estudiantes = $estudiantesQuery->paginate(25)->withQueryString();
         
         $remesa = BoletosRemesa::where('id_remesa', $id_remesa)
@@ -295,11 +295,14 @@ class ApoyoController extends Controller
         if (isset($remesa)) $periodo = $remesa->descripcion_apoyos;
         else $periodo = '';
 
-        $ids_estudiantes = $estudiantes->pluck('id');
+        $ids_estudiantes = $estudiantesId->pluck('id');
         $ids_asignar = $ids_estudiantes->toArray();
         $request->session()->put('ids_asignar', $ids_asignar);
 
-        $montos_estudiantes = $estudiantes->pluck('apoyosMontos.monto');
+        $montos_estudiantes = $estudiantesId->map(function ($estudiante) {
+            return $estudiante->apoyosMontos->where('cve_ciudad_escuela', 2)->pluck('monto')->first();
+        });
+        
         $montos = $montos_estudiantes->toArray();
         $request->session()->put('montos', $montos);
 
@@ -409,7 +412,8 @@ class ApoyoController extends Controller
                 ->whereNotIn('cve_escuela', function ($query) use ($ciclo, $id_remesa) {
                     $query->select('cve_escuela')
                         ->from('apoyos_montos')
-                        ->where('id_remesa', $id_remesa);
+                        ->where('id_remesa', $id_remesa)
+                        ->where('cve_ciudad_escuela', 1);
                 })
                 ->get();
             }
@@ -425,7 +429,8 @@ class ApoyoController extends Controller
                 ->whereNotIn('cve_escuela', function ($query) use ($ciclo, $id_remesa) {
                     $query->select('cve_escuela')
                         ->from('apoyos_montos')
-                        ->where('id_remesa', $id_remesa);
+                        ->where('id_remesa', $id_remesa)
+                        ->where('cve_ciudad_escuela', 2);
                 })
                 ->get();
             }

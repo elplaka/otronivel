@@ -125,7 +125,7 @@
                             <td>{{ $estudiante->carrera }}</td>
                             <td>{{ $estudiante->cantidad_folios }}</td>
                             <td>{{ folios_asignados($estudiante->id_remesa, $estudiante->id) }}</td>
-                            <td style="width:8cm"></td>
+                            <td style="width:7cm"></td>
                          </tr>
                          @endif                   
                     @endforeach 

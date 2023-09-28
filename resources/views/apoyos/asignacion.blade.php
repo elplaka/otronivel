@@ -250,7 +250,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     @if (($id_remesa != 0  && $cve_ciudad != 0) && $i == 1)
                         <div class="col-md-6">
                             <label for="id_remesa" class="col-md-10 col-form-label text-md-right">{{ __('* Esta REMESA no tiene asignados los MONTOS.') }} </label>
@@ -260,12 +259,11 @@
                         <div class="col-mx">
                             <label class="col-form-label float-left">
                                 {{ $estudiantes->links('pagination::bootstrap-5') }} 
-                            </label>                   
+                            </label>           
                             @if ($usertype == 1)
                             <form method="POST" action="{{ route('apoyos.asignacion-crea', ['id_remesa' => $id_remesa, 'cve_ciudad' => $cve_ciudad, 'tipo_partida' => 1]) }}">
                                     @csrf
-                                    @if($id_partida_select == -1)
-                               
+                                    @if($id_partida_select == -1 || is_null($id_partida_select))
                                         @if ($estudiantes_sin_apoyos == $i-1)
                                         <div class="col-md-0 float-right">
                                             <button id="btnAsignar" name="btnAsignar" type="submit" class="btn btn-verde btn-sm"> <i class="fas fa-hand-holding"></i> <b> &nbsp; Asignar </b> </button>
