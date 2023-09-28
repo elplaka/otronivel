@@ -29,7 +29,7 @@
             }
 
             html body {
-                padding-top: 20px;
+                padding-top: 40px;
             }
 
             table {
@@ -41,7 +41,7 @@
                 font-size: 9px;
                 font-family: 'Montserrat', serif;
                 color:#424242;
-                LINE-HEIGHT:0.175cm;
+                LINE-HEIGHT:0.5cm;
             }
 
             h1 {
@@ -119,7 +119,7 @@
                         </tr> 
                         <tr> 
                             <td> 
-                                <h1 style="LINE-HEIGHT:0.25cm"> <b> NÓMINA PARA PAGO DE BECAS CICLO ESCOLAR 2022-2023 </b> </h1>
+                                <h1 style="LINE-HEIGHT:0.25cm"> <b> NÓMINA PARA PAGO DE BECAS CICLO ESCOLAR 2023-2024 </b> </h1>
                             </td> 
                         </tr>
                         <tr> 
