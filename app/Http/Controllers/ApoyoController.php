@@ -300,7 +300,7 @@ class ApoyoController extends Controller
         $request->session()->put('ids_asignar', $ids_asignar);
 
         $montos_estudiantes = $estudiantesId->map(function ($estudiante) {
-            return $estudiante->apoyosMontos->where('cve_ciudad_escuela', 2)->pluck('monto')->first();
+            return $estudiante->apoyosMontos->where('cve_ciudad_escuela', $cve_ciudad)->pluck('monto')->first();
         });
         
         $montos = $montos_estudiantes->toArray();
