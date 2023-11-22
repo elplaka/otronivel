@@ -233,9 +233,10 @@ class ApoyoController extends Controller
                     $estudiantesQuery = $estudiantesQuery->whereHas('apoyosMontos', function ($query) use ($id_remesa) {
                         $query->where('id_remesa', $id_remesa);
                     })
-                    ->whereHas('apoyosAsignados', function ($query) use ($id_partida) {
+                    ->whereHas('apoyosAsignados', function ($query) use ($id_remesa, $id_partida) {
                         if ($id_partida !== null) {
-                            $query->where('id_partida', $id_partida);
+                            $query->where('id_remesa', $id_remesa)
+                            ->where('id_partida', $id_partida);
                         }
                     });
                 }
@@ -258,9 +259,10 @@ class ApoyoController extends Controller
                     $estudiantesQuery = $estudiantesQuery->whereHas('apoyosMontos', function ($query) use ($id_remesa) {
                     $query->where('id_remesa', $id_remesa);
                     })
-                    ->whereHas('apoyosAsignados', function ($query) use ($id_partida) {
+                    ->whereHas('apoyosAsignados', function ($query) use ($id_remesa, $id_partida) {
                         if ($id_partida !== null) {
-                            $query->where('id_partida', $id_partida);
+                            $query->where('id_remesa', $id_remesa)
+                            ->where('id_partida', $id_partida);
                         }
                     });
                 }
@@ -299,7 +301,7 @@ class ApoyoController extends Controller
         $ids_asignar = $ids_estudiantes->toArray();
         $request->session()->put('ids_asignar', $ids_asignar);
 
-        $montos_estudiantes = $estudiantesId->map(function ($estudiante) {
+        $montos_estudiantes = $estudiantesId->map(function ($estudiante) use ($cve_ciudad) {
             return $estudiante->apoyosMontos->where('cve_ciudad_escuela', $cve_ciudad)->pluck('monto')->first();
         });
         

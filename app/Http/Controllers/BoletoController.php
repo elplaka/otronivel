@@ -124,14 +124,35 @@ class BoletoController extends Controller
 
             if ($id_partida > 0)
             {
-                $estudiantesQuery = $estudiantesQuery->whereHas('boletosAsignados', function ($query) use ($id_partida) {
-                    if ($id_partida !== null) {
-                        $query->where('id_partida', $id_partida);
+                $estudiantesQuery = $estudiantesQuery->whereHas('boletosAsignados', function ($query) use ($id_remesa,$id_partida) {
+                    if ($id_partida != null) {
+                        $query->where('id_remesa', $id_remesa)
+                        ->where('id_partida', $id_partida);
                     }
                 });
             }
+
+
+            // $estudiantesQuery = Estudiante::from('estudiantes as e')
+            // ->leftJoin('boletos_tantos as bt', 'e.cve_escuela', '=', 'bt.cve_escuela')
+            // ->where('bt.id_remesa', 10);
+
+            // if ($id_partida > 0) {
+            //     $estudiantesQuery = $estudiantesQuery
+            //         ->whereExists(function ($query) use ($id_remesa, $id_partida) {
+            //             $query->select(DB::raw(1))
+            //                 ->from('boletos_asignados')
+            //                 ->whereRaw('boletos_asignados.id_estudiante = e.id')
+            //                 ->where('boletos_asignados.id_remesa', $id_remesa)
+            //                 ->where('boletos_asignados.id_partida', $id_partida);
+            //         });
+            // }
+   
+            // dd($estudiantesQuery);
         
             $estudiantesId = $estudiantesQuery->get();
+
+            // dd($estudiantesId);
                        
             $ids_estudiantes = $estudiantesId->pluck('id');
             $ids_asignar = $ids_estudiantes->toArray();
