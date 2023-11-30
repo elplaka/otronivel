@@ -158,6 +158,7 @@ class BoletoController extends Controller
             $ids_asignar = $ids_estudiantes->toArray();
 
             $estudiantes = $estudiantesQuery->paginate(25)->withQueryString();
+            
             $request->session()->put('ids_asignar', $ids_asignar);
 
             $partidas = BoletoAsignado::where('id_remesa', $id_remesa)
