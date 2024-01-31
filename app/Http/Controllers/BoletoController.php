@@ -80,7 +80,7 @@ class BoletoController extends Controller
         }
 
         if (!isset($id_partida)) $id_partida = 1;
-        
+
         $request->session()->put('id_remesa', $id_remesa);
         $remesas = BoletosRemesa::where('id_ciclo', $ciclo)->get();
         
@@ -122,7 +122,7 @@ class BoletoController extends Controller
             ->orderBy('segundo_apellido')
             ->orderBy('nombre');
 
-            if ($id_partida > 0)
+            if ($id_partida > 1)
             {
                 $estudiantesQuery = $estudiantesQuery->whereHas('boletosAsignados', function ($query) use ($id_remesa,$id_partida) {
                     if ($id_partida != null) {
