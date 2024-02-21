@@ -86,6 +86,10 @@ class EstudianteController extends Controller
         //Dependiendo del archivo PDF del CURP hay varios tipos y la localización de los datos varía 
         switch($max_key)
         {
+            case 29:
+                $curp = $parr[11];
+                $nombre_pdf = $parr[12];
+                break;
             case 32:
                 $curp = $parr[10];
                 $nombre_pdf = $parr[11];
