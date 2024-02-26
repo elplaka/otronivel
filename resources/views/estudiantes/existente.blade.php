@@ -83,7 +83,15 @@
                     <div class="text-center">
                         <h4 style="text-align: center;"><b> Hola <small>«</small> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} <small>»</small> </b> </h4>
                     </div>
-                    @if($estudiante->img_constancia != 'PENDIENTE')
+                    @if($estudiante->img_constancia == 'PENDIENTE')
+                        @if ($estudiante->cve_status == 2 || $estudiante->cve_status == 3)
+                        <div style="color:white; background-color: #85195b; border: 2px solid rgb(56, 0, 70); padding: 10px;">
+                          <p>
+                         TU REGISTRO PARA EL PERIODO ACTUAL <b>NO ESTÁ COMPLETO</b>. SE REQUIERE SUBIR LA <b> CONSTANCIA DE ESTUDIOS </b>.
+                       </p>
+                      </div>
+                        @endif
+                    @else
                     <div class="text-justify">
                     @php
                         if (isset($prox_remesa))
@@ -137,8 +145,6 @@
                           }
                         }
                     @endphp
-
-
                       @if ($estudiante->cve_status == 6 || $estudiante->cve_status == 7)
                       @if (isset($prox_remesa))
                       <div style="background-color: #a62828; border: 2px solid #800000; color: white; padding: 7px; text-align: center; display: flex; justify-content: center; align-items: center;">
