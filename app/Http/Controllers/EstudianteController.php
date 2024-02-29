@@ -914,7 +914,9 @@ class EstudianteController extends Controller
 
     public function registro(Request $request, $id_hex)
     {
-        $estudiante = Estudiante::where('id_hex', $id_hex)->first();
+        $cicloR = $this->getCiclo();
+
+        $estudiante = Estudiante::where('id_ciclo', $cicloR)->where('id_hex', $id_hex)->first();
         if (isset($estudiante))
         {
             $id_estudiante = $estudiante->id;
