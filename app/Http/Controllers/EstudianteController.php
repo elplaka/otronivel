@@ -1455,7 +1455,9 @@ class EstudianteController extends Controller
 
     public function padron_pdf(Request $request)
     {
+
         $id_ciclo = $request->id_ciclo;
+        $todos = $request->chkTodos;
 
         if ($id_ciclo == 1)
         {
@@ -1479,10 +1481,11 @@ class EstudianteController extends Controller
             $cicloEscolar = "2022-2023";
 
             $estudiantes_reporte = Estudiante::where('id_ciclo', $ciclo)
-            ->where(function ($query) {
-                $query->has('boletosAsignados')
-                    ->orWhereHas('apoyosAsignados');
-            })
+            // ->where(function ($query) {
+            //     $query->has('boletosAsignados')
+            //         ->orWhereHas('apoyosAsignados');
+            // })
+            ->whereIn('cve_status', [1, 2, 3])
             ->orderBy('primer_apellido')
             ->orderBy('segundo_apellido')
             ->orderBy('nombre')
@@ -1494,15 +1497,31 @@ class EstudianteController extends Controller
             $ciclo = '2324';
             $cicloEscolar = "2023-2024";
 
-            $estudiantes_reporte = Estudiante::where('id_ciclo', $ciclo)
-            ->where(function ($query) {
-                $query->has('boletosAsignados')
-                    ->orWhereHas('apoyosAsignados');
-            })
-            ->orderBy('primer_apellido')
-            ->orderBy('segundo_apellido')
-            ->orderBy('nombre')
-            ->get();
+            if ($todos)
+            {
+                $estudiantes_reporte = Estudiante::where('id_ciclo', $ciclo)
+                ->where(function ($query) {
+                    $query->has('boletosAsignados')
+                        ->orWhereHas('apoyosAsignados');
+                })
+                ->orderBy('primer_apellido')
+                ->orderBy('segundo_apellido')
+                ->orderBy('nombre')
+                ->get();
+            }
+            else
+            {
+                $estudiantes_reporte = Estudiante::where('id_ciclo', $ciclo)
+                ->where(function ($query) {
+                    $query->has('boletosAsignados')
+                        ->orWhereHas('apoyosAsignados');
+                })
+                ->where('cve_escuela', '!=', 999)
+                ->orderBy('primer_apellido')
+                ->orderBy('segundo_apellido')
+                ->orderBy('nombre')
+                ->get();
+            }
         }
 
         $tituloReporte = "Padrón de beneficiarios del Ciclo Escolar " . $cicloEscolar;

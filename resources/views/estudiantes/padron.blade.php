@@ -46,6 +46,10 @@
                             <option value="4">2023-2024 :: 2</option>
                         </select>
                     </div>
+
+                    <div>
+                        <input type="checkbox" name="chkTodos" checked> Todos
+                    </div>
                 </div>
                 <div class="row mb-0">
                     <div class="col-md-6 offset-md-4">
