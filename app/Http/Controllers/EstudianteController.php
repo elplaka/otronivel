@@ -1447,4 +1447,69 @@ class EstudianteController extends Controller
     
         return response()->download($zipFilePath)->deleteFileAfterSend(true);;
     }
+
+    public function padron()
+    {
+        return view('estudiantes.padron');
+    }
+
+    public function padron_pdf(Request $request)
+    {
+        $id_ciclo = $request->id_ciclo;
+
+        if ($id_ciclo == 1)
+        {
+            $remesas = [1, 2, 3, 4];
+            $ciclo = '2223';
+        }
+        elseif ($id_ciclo == 2)
+        {
+            $remesas = [5, 6, 7, 8];
+            $ciclo = '2223';
+        }
+        elseif ($id_ciclo == 3)
+        {
+            $remesas = [11, 12];
+            $ciclo = '2324';
+        }
+
+        if ($id_ciclo == -1)
+        {
+            $ciclo = '2223';
+            $cicloEscolar = "2022-2023";
+
+            $estudiantes_reporte = Estudiante::where('id_ciclo', $ciclo)
+            ->where(function ($query) {
+                $query->has('boletosAsignados')
+                    ->orWhereHas('apoyosAsignados');
+            })
+            ->orderBy('primer_apellido')
+            ->orderBy('segundo_apellido')
+            ->orderBy('nombre')
+            ->get();
+        }
+
+        if ($id_ciclo == -2)
+        {
+            $ciclo = '2324';
+            $cicloEscolar = "2023-2024";
+
+            $estudiantes_reporte = Estudiante::where('id_ciclo', $ciclo)
+            ->where(function ($query) {
+                $query->has('boletosAsignados')
+                    ->orWhereHas('apoyosAsignados');
+            })
+            ->orderBy('primer_apellido')
+            ->orderBy('segundo_apellido')
+            ->orderBy('nombre')
+            ->get();
+        }
+
+        $tituloReporte = "Padrón de beneficiarios del Ciclo Escolar " . $cicloEscolar;
+
+        $pdf = PDF::loadView('estudiantes.padron_pdf',['estudiantes_reporte'=>$estudiantes_reporte, 'tituloReporte'=>$tituloReporte]);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream();
+
+    }
 }  

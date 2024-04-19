@@ -101,6 +101,9 @@ Route::post('/estudiantes/censar/{id}', [EstudianteController::class, 'censar'])
 Route::get('/estudiantes/reporte_pdf/', [EstudianteController::class, 'pdf'])->name('estudiantes.pdf');
 Route::get('/estudiantes/download-zip/{id}', [EstudianteController::class, 'download_zip'])->name('estudiantes.download-zip');
 
+Route::get('/estudiantes/padron/', [EstudianteController::class, 'padron'])->name('estudiantes.padron');
+Route::get('/estudiantes/padron_pdf/', [EstudianteController::class, 'padron_pdf'])->name('estudiantes.padron-pdf');
+
 Route::resource('usuarios', UsuarioController::class);
 
 Route::middleware(['auth'])->get('/boletos/paquetes-index', [BoletoController::class, 'paquetes_index'])->name('boletos.paquetes-index')->middleware('admin.user');
