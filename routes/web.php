@@ -99,7 +99,7 @@ Route::post('/estudiantes/update_status/{id}', [EstudianteController::class, 'up
 Route::get('/estudiantes/edit_se/{id}', [EstudianteController::class, 'edit_socioeconomicos'])->name('estudiantes.edit_se')->middleware('editor.user');
 Route::post('/estudiantes/censar/{id}', [EstudianteController::class, 'censar'])->name('estudiantes.censar')->middleware('editor.user');
 Route::get('/estudiantes/reporte_pdf/', [EstudianteController::class, 'pdf'])->name('estudiantes.pdf');
-Route::get('/estudiantes/download-zip/{id}', [EstudianteController::class, 'download_zip'])->name('estudiantes.download-zip');
+Route::get('/estudiantes/download-zip/{id}', [EstudianteController::class, 'download_zip'])->name('estudiantes.download-zip');  
 
 Route::get('/estudiantes/padron/', [EstudianteController::class, 'padron'])->name('estudiantes.padron');
 Route::get('/estudiantes/padron_pdf/', [EstudianteController::class, 'padron_pdf'])->name('estudiantes.padron-pdf');
