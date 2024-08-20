@@ -175,7 +175,7 @@
                             <form class="contact-form" method="POST" action="{{ route('estudiantes.formulario_constancia.post') }}" enctype="multipart/form-data" novalidate>
                                 @csrf
                                 <div class="text-center">
-                                    <a href="/2023-2024">
+                                    <a href="/2024-2025">
                                         <img src="/img/alivianate.jpg" style="width:45%">
                                     </a>
                                 </div>

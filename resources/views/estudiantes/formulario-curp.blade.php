@@ -164,6 +164,56 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="requisitosModal" tabindex="-1" role="dialog" aria-labelledby="requisitosModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="pdfModalLabel" style="font-size:11pt"><b> Requisitos para el REGISTRO al PROGRAMA ALIVIAN4TE </b></h6>
+            </div>
+            <div class="modal-body">
+                <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #f8f3ec; color: #5c2134; text-align: justify;">
+                    <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #f8f3ec;">
+                    <li style="text-align: justify;">
+                        El archivo PDF del CURP será <b> tu primer requisito </b> para registrarte. Además necesitas los archivos PDF de:
+                    </li>
+                    <ul>
+                    <li>
+                       <i> <strong> Identificación Oficial </strong> </i>
+                       <br> <i> De preferencia la credencial del INE. En caso de no contar con esta credencial se aceptará una identificación de cualquier insitución educativa. </i>
+                    </li>
+                    <li>
+                       <i> <strong> Acta de Nacimiento </strong> </i>
+                       <br> <i>En un formato reciente. </i>
+                    </li>
+                    <li>
+                        <i> <strong> Comprobante de Domicilio </strong> </i>  <br>
+                        <i> Puede ser de la CFE, Agua potable, MegaCable, TELMEX con dirección dentro del municipio de Concordia. </i>
+                    </li>
+                    <li>
+                        <i> <strong> Kardex Escolar </strong> </i>
+                        <br>
+                        <i> Es una constancia con calificaciones de tu periodo escolar recién cursado. Si apenas vas a entrar al Nivel Superior subirás el certificado de la preparatoria. </i>
+                    </li>
+                    <li>
+                        <i> <strong> Constancia de Estudios </strong> </i>    <br>
+                        <i> Deberás solicitarla en tu escuela, la cual te acreditará como estudiante del ciclo escolar 2023-2024. </i>
+                    </li>
+                    </ul>
+                    </ul>
+                    <li style="text-align: justify;">
+                    Estos archivos <b> deben ser legibles </b> y cada uno de ellos debe pesar menos de <b> 1 Megabyte. </b>
+                    </li>
+                    <br>
+                    <li style="text-align: justify;">
+                        Una vez que te hayas registrado, puedes usar el mismo archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu Constancia de Estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
+                    </li>
+                </li>                
+                </style>
+            </div>            
+        </div>
+    </div>
+</div>
 </head>
 <body>
     <div class="container">
@@ -189,32 +239,82 @@
                                             <b>SUBIR CURP</b>
                                         </div>
                                         <br> --}}
-                                        <div>
-                                            @if (session()->has('message'))
-                                            <div class="alert alert-danger mb-0">                        
-                                                <button type="button" class="close" data-dismiss="alert">
-                                                    &times;
-                                                </button>                        
-                                                {!! html_entity_decode(session()->get('message')) !!}
-                                            </div> 
+                                        <div class="card-body">                                            
+                                             <div class="row mb-1 justify-content-center">
+                                                <div class="col-md-12">
+                                                    <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #f8f3ec; color: #5c2134; text-align: justify;">
+                                                        <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #f8f3ec;">
+                                                            <h4><b>¡¡ IMPORTANTE !!</b></h4>
+                                                            @if ($convocatoria_abierta)
+                                                            <li style="text-align: justify;">
+                                                                El periodo de registro comprende del <b> 26 de Agosto al 20 de Septiembre de 2024. </b>
+                                                            </li>                                               
+                                                            @else
+                                                            <li style="text-align: justify;">
+                                                                El periodo de registro comprendió del <b> 26 de Agosto al 20 de Septiembre de 2024. </b>
+                                                            </li>                           
+                                                            <li style="text-align: justify;">
+                                                                Puedes usar el archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
+                                                            </li>
+                                                            @endif
+                                                            <li style="text-align: justify;">
+                                                                Se aceptará el <strong> archivo PDF con el formato más reciente </strong> que puedes descargar en la página del Gobierno Federal
+                                                                <i><a href="https://www.gob.mx/curp/" target="_blank" class="text-primary">https://www.gob.mx/curp/</a></i>
+                                                            </li>
+                                                            <li style="text-align: justify;">
+                                                                El archivo PDF <b> NO se imprime</b>, <b> NO se escanea</b>, <b> NO se le toma foto.</b> Se debe subir el <b> archivo original </b> previamente descargado.
+                                                            </li> 
+                                                            <li style="text-align: justify;">
+                                                                El registro a este programa  <b> se completa en dos etapas</b>:
+                                                                <ul>
+                                                                    <li>
+                                                                        <b> ETAPA #1. </b> Utilizando tu <b> archivo PDF del CURP </b> en primera instancia </b> deberás subir <b> uno por uno los archivos PDF </b> de la <i> Identificación Oficial</i>, el <i> Acta de Nacimiento</i>, el  <i>Comprobante de Domicilio </i> y el <i> Kardex Escolar</i>. Dejando la <i> Constancia de Estudios </i> para la segunda etapa.
+                                                                    </li>
+                                                                    <li>
+                                                                        <b>ETAPA #2.</b> Procederás a acceder al sistema de registro mediante tu archivo PDF del CURP y subirás el archivo PDF que contenga la <b>Constancia de Estudios del Ciclo Escolar 2024-2025</b> para completar el registro. 
+                                                                    </li>
+                                                                </ul>
+                                                            </li>                          
+                                                        </ul>
+                                                        <button type="button" id="btnAbrirModal" class="next btn btn-guinda float-right mt-0" style="border: none;" data-toggle="modal" data-target="#requisitosModal">
+                                                            Ver requisitos
+                                                        </button>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                             <!-- Botón para mostrar la ventana modal de selección de archivo -->
+                                             @if (session()->has('message'))
+                                             <div class="col-md-12 alert alert-danger mb-3">
+                                                <div>                        
+                                                    <button type="button" class="close" data-dismiss="alert">
+                                                      &times;
+                                                    </button>                        
+                                                    {!! html_entity_decode(session()->get('message')) !!}
+                                                    <li style="text-align: justify;">
+                                                        Se aceptará el <strong> archivo PDF con el formato más reciente </strong> que puedes descargar en la página del Gobierno Federal
+                                                        <i><a href="https://www.gob.mx/curp/" target="_blank" class="text-primary">https://www.gob.mx/curp/</a></i>
+                                                    </li>
+                                                    <li style="text-align: justify;">
+                                                        El archivo PDF <b> NO se imprime</b>, <b> NO se escanea</b>, <b> NO se le toma foto.</b> Se debe subir el <b> archivo original </b> previamente descargado.
+                                                    </li> 
+                                                </div>
+                                            </div>
                                             @endif 
-                                        </div>
-                                        <div class="card-body">
                                             @if ($errors->any())
-                                            <div class="alert alert-danger">
+                                            <div class="col-md-12 alert alert-danger mb-3">
                                                 <button type="button" class="close" data-dismiss="alert">
-                                                    &times;
+                                                   &times;
                                                 </button> 
                                                 <ul>
                                                     @foreach ($errors->all() as $error)
                                                         <li>{!! $error !!}</li>
                                                     @endforeach
                                                 </ul>
-                                             </div>
-                                             @endif
-                                             <!-- Botón para mostrar la ventana modal de selección de archivo -->
+                                            </div>
+                                            @endif
                                             <div class="row mb-1">
-                                                <label class="col-md-4 col-form-label text-md-right">{{ __('CURP') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>ARCHIVO EN PDF</b> <br> El formulario aceptará el archivo PDF de formato reciente descargado en la página del Gobierno Federal <i>https://www.gob.mx/curp/</i> que no pese más de 500KB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
+                                                <label class="col-md-4 col-form-label text-md-right">{{ __('CURP') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>ARCHIVO EN PDF</b> <br> El formulario aceptará el archivo PDF de formato reciente descargado en la página del Gobierno Federal <i>https://www.gob.mx/curp/</i> que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
                                                     <button type="button" class="btn btn-dorado" id="sel_archivo_curp" style="border: none;">Selecciona archivo <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_curp" style="font-size:13px" required>                 
@@ -229,48 +329,9 @@
                                                 <input class="file" type="file" style="display: none" class="form-control" name="img_curp" id="img_curp"  accept=".pdf, .PDF" onchange="mostrarVistaPreviaPDF(this)">
                                             </div>
                                         </div>
-                                        <div class="row mb-1 justify-content-center">
-                                            <div class="col-md-11">
-                                                <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #f8f3ec; color: #5c2134; text-align: justify;">
-                                                    <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #f8f3ec;">
-                                                        <h4><b>¡¡ IMPORTANTE !!</b></h4>
-                                                        @if ($convocatoria_abierta)
-                                                        <li style="text-align: justify;">
-                                                            El periodo de registro comprende del <b> 7 al 27 de agosto de 2023. </b>
-                                                        </li>
-                                                        @else
-                                                        <li style="text-align: justify;">
-                                                            El periodo de registro comprendió del <b> 7 al 27 de agosto de 2023. </b>
-                                                        </li>
-                                                        <li style="text-align: justify;">
-                                                            Puedes usar el archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
-                                                        </li>
-                                                        @endif
-                                                        <li style="text-align: justify;">
-                                                            Se aceptará el <strong> archivo PDF con el formato más reciente </strong> que puedes descargar en la página del Gobierno Federal
-                                                            <i><a href="https://www.gob.mx/curp/" target="_blank" class="text-primary">https://www.gob.mx/curp/</a></i>
-                                                        </li>
-                                                        <li style="text-align: justify;">
-                                                            <b> NO imprimirlo </b>, <b> NO escanearlo </b>, <b> NO tomarle foto. </b>
-                                                        </li>
-                                                        @if ($convocatoria_abierta)
-                                                            <li style="text-align: justify;">
-                                                                El archivo PDF del CURP será <b> tu primer requisito </b> para registrarte.
-                                                            </li>
-                                                            <li style="text-align: justify;">
-                                                                Una vez que te hayas registrado, puedes usar el mismo archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
-                                                            </li>
-                                                        @else
-                                                     
-                                                        @endif
-                                                    </ul>
-                                                </label>
-                                            </div>
-                                        </div>
                                     </div>
-                                </div>
+                                </div>              
                                 <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-verde float-right mt-2" style="border: none;">Siguiente</button>
-                                {{-- <input type="hidden" name="xt" value="{{ $xt }}"> --}}
                             </form>
                         </div>
                     </div>

@@ -78,7 +78,7 @@
                                 @csrf
                                 <div class="row justify-content-center mb-1">
                                     <div class="text-center">
-                                        <a href="/2023-2024">
+                                        <a href="/2024-2025">
                                             <img src="../img/alivianate.jpg" style="width:45%">
                                         </a>
                                     </div>

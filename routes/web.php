@@ -27,7 +27,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/2023-2024', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+Route::get('/2024-2025', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+// Route::get('/2023-2024', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 // Route::get('/2023-2024/xt', [EstudianteController::class, 'forget_xt'])->name('estudiantes.forget_xt');
 
 Route::middleware(['auth'])->get('/estudiantes/nuevo-xt', [EstudianteController::class, 'nuevo_xt'])->name('estudiantes.nuevo-xt')->middleware('admin.user');

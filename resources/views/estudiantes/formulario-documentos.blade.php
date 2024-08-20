@@ -255,7 +255,7 @@
                                 @csrf
                                 <div class="row justify-content-center mb-1">
                                     <div class="text-center">
-                                        <a href="/2023-2024">
+                                        <a href="/2024-2025">
                                             <img src="../img/alivianate.jpg" style="width:45%">
                                         </a>
                                     </div>
@@ -345,7 +345,7 @@
                                             </div>
  
                                             <div class="row mb-3">
-                                                <label class="col-md-6 col-form-label text-md-right">{{ __('Kárdex') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE CALIFICACIONES O FICHA DE INSCRIPCIÓN</b> <br> Si apenas vas a entrar al Nivel Superior subirás la ficha de inscripción en formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
+                                                <label class="col-md-6 col-form-label text-md-right">{{ __('Kárdex') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE CALIFICACIONES</b> <br> Si apenas vas a entrar al Nivel Superior subirás el certificado de la prepa en formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
                                                     <button type="button" class="btn btn-dorado" id="sel_archivo_kardex">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_kardex" style="font-size:13px">{{$estudiante->img_kardex ?? 'Sin archivo seleccionado' }}</div>
@@ -360,7 +360,7 @@
  
                                             <div class="row mb-1">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> En formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
-                                                <div class="col-md-5 alert alert-danger text-justify" style="padding:5px; margin:0"> <small> <i> Este archivo lo subirás una vez que solicites dicha constancia al inicio del Ciclo Escolar 2023-2024. </i> </small>
+                                                <div class="col-md-5 alert alert-danger text-justify" style="padding:5px; margin:0"> <small> <i> Este archivo lo subirás una vez que solicites dicha constancia al inicio del Ciclo Escolar 2024-2025. </i> </small>
                                                 </div>
                                                 {{-- <div class="col-md-5">
                                                     <button type="button" class="btn btn-success" id="sel_archivo_constancia">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>

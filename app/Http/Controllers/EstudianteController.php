@@ -113,7 +113,10 @@ class EstudianteController extends Controller
         
         if ($this->esCURP($curp)) 
         {
-            $estudiante = Estudiante::where('curp', $curp)->orderByDesc('id_ciclo')->first();
+            $estudiante = Estudiante::where('curp', $curp)
+                        ->orderByDesc('id_ciclo')
+                        ->first();
+
 
             if (isset($estudiante))   //SI YA SE HABÍA INSCRITO EN CICLOS PASADOS
             {
@@ -248,9 +251,9 @@ class EstudianteController extends Controller
         $message = '';
 
         $validatedData = $request->validate([
-            'img_curp' => ['file', 'max:500'], // Aquí 'file' se asegura de que sea un archivo válido
+            'img_curp' => ['file', 'max:1024'], // Aquí 'file' se asegura de que sea un archivo válido
         ], [
-            'img_curp.max' => 'El archivo del <b> CURP </b> no debe pesar más de 500 KB.',
+            'img_curp.max' => 'El archivo del <b> CURP </b> no debe pesar más de 1 MB.',
         ]);
 
         $extCurp = "ext";

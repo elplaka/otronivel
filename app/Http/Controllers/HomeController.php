@@ -24,7 +24,7 @@ class HomeController extends Controller
     
     public function getCiclo()
     {
-        $configFilePath = config_path('ciclo_actual.ini');
+        $configFilePath = config_path('ciclo_actual.ini');  //Carpeta CONFIG
         $config = parse_ini_file($configFilePath, true);
 
         $cicloActual = $config['Ciclo']['CicloActual'];
