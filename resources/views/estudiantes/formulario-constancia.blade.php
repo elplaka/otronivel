@@ -239,7 +239,7 @@
                                             </div>
                                             @endif
                                             <div class="row mb-1">
-                                                <label class="col-md-5 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> Del Ciclo Escolar 2023-2024 en formato PDF que no pese más de 1MB"><img src="/img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
+                                                <label class="col-md-5 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> Del Ciclo Escolar 2024-2025 en formato PDF que no pese más de 1MB"><img src="/img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
                                                     <button type="button" class="btn btn-dorado" id="sel_archivo_constancia" style="border: none;">Selecciona archivo <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_constancia" style="font-size:13px" required>                 

@@ -72,22 +72,31 @@
 
 </head>
 <body>
-    <div class="container">
-        <div class="card-body">
-            <div class="row justify-content-center">
-                <div class="col-md-7">
-                    <div class="row text-center">
-                        <h2><b> INFORMACIÓN ACTUALIZADA CON ÉXITO </b> </h2>
-                    </div>
-                    {{-- <div class="row text-justify">
-                        Aquí podrás descargar el archivo PDF que contiene la información completa de tu registro.
-                    </div> --}}
+  <div class="container">
+    <div class="row justify-content-center mb-2">
+      <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:35%"> &nbsp; &nbsp; &nbsp;
+      &nbsp; <img src="../img/alivianate.jpg" style="width:20%">
+  </div>
+    <div class="card-body mb-0">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="row text-center">
+                    <h2><b> TU REGISTRO HA SIDO COMPLETADO CON ÉXITO </b></h2>
+                </div>
+                <div class="row text-justify">
+                    <p>
+                        ¡Felicidades!  Tu solicitud ha sido recibida y ahora está en nuestra base de datos, lista para ser revisada y validada según sea necesario. <br>                 
+                        Si necesitas realizar algún cambio a la información o tienes alguna duda, no dudes en ponerte en contacto con nosotros. <br>
+                        <b>
+                   
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="card-body">
+  </div>
+    <div class="container mt-0">
+        <div class="card-body"> 
             <div class="row justify-content-center d-flex">
                 <div class="col text-right">
                     <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-rojo"><i class="fa-solid fa-download"></i> Hoja de Registro</a>
@@ -96,10 +105,6 @@
                     <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Ir al Inicio</a>
                 </div>
             </div>
-        </div>
-        <div class="row justify-content-center mb-4">
-            <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:35%"> &nbsp; &nbsp; &nbsp;
-            &nbsp; <img src="../img/alivianate.jpg" style="width:20%">
         </div>
     </div>
     <script src="{{ asset('js/jquery.js') }}"></script>

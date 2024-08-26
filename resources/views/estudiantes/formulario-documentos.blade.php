@@ -360,7 +360,7 @@
  
                                             <div class="row mb-1">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> En formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
-                                                <div class="col-md-5 alert alert-danger text-justify" style="padding:5px; margin:0"> <small> <i> Este archivo lo subirás una vez que solicites dicha constancia al inicio del Ciclo Escolar 2024-2025. </i> </small>
+                                                <div class="col-md-5 alert alert-danger text-justify" style="padding:5px; margin:0"> <small> <i> Este archivo lo subirás después de que hayas enviado todos los documentos previamente solicitados. </i> </small>
                                                 </div>
                                                 {{-- <div class="col-md-5">
                                                     <button type="button" class="btn btn-success" id="sel_archivo_constancia">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
@@ -382,6 +382,20 @@
                                     <div class="alert alert-danger mb-0" id="mensajeError" style="display:none">
                                     </div>
                                 </div>
+                                <div class="row mb-1 justify-content-center">
+                                    <div class="col-12 text-center">
+                                        <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #f8f3ec; color: #5c2134;">
+                                            <h4><b>¡¡ IMPORTANTE !!</b></h4>
+                                            <ul>
+                                                <li><strong>Estás en la ETAPA #1 DEL PROCESO:</strong> Asegúrate de completar esta etapa para avanzar en el proceso y poder subir la Constancia de Estudios más adelante.</li>
+                                                <li><strong>Tienes que ENVIAR todos los archivos solicitados:</strong> Es obligatorio subir todos los documentos solicitados.</li>
+                                                <li><strong>La sesión NO QUEDA GUARDADA:</strong> Completa y envía el formulario antes de cerrar esta página.</li>
+                                                <li><strong>Formulario enviado con éxito:</strong> Verás un mensaje de confirmación cuando el envío sea exitoso.</li>
+                                            </ul>
+                                        </label>
+                                    </div>
+                                </div>
+                                
                                 <a href="#" class="next btn btn-verde float-left mt-2" data-toggle="modal" data-target="#confirmModal">Anterior</a>
                                 <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-verde float-right mt-2" disabled>Enviar</button>                                
                             </form>

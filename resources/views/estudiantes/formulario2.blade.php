@@ -160,7 +160,7 @@
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
-                                                <label for="celular" class="col-md-5 col-form-label text-md-right">{{ __('N° Celular') }}</label>
+                                                <label for="celular" class="col-md-5 col-form-label text-md-right">{{ __('N° Celular') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>NUM. DE CELULAR VÁLIDO</b> <br> Debes registrar un número de celular que nos podamos comunicarnos para cualquier aviso o anuncio referentes a esta beca."><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-6">
                                                     <input id="celular" type="tel" class="form-control @error('celular') is-invalid @enderror" name="celular" value="{{ old('celular', $estudiante->celular) }}"  autocomplete="celular" maxlength="10" required>
                                                     @error('celular')
@@ -193,6 +193,21 @@
                                             </div>                                            
                                         </div>
                                     </div> 
+                                </div>
+                                <div class="row mb-1 justify-content-center">
+                                    <div class="col-md-12">
+                                        <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #f8f3ec; color: #5c2134; text-align: justify;">
+                                            <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #f8f3ec;">
+                                                <h4><b>¡¡ IMPORTANTE !!</b></h4>
+                                                <li style="text-align: justify;">
+                                                    El <b> número de celular </b> debe ser accesible en todo momento, y de preferencia, debe tener instalado WhatsApp para que puedas recibir notificaciones y estar al tanto de cualquier comunicación importante o actualización relacionada con esta beca.
+                                                </li>                                               
+                                                <li style="text-align: justify;">
+                                                    El <b> e-mail </b> debe existir y además puedas acceder al mismo, ya que al finalizar este formulario se te enviará un archivo importante relacionado con este proceso. Es fundamental que puedas recibir y revisar dicho correo para continuar con los siguientes pasos.
+                                                </li>                           
+                                            </ul>
+                                        </label>
+                                    </div>
                                 </div>
                                 {{-- <a href="{{ route('estudiantes.formulario-curp') }}" class="next btn btn-info float-left mt-2">Anterior</a> --}}
                                 <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-verde float-right mt-2">Siguiente</button>

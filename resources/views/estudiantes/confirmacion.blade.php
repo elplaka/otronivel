@@ -130,11 +130,9 @@ p {
      <br>
      <div align="center"> <h2> CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} </h2> </div> 
     <div align="center"> <h1> DATOS DE REGISTRO <h1> </div>
-    <div align="center">
-       {{-- <a href="{{ url('/registro/' . $estudiante->id_hex) }}">Ver Hoja de Registro</a> --}}
+    {{-- <div align="center">
        <a href="{{ url('/registro/' . $estudiante->id_hex) }}" style="display: inline-block; padding: 10px 20px; background-color: #B12A34; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">Ver Registro</a>
-
-    </div>
+    </div> --}}
     <br>
     <table width="100%" border="1" cellspacing="0">
         <tr>

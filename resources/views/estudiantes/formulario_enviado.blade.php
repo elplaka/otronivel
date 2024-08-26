@@ -78,31 +78,56 @@
 <body>
     <div class="container">
         <div class="card-body">
-            <div class="row justify-content-center">
-                <div class="col-md-7">
-                    <div class="row text-center">
-                        <h2><b> FORMULARIO ENVIADO CON ÉXITO </b> </h2>
-                    </div>
-                    <div class="row text-justify">
-                      <p>Se te envió un correo electrónico a la dirección de e-mail que proporcionaste en el formulario recién enviado. Conserva este correo porque te servirá más adelante en este proceso.</p>
-                      <p>Asimismo, aquí podrás <b>descargar un archivo PDF</b> que contiene la información que registraste.</p>
-                      <p><strong>Importante:</strong> Por favor, revisa tu bandeja de spam o correo no deseado, ya que el correo electrónico podría llegar allí.</p>
-                    </div>
+          <div class="row justify-content-center mb-4">
+            <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:35%"> &nbsp; &nbsp; &nbsp;
+            &nbsp; <img src="../img/alivianate.jpg" style="width:20%">
+          </div>   
+          <div class="row justify-content-center">
+              <div class="col-md-7" style="font-size:11pt">
+                <div class="row text-center">
+                    <h2><b> FORMULARIO ENVIADO CON ÉXITO </b> </h2>
                 </div>
-            </div>
-            <div class="row justify-content-center mb-3">
-              <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-rojo float-center"><i class="fa-solid fa-download"></i> <b> PDF </b></a>
-            </div>
-            <div class="row justify-content-center mb-4">
-                <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:35%"> &nbsp; &nbsp; &nbsp;
-                &nbsp; <img src="../img/alivianate.jpg" style="width:20%">
-            </div>          
-            <div class="row justify-content-center">
-                <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Nuevo registro</a>
-            </div>
-        </div>
-    </div>
+                <div class="row text-justify mb-0">
+                    <p>Se te ha enviado un correo electrónico a la dirección que proporcionaste en el formulario. Es importante que conserves este correo, ya que te será útil en las siguientes etapas del proceso.</p>
 
+                    {{-- <p class="mb-0"><strong>Descarga del PDF:</strong> En este momento, también tienes la opción de descargar un archivo PDF que contiene toda la información que acabas de registrar. Este archivo es una copia de seguridad y te permitirá tener acceso inmediato a los detalles enviados.</p> --}}
+                </div>
+
+                {{-- <div class="col-12 text-center mt-0">
+                    <a href="{{ route('estudiantes.registro_pdf') }}" class="btn btn-rojo">
+                        <i class="fa-solid fa-download"></i> <b> PDF </b>
+                    </a>
+                </div> --}}
+                <div class="row text-justify mb-0">
+                  <p class="mb-0"><strong>Revisar tu correo:</strong></p>
+                  <ul>
+                      <li><strong>Bandeja de entrada:</strong> El correo electrónico debería llegar en unos minutos a tu bandeja de entrada.</li>
+                      <li><strong>Carpeta de spam o correo no deseado:</strong> Si no ves el correo en tu bandeja de entrada, por favor revisa tu carpeta de spam o correo no deseado. A veces, los correos electrónicos automáticos pueden ser filtrados por error.</li>
+                  </ul>
+
+                  <p class="mb-0"><strong>Problemas para recibir el correo:</strong></p>
+                  <ul>
+                      <li>Si no recibes el correo electrónico en las próximas horas, verifica que la dirección de e-mail proporcionada sea correcta.</li>
+                      <li>En caso de errores o problemas, contacta con el equipo de soporte utilizando la información de contacto proporcionada en la plataforma.</li>
+                  </ul>
+
+                  <p class="mb-0"><strong>Próximos pasos</strong></p>
+                  <ul>
+                      <li><strong>Contacto por WhatsApp:</strong> Asegúrate de que el número de WhatsApp que proporcionaste en el formulario esté activo y disponible. Te contactaremos a través de este medio para informarte sobre el avance del proceso y cualquier otra información relevante. Es importante que puedas acceder a WhatsApp regularmente para no perderte ninguna comunicación.</li>
+
+                      <li><strong>Continúa con el proceso:</strong> Ya puedes subir la Constancia de Estudios requerida para continuar con el registro.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>       
+            <div class="row justify-content-center">
+                <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Nuevo Registro</a> &nbsp;&nbsp;
+              <a class="btn btn-dorado" href="{{ route('estudiantes.forget') }}">Subir Constancia de Estudios</a>
+            </div>
+            <br>
+          </div>
+        </div>
+      </div>
             
 
     <script src="{{ asset('js/jquery.js') }}"></script>

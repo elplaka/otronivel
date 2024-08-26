@@ -155,28 +155,44 @@
                       {{-- <br> --}}
                       @else
                       <div style="background-color: #e5f7e1; border: 2px solid green; padding: 10px;">
-                           <p>
-                          TU REGISTRO PARA EL PERIODO ACTUAL <b>HA SIDO COMPLETADO</b>. TU DOCUMENTACIÓN YA SE VALIDÓ Y ESTÁ EN ORDEN.
-                          <i class="fas fa-check-circle" style="color: green;"></i>
+                        <p>
+                            <b>TU DOCUMENTACIÓN YA SE VALIDÓ Y ESTÁ EN ORDEN</b>.
+                            <i class="fas fa-check-circle" style="color: green;"></i>
                         </p>
-                      </div>
+                        <p>
+                            Nos complace informarte que toda la documentación que proporcionaste ha sido revisada y validada correctamente. Esto significa que has cumplido con todos los requisitos necesarios hasta esta etapa del proceso.                            
+                        </p>
+                    </div>                    
                       @endif                     
                       @elseif ($estudiante->cve_status == 2)
-                      <div style="background-color: #ffffcc; border: 2px solid yellow; padding: 10px;">
+                      {{-- <div style="background-color: #ffffcc; border: 2px solid yellow; padding: 10px;">
                         <p>
                           TU REGISTRO PARA EL PERIODO ACTUAL <b>ESTÁ A PUNTO DE COMPLETARSE</b>. TU DOCUMENTACIÓN ESTÁ COMPLETA Y EN PROCESO DE REVISIÓN.
                           <i class="fas fa-exclamation-circle" style="color: rgba(168, 168, 31, 0.71);"></i>
                         </p>
-                      </div>
+                      </div> --}}
+                      <div style="background-color: #ffffcc; border: 2px solid yellow; padding: 10px;">
+                        <p>
+                            <b>TU SOLICITUD PARA ESTE PERIODO ESTÁ EN SU ETAPA FINAL</b>.
+                            <i class="fas fa-exclamation-circle" style="color: rgba(168, 168, 31, 0.71);"></i>
+                        </p>
+                        <p>
+                             Nos encontramos en la fase final del proceso de validación y revisión de documentos, y pronto te enterarás del resultado de este proceso. Te recomendamos que estés al pendiente del sistema de registro para ver el estatus de tu solicitud.
+                        </p>
+                    </div>
+                    
                       @elseif ($estudiante->cve_status == 3)
                       <div style="background-color: #cce5ff; border: 2px solid #0000cc; padding: 10px;">
-                          <p>
-                            TU DOCUMENTACIÓN <b>ESTÁ INCOMPLETA O TIENE INCONSISTENCIAS</b>. CONSULTA AL ADMINISTRADOR DEL SISTEMA PARA MAYOR INFORMACIÓN.
-                            <b><a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">
-                              <i class="fab fa-whatsapp" style="color: #0000cc;"></i> Contactar por WhatsApp
-                            </a></b>
-                          </p>
-                      </div>
+                        <p>
+                          <b>TU DOCUMENTACIÓN ESTÁ INCOMPLETA O TIENE INCONSISTENCIAS</b>. Es posible que algunos documentos no hayan sido cargados correctamente. 
+                            Para evitar retrasos en el proceso, te recomendamos que te pongas en contacto con el administrador del sistema lo antes posible, quien podrá guiarte en los pasos necesarios para corregir la situación.
+                        </p>
+                        <p>
+                            Si tienes alguna duda o necesitas asistencia inmediata, puedes <b><a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">
+                            <i class="fab fa-whatsapp" style="color: #0000cc;"></i> contactarnos por WhatsApp</a></b>, donde nuestro equipo estará disponible para ayudarte a resolver cualquier inconveniente que hayas encontrado.
+                        </p>
+                    </div>
+                    
                       @endif
                     @endif
                   </div>

@@ -268,13 +268,16 @@
                                                                 El registro a este programa  <b> se completa en dos etapas</b>:
                                                                 <ul>
                                                                     <li>
-                                                                        <b> ETAPA #1. </b> Utilizando tu <b> archivo PDF del CURP </b> en primera instancia </b> deberás subir <b> uno por uno los archivos PDF </b> de la <i> Identificación Oficial</i>, el <i> Acta de Nacimiento</i>, el  <i>Comprobante de Domicilio </i> y el <i> Kardex Escolar</i>. Dejando la <i> Constancia de Estudios </i> para la segunda etapa.
+                                                                        <b> ETAPA #1. </b> Utilizando tu <b> archivo PDF del CURP </b> en primera instancia </b> deberás subir <b> uno por uno los archivos PDF </b> de la <i> Identificación Oficial</i>, el <i> Acta de Nacimiento</i>, el  <i>Comprobante de Domicilio </i> y el <i> Kardex Escolar</i>. Dejando la <i> Constancia de Estudios </i> para la segunda etapa. En una sola sesión debes <b>subir todos estos archivos</b>.
                                                                     </li>
                                                                     <li>
                                                                         <b>ETAPA #2.</b> Procederás a acceder al sistema de registro mediante tu archivo PDF del CURP y subirás el archivo PDF que contenga la <b>Constancia de Estudios del Ciclo Escolar 2024-2025</b> para completar el registro. 
                                                                     </li>
                                                                 </ul>
-                                                            </li>                          
+                                                            </li>
+                                                            <li style="text-align: justify;">
+                                                                Tu registro será completado con éxito hasta que hayas subido <b> TODOS LOS DOCUMENTOS SOLICITADOS</b>. 
+                                                            </li>                      
                                                         </ul>
                                                         <button type="button" id="btnAbrirModal" class="next btn btn-guinda float-right mt-0" style="border: none;" data-toggle="modal" data-target="#requisitosModal">
                                                             Ver requisitos

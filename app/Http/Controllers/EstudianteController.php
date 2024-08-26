@@ -806,9 +806,16 @@ class EstudianteController extends Controller
     
     public function formulario_constancia_post(Request $request)
     {
+        // $validatedData = $request->validate([
+        //     'img_constancia' => ['required_with:alpha_dash', 'max:1024'],
+        // ]);
+
         $validatedData = $request->validate([
             'img_constancia' => ['required_with:alpha_dash', 'max:1024'],
+        ], [
+            'img_constancia.max' => 'La imagen de constancia no debe pesar más de 1MB.',
         ]);
+        
 
         $constanciaCargada = false;
 
