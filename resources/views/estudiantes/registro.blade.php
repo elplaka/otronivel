@@ -183,7 +183,7 @@ p {
         
     </div>
      <br>
-     <table class="center" width="100%" style="border-spacing: 0px 2px;">
+     {{-- <table class="center" width="100%" style="border-spacing: 0px 2px;">
         <tr style="padding-bottom:1px">
             <td class="text-center">
                 <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" class="next btn btn-rojo mt-2"><i class="fa-solid fa-download"></i> <b> Hoja de Registro </b></a> 
@@ -192,7 +192,7 @@ p {
                 <a href="{{ route('estudiantes.formulario_constancia', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-verde btn-md"> <b> <i class="fa-solid fa-upload"></i> Subir CONSTANCIA </b> </a>
             </td>
         </tr>
-    </table>  
+    </table>   --}}
     <br>
     <div style="text-align:center;"> <h2> INFORMACIÓN PERSONAL </h2> </div>
     <table class="center" width="100%" style="border-spacing: 0px 2px;">

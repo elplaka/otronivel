@@ -81,6 +81,7 @@ class EstudianteController extends Controller
 
         $max_key = array_key_last($parr);  //Obtiene la última clave de un array
 
+
         $curp = ""; 
 
         //Dependiendo del archivo PDF del CURP hay varios tipos y la localización de los datos varía 
@@ -89,6 +90,18 @@ class EstudianteController extends Controller
             case 29:
                 $curp = $parr[11];
                 $nombre_pdf = $parr[12];
+                break;
+            case 30:
+                $curp = $parr[11];
+                if ($parr[14] == "Clave:")
+                {
+                    $nombre_pdf = $parr[12] . " " . $parr[13];
+                }
+                else
+                {
+                    $nombre_pdf = $parr[12];
+                }
+
                 break;
             case 32:
                 $curp = $parr[10];
