@@ -314,7 +314,7 @@ class EstudianteController extends Controller
 
         if ($ciclo == $estudiante->id_ciclo)   //YA EXISTE EN EL CICLO ACTUAL
         {
-            if ($estudiante->cve_status == 1 || $estudiante->cve_status == 2 || $estudiante->cve_status == 3 || $estudiante->cve_status == 6 || $estudiante->cve_status == 7)
+            if ($estudiante->cve_status == 1 || $estudiante->cve_status == 2 || $estudiante->cve_status == 3 || $estudiante->cve_status == 5 ||  $estudiante->cve_status == 6 || $estudiante->cve_status == 7)
             {
             $request->session()->put('existente', true);
             return redirect()->route('estudiantes.existente', $estudiante->id_hex);

@@ -299,7 +299,7 @@
                                                         <i><a href="https://www.gob.mx/curp/" target="_blank" class="text-primary">https://www.gob.mx/curp/</a></i>
                                                     </li>
                                                     <li style="text-align: justify;">
-                                                        El archivo PDF <b> NO se imprime</b>, <b> NO se escanea</b>, <b> NO se le toma foto.</b> Se debe subir el <b> archivo original </b> previamente descargado.
+                                                        El archivo PDF <b> NO se imprime</b>, <b> NO se escanea</b>, <b> NO se le toma foto</b>, <b>NO se comprime.</b> Se debe subir el <b> archivo original </b> previamente descargado.
                                                     </li> 
                                                 </div>
                                             </div>

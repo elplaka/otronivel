@@ -24,6 +24,8 @@
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script> --}}
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qr.js/1.0.0/qr.min.js"></script>
+
 
 
     <!-- Custom styles for this template-->
@@ -272,7 +274,7 @@
                 </div>
             </li> --}}
 
-            @if (Auth::user()->usertype == 1 || Auth::user()->usertype == 3)  
+            {{-- @if (Auth::user()->usertype == 1 || Auth::user()->usertype == 3)  
             <!-- Divider -->
            <hr class="sidebar-divider my-0"> 
            <li class="nav-item">
@@ -292,7 +294,7 @@
                 </div>
             </div>
             </li>
-           @endif
+           @endif --}}
 
            @if (Auth::user()->usertype == 1 || Auth::user()->usertype == 3)  
            <!-- Divider -->
@@ -306,6 +308,7 @@
            <div id="collapseSystem3" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                <div class="py-0 collapse-inner rounded">
                     @if (Auth::user()->usertype == 1) 
+                    <a class="nav-link" href="{{ route('boletos.remesas-index') }}"><i class="fa-solid fa-people-carry-box"></i>Remesas </a>
                     <a class="nav-link" href="{{ route('apoyos.montos-index') }}"><i class="fa-solid fa-sack-dollar"></i>Montos </a>
                     @endif
                     @if (Auth::user()->usertype == 1 || Auth::user()->usertype == 3) 

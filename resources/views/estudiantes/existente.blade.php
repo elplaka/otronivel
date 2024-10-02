@@ -79,19 +79,40 @@
     <div class="container">
         <div class="card-body">
             <div class="row justify-content-center">
-                <div class="col-md-7">
+              <div class="row justify-content-center mb-4">
+                <img src="{{ url('img/Logo_y_Escudo.jpg') }}" alt="Por tiempos mejores" style="width: 35%">
+                &nbsp; &nbsp; &nbsp; &nbsp;
+                <img src="{{ url('img/alivianate.jpg') }}" style="width: 20%">
+            </div>
+
+                <div class="col-md-8">
+                    @if ($estudiante->cve_status != 4)
                     <div class="text-center">
                         <h4 style="text-align: center;"><b> Hola <small>«</small> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} <small>»</small> </b> </h4>
                     </div>
+                    @endif
                     @if($estudiante->img_constancia == 'PENDIENTE')
-                        @if ($estudiante->cve_status == 2 || $estudiante->cve_status == 3)
-                        <div style="color:white; background-color: #85195b; border: 2px solid rgb(56, 0, 70); padding: 10px;">
-                          <p>
-                         TU REGISTRO PARA EL PERIODO ACTUAL <b>NO ESTÁ COMPLETO</b>. SE REQUIERE SUBIR LA <b> CONSTANCIA DE ESTUDIOS </b>.
-                       </p>
-                      </div>
+                        @if ($estudiante->cve_status == 1)
+                          <div style="color:white; background-color: #85195b; border: 2px solid rgb(56, 0, 70); padding: 10px;">
+                              <p>
+                            TU REGISTRO PARA EL PERIODO ACTUAL <b>AÚN NO ESTÁ COMPLETO</b>. SE REQUIERE SUBIR LA <b> CONSTANCIA DE ESTUDIOS </b>.
+                            </p>
+                          </div>
+                        @elseif ($estudiante->cve_status == 2)
+                          <div style="color:white; background-color: #6b7c00; border: 2px solid rgb(56, 0, 70); padding: 10px;">
+                            <p>
+                          LA DOCUMENTACIÓN QUE HAS PROPORCIONADO HASTA EL MOMENTO HA SIDO REVISADA Y VALIDADA CORRECTAMENTE, SIN EMBARGO TU REGISTRO PARA EL PERIODO ACTUAL <b>AÚN NO ESTÁ COMPLETO</b>. SE REQUIERE SUBIR LA <b> CONSTANCIA DE ESTUDIOS </b>.
+                          </p>
+                          </div>
                         @endif
                     @else
+                      @if ($estudiante->cve_status == 1)
+                        <div style="color:white; background-color: #85195b; border: 2px solid rgb(56, 0, 70); padding: 10px;">
+                          <p>
+                            TU REGISTRO PARA EL PERIODO ACTUAL <b>YA ESTÁ COMPLETO</b>. TU DOCUMENTACIÓN SERÁ REVISADA Y VALIDADA SEGÚN SEA NECESARIO. </b>.
+                          </p>
+                        </div>
+                      @endif
                     <div class="text-justify">
                     @php
                         if (isset($prox_remesa))
@@ -146,92 +167,86 @@
                         }
                     @endphp
                       @if ($estudiante->cve_status == 6 || $estudiante->cve_status == 7)
-                      @if (isset($prox_remesa))
-                      <div style="background-color: #a62828; border: 2px solid #800000; color: white; padding: 7px; text-align: center; display: flex; justify-content: center; align-items: center;">
-                        <p>
-                            FECHA DE ENTREGA DE BECA: <b>{{  $dia }}-{{ $nombre_mes }}-{{ $anio }}</b>
-                        </p>
-                      </div>
-                      {{-- <br> --}}
-                      @else
-                      <div style="background-color: #e5f7e1; border: 2px solid green; padding: 10px;">
-                        <p>
-                            <b>TU DOCUMENTACIÓN YA SE VALIDÓ Y ESTÁ EN ORDEN</b>.
-                            <i class="fas fa-check-circle" style="color: green;"></i>
-                        </p>
-                        <p>
-                            Nos complace informarte que toda la documentación que proporcionaste ha sido revisada y validada correctamente. Esto significa que has cumplido con todos los requisitos necesarios hasta esta etapa del proceso.                            
-                        </p>
-                    </div>                    
-                      @endif                     
+                        @if (isset($prox_remesa))
+                        <div style="background-color: #a62828; border: 2px solid #800000; color: white; padding: 7px; text-align: center; display: flex; justify-content: center; align-items: center;">
+                          <p>
+                              FECHA DE ENTREGA DE BECA: <b>{{  $dia }}-{{ $nombre_mes }}-{{ $anio }}</b>
+                          </p>
+                        </div>
+                        @else
+                        <div style="background-color: #e5f7e1; border: 2px solid green; padding: 10px;">
+                          <p>
+                              <b>TU DOCUMENTACIÓN YA SE VALIDÓ Y ESTÁ EN ORDEN</b>.
+                              <i class="fas fa-check-circle" style="color: green;"></i>
+                          </p>
+                          <p>
+                              Nos complace informarte que toda la documentación que proporcionaste ha sido revisada y validada correctamente. Esto significa que has cumplido con todos los requisitos necesarios hasta esta etapa del proceso.                            
+                          </p>
+                        </div>                    
+                        @endif                     
                       @elseif ($estudiante->cve_status == 2)
-                      {{-- <div style="background-color: #ffffcc; border: 2px solid yellow; padding: 10px;">
-                        <p>
-                          TU REGISTRO PARA EL PERIODO ACTUAL <b>ESTÁ A PUNTO DE COMPLETARSE</b>. TU DOCUMENTACIÓN ESTÁ COMPLETA Y EN PROCESO DE REVISIÓN.
-                          <i class="fas fa-exclamation-circle" style="color: rgba(168, 168, 31, 0.71);"></i>
-                        </p>
-                      </div> --}}
                       <div style="background-color: #ffffcc; border: 2px solid yellow; padding: 10px;">
                         <p>
                             <b>TU SOLICITUD PARA ESTE PERIODO ESTÁ EN SU ETAPA FINAL</b>.
                             <i class="fas fa-exclamation-circle" style="color: rgba(168, 168, 31, 0.71);"></i>
                         </p>
                         <p>
-                             Nos encontramos en la fase final del proceso de validación y revisión de documentos, y pronto te enterarás del resultado de este proceso. Te recomendamos que estés al pendiente del sistema de registro para ver el estatus de tu solicitud.
+                             Nos encontramos en la fase final del proceso de validación y revisión de documentos, en la cual HAS CUMPLIDO CORRECTAMENTE con los requisitos para el registro a este programa. Te recomendamos que estés al pendiente de este sistema donde se publicará posteriormente información importante.
                         </p>
-                    </div>
-                    
+                    </div>                    
                       @elseif ($estudiante->cve_status == 3)
                       <div style="background-color: #cce5ff; border: 2px solid #0000cc; padding: 10px;">
                         <p>
                           <b>TU DOCUMENTACIÓN ESTÁ INCOMPLETA O TIENE INCONSISTENCIAS</b>. Es posible que algunos documentos no hayan sido cargados correctamente. 
-                            Para evitar retrasos en el proceso, te recomendamos que te pongas en contacto con el administrador del sistema lo antes posible, quien podrá guiarte en los pasos necesarios para corregir la situación.
+                            Para evitar retrasos en el proceso, te recomendamos que atiendas las observaciones que se te hicieron para corregir la situación.
                         </p>
                         <p>
                             Si tienes alguna duda o necesitas asistencia inmediata, puedes <b><a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">
                             <i class="fab fa-whatsapp" style="color: #0000cc;"></i> contactarnos por WhatsApp</a></b>, donde nuestro equipo estará disponible para ayudarte a resolver cualquier inconveniente que hayas encontrado.
                         </p>
-                    </div>
-                    
+                        </div>
+                        @if (!is_null($estudiante->observaciones_estudiante))
+                          <br> <b> OBSERVACIONES: </b> <br>
+                          <div style="color:rgb(0, 0, 0); background-color: #09ff00; border: 2px solid rgb(0, 51, 38); padding: 10px;">
+                            <p>
+                              <b> {{ $estudiante->observaciones_estudiante }} </b>
+                            </p>
+                          </div>
+                        @endif           
                       @endif
                     @endif
                   </div>
-                    <div class="text-justify">
-                        <p> <br> Aquí puedes descargar el archivo PDF que contiene tu <b> HOJA DE REGISTRO </b> para el Ciclo Escolar {{ $ciclo }}. </p>
-                        <div class="text-center"> 
-                          <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-rojo"><i class="fa-solid fa-download"></i> <b> PDF </b></a>
-                      </div>
-                    </div>
                     @if($estudiante->img_constancia == 'PENDIENTE')
                     <div class="text-justify">
-                      <p> <br> También puedes subir la <b> CONSTANCIA DE ESTUDIOS DEL PERIODO ACTUAL </b> para concluir el proceso de registro. </p>
+                      <p> <br> Aquí puedes subir la <b> CONSTANCIA DE ESTUDIOS DEL PERIODO ACTUAL </b> para concluir el proceso de registro. </p>
                       <div class="text-center"> 
                         <a href="{{ route('estudiantes.formulario_constancia', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-verde btn-md"> <b> <i class="fa-solid fa-upload"></i> Subir CONSTANCIA </b> </a>
                     </div>
                     @else
-                    @if ($estudiante->cve_status != 6 && $estudiante->cve_status != 7)
+                    @if ($estudiante->cve_status == 1 || $estudiante->cve_status == 2 || $estudiante->cve_status == 3)
                     <div class="text-justify">
-                      <p> <br> Ya has subido la <b> CONSTANCIA DE ESTUDIOS DEL PERIODO ACTUAL </b>. Pero si quieres actualizar este archivo lo puedes hacer aquí. </p>
+                      <p> <br> Si quieres actualizar la <b> CONSTANCIA DE ESTUDIOS DEL PERIODO ACTUAL </b> lo puedes hacer aquí. </p>
                       <div class="text-center"> 
                         <a href="{{ route('estudiantes.formulario_constancia', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-verde btn-md"> <b> <i class="fa-solid fa-upload"></i> Actualizar CONSTANCIA </b> </a>
                     </div>
                     @endif
                     @endif
+                    @if ($estudiante->cve_status != 4)
+                    <div class="text-justify">
+                        <p> <br> También puedes descargar el archivo PDF que contiene tu <b> HOJA DE REGISTRO </b> para el Ciclo Escolar {{ $ciclo }}. </p>
+                        <div class="text-center"> 
+                          <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-rojo"><i class="fa-solid fa-download"></i> <b> PDF </b></a>
+                      </div>
+                    </div>
+                    @endif
+                    <br><br>
+                    <div class="row justify-content-center">
+                      <a class="btn btn-dorado" href="{{ route('estudiantes.forget') }}">Ir al Inicio</a>
+                    </div>
                   </div>
                 </div>
             </div>
-            <div class="row justify-content-center">
-
-                      </div> <br>
-                  <div class="row justify-content-center mb-4">
-                      <img src="{{ url('img/Logo_y_Escudo.jpg') }}" alt="Por tiempos mejores" style="width: 35%">
-                      &nbsp; &nbsp; &nbsp; &nbsp;
-                      <img src="{{ url('img/alivianate.jpg') }}" style="width: 20%">
-                  </div>
-                  <div class="row justify-content-center">
-                      <a class="btn btn-dorado" href="{{ route('estudiantes.forget') }}">Ir al Inicio</a>
-                  </div>
-        </div>
+          </div>
     </div>
             
     <script src="{{ asset('js/jquery.js') }}"></script>

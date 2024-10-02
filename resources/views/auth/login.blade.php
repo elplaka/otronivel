@@ -39,7 +39,7 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        {{-- <div class="row mb-3">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -49,7 +49,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
@@ -57,14 +57,22 @@
                                     {{ __('Ingresar') }}
                                 </button>
 
-                                @if (Route::has('password.request'))
+                                {{-- @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
                                         {{ __('Olvidaste tu contraseña?') }}
                                     </a>
-                                @endif
+                                @endif --}}
                             </div>
                         </div>
-                    </form>
+                    </form>                   
+                </div>
+            </div>
+            <div class="col-md-8 mx-auto">
+                <div class="row mt-3 mb-0 text-center">
+                    <p style="font-size:12pt">Da clic en el siguiente botón para ir a la PÁGINA DE REGISTRO <br> del Programa de Becas ALIVIAN4TE</p>
+                    <div class="col-md-8 mx-auto d-flex justify-content-center">
+                        <a class="btn btn-danger" href="{{ route('estudiantes.forget') }}">Ir a la Página de Registro</a>
+                    </div>
                 </div>
             </div>
         </div>

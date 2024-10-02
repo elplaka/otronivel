@@ -1,6 +1,8 @@
 @extends('layouts.main')
 
 <?php
+    use App\Models\Estudiante;
+
     if (isset(auth()->user()->usertype))
     {
         $usertype = auth()->user()->usertype;
@@ -146,6 +148,11 @@
 
         .text-rojo:hover {
             color: #5c2134;
+        }
+
+        /* Forzar el color del texto en los badges */
+        .text-white-important {
+            color: white !important;
         }
     </style>
 
@@ -482,13 +489,30 @@
                                             $color = "#ff8000";
                                             break;  
                                     }
+
+                                    $aniosEscolares = Estudiante::where('curp', $estudiante->curp)
+                                    ->distinct()
+                                    ->pluck('ano_escolar');
+
+                                    $badgeColors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+                                    $darkColors = ['primary', 'secondary', 'success', 'danger', 'info', 'dark'];
                                 ?>
                                 <tr  @if ($usertype <= 1) title={{ $estudiante->status->descripcion }} @endif>
                                     <td scope="row" style="border-left: 4px solid @if ($usertype <= 1) {{ $color }} @endif; vertical-align:middle">{{ $i++ }}</td>
                                     <td style="vertical-align:middle">{{ $estudiante->id }}</td>
                                     <td style="vertical-align:middle">{{ $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido . ' ' . $estudiante->nombre }} &nbsp;</td>
-                                    <td style="vertical-align:middle">{{ $estudiante->ano_escolar . '°' }} <i class="fas fa-university"></i> {{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $ciudadEscuela }} &nbsp;</td>
-                                    <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;</td>
+                                    <td style="vertical-align:middle">{{ $estudiante->ano_escolar . '°' }} <i class="fas fa-university"></i> {{ $estudiante->escuela->escuela_abreviatura }} <i class="fas fa-map-marker-alt"></i> {{ $estudiante->ciudad->abreviatura }} &nbsp;</td>
+                                    <td style="vertical-align:middle">{{ $estudiante->carrera }} &nbsp;
+                                        @foreach ($aniosEscolares as $index => $anio)
+                                        @php
+                                            // Asignar un color distinto para cada badge, utilizando el índice para ciclar colores
+                                            $colorBadge = $badgeColors[$index % count($badgeColors)];
+                                            $textClass = in_array($color, $darkColors) ? 'text-white-important' : 'text-dark';
+                                        @endphp
+                                        <span class="badge bg-{{ $colorBadge }}" style="color: white;">{{ $anio }}</span>
+                                        @endforeach
+
+                                    </td>
                                     @if ($usertype <= 1) <td style="vertical-align:middle">{{ $estudiante->observaciones_admin }} &nbsp;</td> @endif
                                     <td style="vertical-align: middle;">
                                         @if ($usertype <= 1)

@@ -26,9 +26,9 @@
 
     $qrcode = base64_encode(QrCode::format('png')->size(300)->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
 
+    //$qrcode = base64_encode(\QrCode::format('png')->size(300)->generate(URL::to("/") . '/registro/' . $estudiante->id_hex));
 
-
-
+    
 ?>
 
 <style>
