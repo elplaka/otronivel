@@ -11,6 +11,7 @@ use App\Mail\EstudiantesMailable;
 use App\Mail\EstudiantesFolioMailable;
 use App\Models\Estudiante;
 use App\Http\Middleware\ChecaTipoUsuario;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------

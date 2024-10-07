@@ -10,7 +10,8 @@ use App\Models\Estudiante;
 use App\Models\Escuela;
 use App\Models\Ciudad;
 use Illuminate\Support\Facades\DB;
-use PDF;
+// use PDF;
+use Barryvdh\DomPDF\Facade\PDF;
 use Dompdf\Dompdf;  
 use DOMDocument;
 
@@ -32,26 +33,7 @@ class ApoyoController extends Controller
         $id_remesa = $request->idRemesa;
         $cve_ciudad = $request->cveCiudad;
 
-        if ($cve_ciudad == 1)  //MAZATLÁN
-        {
-            $estudiantes_reporte = Estudiante::select('estudiantes.id as id', 'estudiantes.nombre as nombre', 'estudiantes.primer_apellido as primer_apellido', 'estudiantes.segundo_apellido', 'estudiantes.cve_ciudad_escuela as cve_ciudad_escuela', 'estudiantes.carrera as carrera', 'apoyos_montos.id_remesa as id_remesa', 'escuelas.escuela_abreviatura as escuela_abreviatura', 'apoyos_montos.monto as monto', 'localidades.localidad as lugar_origen')
-            ->leftjoin('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela' )
-            ->leftjoin('localidades', 'estudiantes.cve_localidad_origen', '=', 'localidades.cve_localidad' )
-            ->leftJoin('apoyos_montos', function($join)
-            {
-                $join->on('estudiantes.cve_ciudad_escuela', '=', 'apoyos_montos.cve_ciudad_escuela');
-                $join->on('estudiantes.cve_escuela', '=', 'apoyos_montos.cve_escuela');
-            })
-            ->whereIn('estudiantes.id', $ids_asignar)
-            ->where('id_remesa', $id_remesa)
-            ->where('estudiantes.id_ciclo', $ciclo)
-            ->where('estudiantes.cve_ciudad_escuela', 1)->where('estudiantes.cve_status', 7)
-            ->where('apoyos_montos.monto', '>', 0)
-            ->orderBy('estudiantes.primer_apellido')
-            ->orderBy('estudiantes.segundo_apellido')
-            ->orderBy('estudiantes.nombre'); 
-        }
-        elseif ($cve_ciudad == 2)  //CULIACÁN
+        if ($cve_ciudad == 2)  //CULIACÁN
         {
             $estudiantes_reporte = Estudiante::select('estudiantes.id as id', 'estudiantes.nombre as nombre', 'estudiantes.primer_apellido as primer_apellido', 'estudiantes.segundo_apellido', 'estudiantes.cve_ciudad_escuela as cve_ciudad_escuela', 'estudiantes.carrera as carrera', 'apoyos_montos.id_remesa as id_remesa', 'escuelas.escuela_abreviatura as escuela_abreviatura', 'apoyos_montos.monto as monto', 'localidades.localidad as lugar_origen')
             ->leftjoin('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela' )
@@ -68,9 +50,28 @@ class ApoyoController extends Controller
             ->where('apoyos_montos.monto', '>', 0)
             ->orderBy('estudiantes.primer_apellido')
             ->orderBy('estudiantes.segundo_apellido')
+            ->orderBy('estudiantes.nombre');
+        }
+        else  //MAZATLÁN Y +
+        {
+            $estudiantes_reporte = Estudiante::select('estudiantes.id as id', 'estudiantes.nombre as nombre', 'estudiantes.primer_apellido as primer_apellido', 'estudiantes.segundo_apellido', 'estudiantes.cve_ciudad_escuela as cve_ciudad_escuela', 'estudiantes.carrera as carrera', 'apoyos_montos.id_remesa as id_remesa', 'escuelas.escuela_abreviatura as escuela_abreviatura', 'apoyos_montos.monto as monto', 'localidades.localidad as lugar_origen')
+            ->leftjoin('escuelas', 'estudiantes.cve_escuela', '=', 'escuelas.cve_escuela' )
+            ->leftjoin('localidades', 'estudiantes.cve_localidad_origen', '=', 'localidades.cve_localidad' )
+            ->leftJoin('apoyos_montos', function($join)
+            {
+                $join->on('estudiantes.cve_ciudad_escuela', '=', 'apoyos_montos.cve_ciudad_escuela');
+                $join->on('estudiantes.cve_escuela', '=', 'apoyos_montos.cve_escuela');
+            })
+            ->whereIn('estudiantes.id', $ids_asignar)
+            ->where('id_remesa', $id_remesa)
+            ->where('estudiantes.id_ciclo', $ciclo)
+            ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)->where('estudiantes.cve_status', 7)
+            ->where('apoyos_montos.monto', '>', 0)
+            ->orderBy('estudiantes.primer_apellido')
+            ->orderBy('estudiantes.segundo_apellido')
             ->orderBy('estudiantes.nombre'); 
         }
-
+    
         $montos = $request->session()->get('montos');
         $suma_montos = array_sum($montos);
 
@@ -304,7 +305,7 @@ class ApoyoController extends Controller
         $montos_estudiantes = $estudiantesId->map(function ($estudiante) use ($cve_ciudad) {
             return $estudiante->apoyosMontos->where('cve_ciudad_escuela', $cve_ciudad)->pluck('monto')->first();
         });
-        
+
         $montos = $montos_estudiantes->toArray();
         $request->session()->put('montos', $montos);
 
@@ -321,7 +322,6 @@ class ApoyoController extends Controller
         $cve_ciudad = $request->cve_ciudad;
         if (!isset($cve_ciudad)) $cve_ciudad = 0;
         $ciudades = Ciudad::all();
-
 
         if ($cve_ciudad == 2)  //CULIACÁN
         {
@@ -343,7 +343,6 @@ class ApoyoController extends Controller
             ->where('estudiantes.cve_ciudad_escuela', $cve_ciudad)
             ->where('br.id_remesa', $id_remesa)
             ->get();
-
         }
         else //DEMÁS CIUDADES
         {

@@ -178,9 +178,10 @@
                             <tbody>
                                 @foreach ($estudiantes as $estudiante)
                                     <?php
-                                        if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
-                                        elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
-                                        else $ciudadEscuela = "NULL";
+                                        // if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
+                                        // elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
+                                        // else $ciudadEscuela = "NULL";
+                                        $ciudadEscuela = $estudiante->ciudad->abreviatura;
                                         switch ($estudiante->cve_status)  // Se colorea el borde izquierdo de la celda de acuerdo al status del estudiante
                                         {
                                             case 1:   //RECIBIDO

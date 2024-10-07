@@ -171,8 +171,10 @@
                 <tbody>
                     @foreach ($estudiantes_reporte as $estudiante)
                         <?php
-                                if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
-                                elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
+                                // if ($estudiante->cve_ciudad_escuela == 1) $ciudadEscuela = "MZT";
+                                // elseif ($estudiante->cve_ciudad_escuela == 2) $ciudadEscuela = "CLN";
+
+                                $ciudadEscuela = $estudiante->ciudad->abreviatura;
 
                                 $monto_asignado = monto_asignado($estudiante->id_remesa, $estudiante->id);
 
