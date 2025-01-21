@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>ALIVIAN4TE - Por tiempos mejores </title>
+        <title>OTRO NIVEL </title>
     
         <!-- Custom fonts for this template-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -100,9 +100,9 @@
             <div class="row justify-content-center">
                       </div> <br>
                   <div class="row justify-content-center mb-4">
-                      <img src="{{ url('img/Logo_y_Escudo.jpg') }}" alt="Por tiempos mejores" style="width: 35%">
+                      <img src="{{ url('img/Logo_y_Escudo.jpg') }}" style="width: 35%">
                       &nbsp; &nbsp; &nbsp; &nbsp;
-                      <img src="{{ url('img/alivianate.jpg') }}" style="width: 20%">
+                      <img src="{{ url('img/logo_programa.jpg') }}" style="width: 20%">
                   </div>
                   <div class="row justify-content-center">
                       <a class="btn btn-dorado" href="{{ route('estudiantes.forget') }}">Ir al Inicio</a>

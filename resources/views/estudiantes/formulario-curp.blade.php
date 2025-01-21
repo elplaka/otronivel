@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>ALIVIAN4TE - Por tiempos mejores </title>
+        <title>OTRO NIVEL </title>
     
         <!-- Custom fonts for this template-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -91,17 +91,17 @@
 
 <style>
     .btn-dorado {
-      background-color: #b2945e;
+      background-color: #706f6f;
       color: white;
     }
   
     .btn-dorado:hover {
-      background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      background-color: #575757; /* Cambia el color aquí al deseado cuando el mouse esté encima */
       color: white;
     }
 
     .btn-verde {
-      background-color: #3d5b4f;
+      background-color: #00656c;
       color: white;
     }
   
@@ -116,7 +116,7 @@
     }
 
     .btn-guinda {
-      background-color: #5c2134;
+      background-color: #7b003a;
       color: white;
     }
   
@@ -169,11 +169,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="pdfModalLabel" style="font-size:11pt"><b> Requisitos para el REGISTRO al PROGRAMA ALIVIAN4TE </b></h6>
+                <h6 class="modal-title" id="pdfModalLabel" style="font-size:11pt"><b> Requisitos para el REGISTRO al PROGRAMA OTRO NIVEL </b></h6>
             </div>
             <div class="modal-body">
-                <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #f8f3ec; color: #5c2134; text-align: justify;">
-                    <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #f8f3ec;">
+                <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #ebebeb; color: #7b003a; text-align: justify;">
+                    <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #ebebeb;">
                     <li style="text-align: justify;">
                         El archivo PDF del CURP será <b> tu primer requisito </b> para registrarte. Además necesitas los archivos PDF de:
                     </li>
@@ -206,7 +206,7 @@
                     </li>
                     <br>
                     <li style="text-align: justify;">
-                        Una vez que te hayas registrado, puedes usar el mismo archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu Constancia de Estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
+                        Una vez que te hayas registrado, puedes usar el mismo archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu Constancia de Estudios </b> y <b>consultar información</b> sobre el programa OTRO NIVEL.
                     </li>
                 </li>                
                 </style>
@@ -221,14 +221,14 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="row justify-content-center mb-2">
-                        <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:70%">
+                        <img src="../img/Logo_y_Escudo.jpg" style="width:70%">
                     </div>
                     <div class="card">
                         <div class="card-body">
                             <form id="my_form" name="my_form" class="contact-form" method="POST" action="{{ route('estudiantes.formulario-curp.post') }}" enctype="multipart/form-data" novalidate>
                                 @csrf
                                 <div class="row justify-content-center mb-2">
-                                    <img src="../img/alivianate.jpg" style="width:45%">
+                                    <img src="../img/logo_programa.jpg" style="width:45%">
                                 </div>
                                 {{-- <div class="row justify-content-center mb-1">
                                     <h1 class="h3 mb-2 text-gray-800"> <b>{{ __('INICIO DEL REGISTRO') }} </b> </h1>
@@ -242,29 +242,32 @@
                                         <div class="card-body">                                            
                                              <div class="row mb-1 justify-content-center">
                                                 <div class="col-md-12">
-                                                    <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #f8f3ec; color: #5c2134; text-align: justify;">
-                                                        <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #f8f3ec;">
+                                                    <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #ebebeb; color: #7b003a; text-align: justify;">
+                                                        <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #ebebeb;">
                                                             <h4><b>¡¡ IMPORTANTE !!</b></h4>
                                                             @if ($convocatoria_abierta)
-                                                            <li style="text-align: justify;">
+                                                            {{-- <li style="text-align: justify;">
                                                                 El periodo de registro comprende del <b> 26 de Agosto al 20 de Septiembre de 2024. </b>
                                                             </li>                                               
                                                             @else
                                                             <li style="text-align: justify;">
                                                                 El periodo de registro comprendió del <b> 26 de Agosto al 20 de Septiembre de 2024. </b>
-                                                            </li>                           
+                                                            </li>                            --}}
                                                             <li style="text-align: justify;">
-                                                                Puedes usar el archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa ALIVIAN4TE.
+                                                                Puedes usar el archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa OTRO NIVEL.
                                                             </li>
                                                             @endif
                                                             <li style="text-align: justify;">
-                                                                Se aceptará el <strong> archivo PDF con el formato más reciente </strong> que puedes descargar en la página del Gobierno Federal
+                                                                Se aceptará el <strong> archivo PDF del CURP con el formato más reciente </strong> que puedes descargar en la página del Gobierno Federal
                                                                 <i><a href="https://www.gob.mx/curp/" target="_blank" class="text-primary">https://www.gob.mx/curp/</a></i>
                                                             </li>
                                                             <li style="text-align: justify;">
-                                                                El archivo PDF <b> NO se imprime</b>, <b> NO se escanea</b>, <b> NO se le toma foto.</b> Se debe subir el <b> archivo original </b> previamente descargado.
-                                                            </li> 
+                                                                El archivo PDF del CURP <b> NO se imprime</b>, <b> NO se escanea</b>, <b> NO se le toma foto</b>, <b> NO se comprime </b>. Se debe subir el <b> archivo original </b> previamente descargado.
+                                                            </li>
                                                             <li style="text-align: justify;">
+                                                                Procederás a acceder al sistema de registro mediante tu archivo PDF del CURP y subirás el archivo PDF de la <b>Constancia de Estudios del Ciclo Escolar 2024-2025 más reciente</b> para completar el registro.
+                                                            </li> 
+                                                            {{-- <li style="text-align: justify;">
                                                                 El registro a este programa  <b> se completa en dos etapas</b>:
                                                                 <ul>
                                                                     <li>
@@ -274,14 +277,14 @@
                                                                         <b>ETAPA #2.</b> Procederás a acceder al sistema de registro mediante tu archivo PDF del CURP y subirás el archivo PDF que contenga la <b>Constancia de Estudios del Ciclo Escolar 2024-2025</b> para completar el registro. 
                                                                     </li>
                                                                 </ul>
-                                                            </li>
-                                                            <li style="text-align: justify;">
+                                                            </li> --}}
+                                                            {{-- <li style="text-align: justify;">
                                                                 Tu registro será completado con éxito hasta que hayas subido <b> TODOS LOS DOCUMENTOS SOLICITADOS</b>. 
-                                                            </li>                      
+                                                            </li>                       --}}
                                                         </ul>
-                                                        <button type="button" id="btnAbrirModal" class="next btn btn-guinda float-right mt-0" style="border: none;" data-toggle="modal" data-target="#requisitosModal">
+                                                        {{-- <button type="button" id="btnAbrirModal" class="next btn btn-verde float-right mt-0" style="border: none;" data-toggle="modal" data-target="#requisitosModal">
                                                             Ver requisitos
-                                                        </button>
+                                                        </button> --}}
                                                     </label>
                                                 </div>
                                             </div>
@@ -319,7 +322,7 @@
                                             <div class="row mb-1">
                                                 <label class="col-md-4 col-form-label text-md-right">{{ __('CURP') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>ARCHIVO EN PDF</b> <br> El formulario aceptará el archivo PDF de formato reciente descargado en la página del Gobierno Federal <i>https://www.gob.mx/curp/</i> que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="btn btn-dorado" id="sel_archivo_curp" style="border: none;">Selecciona archivo <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-guinda" id="sel_archivo_curp" style="border: none;">Selecciona archivo <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_curp" style="font-size:13px" required>                 
                                                         {{$estudiante->img_curp ?? 'Sin archivo seleccionado' }}
                                                     </div>
@@ -340,8 +343,8 @@
                     </div>
                     <div class="row mb-1 justify-content-center">
                         <div class="col-12 text-center">
-                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #f8f3ec; color: #5c2134;">
-                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6941088943</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
+                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #ebebeb; color: #7b003a;">
+                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6692295855</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
                                 * Mayores informes en la presidencia municipal de <b> Lunes a Viernes de 8:30 a.m. a 3 p.m. </b>
                             </label>
                         </div>

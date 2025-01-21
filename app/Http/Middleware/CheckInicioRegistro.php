@@ -17,7 +17,7 @@ class CheckInicioRegistro
     public function handle(Request $request, Closure $next)
     {
         // Verificar si la ruta '/2023-2024' ha sido visitada previamente
-        if ($request->session()->has('visited_2023_2024')) {
+        if ($request->session()->has('visited_2024_2025')) {
             return $next($request);
         }
 

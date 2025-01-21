@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>ALIVIAN4TE - Por tiempos mejores </title>
+        <title>OTRO NIVEL  </title>
     
         <!-- Custom fonts for this template-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -35,7 +35,7 @@
     }
 
     .btn-verde {
-      background-color: #3d5b4f;
+      background-color: #00656c;
       color: white;
     }
   
@@ -45,7 +45,7 @@
     }
 
     .btn-guinda {
-      background-color: #5c2134;
+      background-color: #7b003a;
       color: white;
     }
   
@@ -79,8 +79,8 @@
     <div class="container">
         <div class="card-body">
           <div class="row justify-content-center mb-4">
-            <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:35%"> &nbsp; &nbsp; &nbsp;
-            &nbsp; <img src="../img/alivianate.jpg" style="width:20%">
+            <img src="../img/Logo_y_Escudo.jpg" style="width:35%"> &nbsp; &nbsp; &nbsp;
+            &nbsp; <img src="../img/logo_programa.jpg" style="width:20%">
           </div>   
           <div class="row justify-content-center">
               <div class="col-md-7" style="font-size:11pt">
@@ -121,8 +121,8 @@
               </div>
             </div>       
             <div class="row justify-content-center">
-                <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Nuevo Registro</a> &nbsp;&nbsp;
-              <a class="btn btn-dorado" href="{{ route('estudiantes.forget') }}">Subir Constancia de Estudios</a>
+                <a class="btn btn-guinda" href="{{ route('estudiantes.forget') }}">Nuevo Registro</a> &nbsp;&nbsp;
+              <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Subir Constancia de Estudios</a>
             </div>
             <br>
           </div>

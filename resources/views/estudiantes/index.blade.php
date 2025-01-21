@@ -104,11 +104,11 @@
 
     <style>
     .bg-rojo {
-           background-color: #892641; /* Color rojo en formato hexadecimal */
+           background-color: #7b003a; /* Color rojo en formato hexadecimal */
        }
 
    .btn-verde {
-     background-color: #3d5b4f;
+     background-color: #00656c;
      color: white;
    }
  
@@ -123,17 +123,17 @@
     }
 
    .btn-dorado {
-      background-color: #b2945e;
+      background-color: #706f6f;
       color: white;
     }
   
     .btn-dorado:hover {
-      background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      background-color: #ebebeb; /* Cambia el color aquí al deseado cuando el mouse esté encima */
       color: white;
     }
 
     .btn-rojo {
-      background-color: #932f4a;
+      background-color: #7b003a;
       color: white;
     }
   
@@ -158,7 +158,7 @@
 
 <style>
     .custom-pagination .pagination .page-item.active .page-link {
-        background-color: #8B0000; /* Color guinda (maroon) para el paginador activo */
+        background-color: #7b003a; /* Color guinda (maroon) para el paginador activo */
         color: white; /* Cambiar el color del texto a blanco para el paginador activo */
         /* Ajusta otros estilos según tus preferencias */
     }

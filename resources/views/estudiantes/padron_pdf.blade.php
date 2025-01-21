@@ -6,7 +6,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>Sistema ALIVIAN4TE :: Gobierno del Municipio de CONCORDIA</title>
+        <title>Sistema OTRO NIVEL :: Gobierno del Municipio de CONCORDIA</title>
     
         <!-- Custom styles for this template-->
         <link href="{{ public_path('css/sb-admin.min.pdf.css')}}" rel="stylesheet" type="text/css">  
@@ -46,7 +46,7 @@
         </style>  
 </head>
 <?php 
-    $path = getcwd() . '/img/alivianate.jpg';
+    $path = getcwd() . '/img/logo_programa.jpg';
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
     $logo_aliviane = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -72,13 +72,13 @@
         <table>
             <tr>
                 <td style="width:8cm">
-                    <img src="{{ $logo_admon }}" alt="Por tiempos mejores" style="width:100%">
+                    <img src="{{ $logo_admon }}" style="width:100%">
                 </td>
                 <td style="width:12cm">
                     <h2 class="h3 text-gray-800" style="text-align:center;padding:0px;margin:0px"> <b> GOBIERNO DEL MUNICIPIO DE CONCORDIA <br> {{ $tituloReporte }} </b> </h1>
                 </td>
                 <td style="width:5cm"> 
-                    <img src="{{ $logo_aliviane }}" alt="Por tiempos mejores" style="width:95%">
+                    <img src="{{ $logo_aliviane }}" style="width:95%">
                 </td>
             </tr>
         </table>

@@ -574,7 +574,7 @@ class EstudianteController extends Controller
         $comprobanteCargado = false;
         $identificacionCargada = false;
         $kardexCargado = false;
-        $constanciaCargada = false;
+        // $constanciaCargada = false;
 
         $estudiante = $request->session()->get('estudiante');
      
@@ -722,11 +722,11 @@ class EstudianteController extends Controller
             Storage::putFileAs('kardex', $request->img_kardex, $newFileName);
             $estudiante->img_kardex = $newFileName;
         }
-        if ($constanciaCargada)
-        {
-            $archivo = 'CN_' . $rfc . '.' . $extConstancia;
-            $request->img_constancia->move('img/constancias', $archivo);
-        }
+        // if ($constanciaCargada)
+        // {
+        //     $archivo = 'CN_' . $rfc . '.' . $extConstancia;
+        //     $request->img_constancia->move('img/constancias', $archivo);
+        // }
 
          // Obtener la ruta del archivo original
         $archivoOriginal = 'tmp/' . $estudiante->img_curp;
@@ -827,8 +827,7 @@ class EstudianteController extends Controller
             'img_constancia' => ['required_with:alpha_dash', 'max:1024'],
         ], [
             'img_constancia.max' => 'La imagen de constancia no debe pesar más de 1MB.',
-        ]);
-        
+        ]);        
 
         $constanciaCargada = false;
 
@@ -856,6 +855,13 @@ class EstudianteController extends Controller
         {
             $message = $message . "<li>El archivo de la <b>CONSTANCIA DE ESTUDIOS</b> debe ser PDF.</li>";
             $errorConstancia = true;
+        }
+        else {
+            $file = $request->file('img_constancia');
+            if ($file && $file->getSize() > 1024 * 1024) { // 1024 KB = 1 MB
+                $message .= "<li>La <b>CONSTANCIA</b> no debe pesar más de 1MB.</li>";
+                $errorConstancia = true;
+            }
         }
 
         $message = $message . "</ul>";

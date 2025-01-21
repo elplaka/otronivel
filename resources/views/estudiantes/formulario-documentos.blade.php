@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>ALIVIAN4TE - Por tiempos mejores </title>
+        <title>OTRO NIVEL </title>
     
         <!-- Custom fonts for this template-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -174,11 +174,11 @@
 
 <style>
     .bg-rojo {
-           background-color: #892641; /* Color rojo en formato hexadecimal */
+           background-color: #7b003a; /* Color rojo en formato hexadecimal */
        }
 
    .btn-verde {
-     background-color: #3d5b4f;
+     background-color: #00656c;
      color: white;
    }
  
@@ -247,7 +247,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="row justify-content-center mb-2">
-                        <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:70%">
+                        <img src="../img/Logo_y_Escudo.jpg" style="width:70%">
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -256,7 +256,7 @@
                                 <div class="row justify-content-center mb-1">
                                     <div class="text-center">
                                         <a href="/2024-2025">
-                                            <img src="../img/alivianate.jpg" style="width:45%">
+                                            <img src="../img/logo_programa.jpg" style="width:45%">
                                         </a>
                                     </div>
                                 </div>
@@ -297,13 +297,13 @@
                                              @endif
                                              {{-- <div class="col-md-11 alert alert-success text-center mt-n4" style="padding:5px;"> <small> <strong> ¡¡IMPORTANTE!! </strong> Todos los archivos deben estar en formato PDF. </small>
                                              </div> --}}
-                                             <div class="row mb-3 justify-content-center" style="background-color: #f8f3ec; color: #5c2134;">
+                                             <div class="row mb-3 justify-content-center" style="background-color: #ebebeb; color: #7b003a;">
                                                 Estudiante: &nbsp; <b> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} </b>
                                             </div>
                                              <div class="row mb-3">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('Acta de Nacimiento') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>ACTA CON FORMATO RECIENTE</b> <br> El acta de nacimiento se recomienda que sea de formato reciente y que esté en formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="btn btn-dorado" id="sel_archivo_acta_nac">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-verde" id="sel_archivo_acta_nac">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_acta_nac" style="font-size:13px">{{$estudiante->img_acta_nac ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <div id="vistaPreviaActa" name="vistaPreviaActa">
@@ -320,7 +320,7 @@
                                                     - Recibo de JUMAPAC o<br>
                                                     - Recibo de TELMEX<br> En formato PDF que no pese más de 1MB."><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label> 
                                                 <div class="col-md-5">
-                                                    <button type="button" class="btn btn-dorado" id="sel_archivo_comprobante_dom">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-verde" id="sel_archivo_comprobante_dom">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_comprobante_dom" style="font-size:13px">{{$estudiante->img_comprobante_dom ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <div id="vistaPreviaComprobante" name="vistaPreviaComprobante">
@@ -333,7 +333,7 @@
                                             <div class="row mb-3">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('Identificación Oficial') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>INE O ESCOLAR</b> <br> Si no tienes la credencial del INE entonces subirás una credencial escolar en formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="btn btn-dorado" id="sel_archivo_identificacion">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-verde" id="sel_archivo_identificacion">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_identificacion" style="font-size:13px">{{$estudiante->img_identificacion ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <div id="vistaPreviaIdentificacion" name="vistaPreviaIdentificacion">
@@ -347,7 +347,7 @@
                                             <div class="row mb-3">
                                                 <label class="col-md-6 col-form-label text-md-right">{{ __('Kárdex') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE CALIFICACIONES</b> <br> Si apenas vas a entrar al Nivel Superior subirás el certificado de la prepa en formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="btn btn-dorado" id="sel_archivo_kardex">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-verde" id="sel_archivo_kardex">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_kardex" style="font-size:13px">{{$estudiante->img_kardex ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
                                                 <div id="vistaPreviaKardex" name="vistaPreviaKardex">
@@ -371,7 +371,7 @@
                                             {{-- <input id="constancia_hidden" name="constancia_hidden" type="hidden" value="{{ $estudiante->img_constancia ?? '#constancia#' }}"> --}}
                                             <div class="row mb-1 justify-content-center">
                                                 <div class="col-12 text-center">
-                                                    <label class="col-form-label mx-1 p-2 col-10" style="font-size: 10pt; text-align: justify; color: #5c2134;">
+                                                    <label class="col-form-label mx-1 p-2 col-10" style="font-size: 10pt; text-align: justify; color: #7b003a;">
                                                     * Para escanear los documentos se recomienda <b> CamScanner</b>. <br>
                                                     * Para la manipulación de <b> archivos PDF </b> se recomienda  <b> ILovePDF</b>.
                                                     </label>
@@ -384,7 +384,7 @@
                                 </div>
                                 <div class="row mb-1 justify-content-center">
                                     <div class="col-12 text-center">
-                                        <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #f8f3ec; color: #5c2134;">
+                                        <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #ebebeb; color: #7b003a;">
                                             <h4><b>¡¡ IMPORTANTE !!</b></h4>
                                             <ul>
                                                 <li><strong>Estás en la ETAPA #1 DEL PROCESO:</strong> Asegúrate de completar esta etapa para avanzar en el proceso y poder subir la Constancia de Estudios más adelante.</li>
@@ -403,8 +403,8 @@
                     </div>
                     <div class="row mb-1 justify-content-center">
                         <div class="col-12 text-center">
-                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #f8f3ec; color: #5c2134;">
-                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6941088943</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
+                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #ebebeb; color: #7b003a;">
+                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6692295855</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
                                 * Mayores informes en la presidencia municipal de <b> Lunes a Viernes de 8:30 a.m. a 3 p.m. </b>
                             </label>
                         </div>
@@ -420,7 +420,7 @@
 
     <script>
         function openWhatsApp() {
-            var phoneNumber = "526941088943"; // Coloca el número de teléfono sin el signo "+"
+            var phoneNumber = "526692295855"; // Coloca el número de teléfono sin el signo "+"
             var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
     

@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>ALIVIAN4TE - Por tiempos mejores </title>
+        <title>OTRO NIVEL </title>
     
         <!-- Custom fonts for this template-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -96,11 +96,11 @@ function showDiv(divId, element) {
 
 <style>
     .bg-rojo {
-           background-color: #892641; /* Color rojo en formato hexadecimal */
+           background-color: #7b003a; /* Color rojo en formato hexadecimal */
        }
 
    .btn-verde {
-     background-color: #3d5b4f;
+     background-color: #00656c;
      color: white;
    }
  
@@ -121,7 +121,7 @@ function showDiv(divId, element) {
             <div class="row justify-content-center">
                 <div class="col-md-7">
                     <div class="row justify-content-center mb-4">
-                        <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:70%">
+                        <img src="../img/Logo_y_Escudo.jpg" style="width:70%">
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -130,7 +130,7 @@ function showDiv(divId, element) {
                                 <div class="row justify-content-center mb-1">
                                     <div class="text-center">
                                         <a href="/2024-2025">
-                                            <img src="../img/alivianate.jpg" style="width:45%">
+                                            <img src="../img/logo_programa.jpg" style="width:45%">
                                         </a>
                                     </div>
                                 </div>
@@ -154,7 +154,7 @@ function showDiv(divId, element) {
                                             @endif 
                                         </div>
                                         <div class="card-body">
-                                            <div class="row mb-3 justify-content-center" style="background-color: #f8f3ec; color: #5c2134;">
+                                            <div class="row mb-3 justify-content-center" style="background-color: #ebebeb; color: #7b003a;">
                                                 Estudiante: &nbsp; <b> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} </b>
                                             </div>
                                             <div class="row mb-3">
@@ -299,8 +299,8 @@ function showDiv(divId, element) {
                     </div>
                     <div class="row mb-1 justify-content-center">
                         <div class="col-12 text-center">
-                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #f8f3ec; color: #5c2134;">
-                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6941088943</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
+                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #ebebeb; color: #7b003a;">
+                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6692295855</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
                                 * Mayores informes en la presidencia municipal de <b> Lunes a Viernes de 8:30 a.m. a 3 p.m. </b>
                             </label>
                         </div>
@@ -312,7 +312,7 @@ function showDiv(divId, element) {
 
     <script>
         function openWhatsApp() {
-            var phoneNumber = "526941088943"; // Coloca el número de teléfono sin el signo "+"
+            var phoneNumber = "526692295855"; // Coloca el número de teléfono sin el signo "+"
             var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
     

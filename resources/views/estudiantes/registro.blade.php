@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>ALIVIAN4TE :: Información de Registro </title>
+    <title>OTRO NIVEL :: Información de Registro </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
@@ -17,7 +17,7 @@
     use SimpleSoftwareIO\QrCode\Facades\QrCode;
     use Illuminate\Support\Facades\URL;
 
-    $path = getcwd() . '/img/alivianate.jpg';
+    $path = getcwd() . '/img/logo_programa.jpg';
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
     $logo_aliviane = 'data:image/' . $type . ';base64,' . base64_encode($data);

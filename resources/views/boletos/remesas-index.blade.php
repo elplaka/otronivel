@@ -74,7 +74,7 @@
             <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-2">
                 <h1 class="h3 mb-0 text-gray-800"><b>Remesas</b></h1> &nbsp;&nbsp;
-                <a href="{{ route('boletos.remesas-nuevo') }}" title="Nueva Remesa" class="btn btn-primary mb-2">+</a>
+                <a href="{{ route('boletos.remesas-nuevo') }}" title="Nueva Remesa" class="btn btn-verde mb-2">+</a>
             </div>
         </div>
         

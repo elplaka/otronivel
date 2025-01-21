@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div> --}}
-        <img src="img/logo.png" alt="Por tiempos mejores" style="width:100%">
+        {{-- <img src="img/logo_new.png" style="width:100%"> --}}
     </div>
 </div>
 @endsection

@@ -2,14 +2,14 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>ALIVIAN4TE :: Información de Registro </title>
+    <title>OTRO NIVEL :: Información de Registro </title>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 <?php 
     //require_once(realpath($_SERVER["DOCUMENT_ROOT"]) .'/include/funciones.php');
 
     use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-    $path = getcwd() . '/img/alivianate.jpg';
+    $path = getcwd() . '/img/logo_programa.jpg';
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
     $logo_aliviane = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -19,7 +19,7 @@
     $data = file_get_contents($path);
     $logo_admon = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
-    $path = getcwd() . '/img/Pattern_Footer.svg';
+    $path = getcwd() . '/img/Pattern_Footer.jpg';
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
     $footer = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -33,7 +33,7 @@
 
 <style>
         @page {
-            margin: 1.5cm 1.5cm 1.5cm 1.5cm !important;                   /*arriba, derecha, abajo, izquierda*/
+            margin: 1cm 1.5cm 1.5cm 1.5cm !important;                   /*arriba, derecha, abajo, izquierda*/
         }
 
 th, td {
@@ -120,14 +120,13 @@ p {
 <body style="font-family: 'Montserrat'; -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
     <header>
         <div style="text-align:center;">
-            <img src="{{ $logo_admon }}" alt="Por tiempos mejores" style="width:65%">
+            <img src="{{ $logo_admon }}" style="width:55%">
         </div>
     </header>
-    <br>
     <div id="logo_aliviane" style="text-align:center;">
-        <img src="{{ $logo_aliviane }}" style="width:30%;";>
+        <img src="{{ $logo_aliviane }}" style="width:45%;";>
     </div>
-    <div style="text-align:center;"> <h2> CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} </h2> </div>        
+    <div style="text-align:center;" class="mb-0"> <h2> CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} </h2> </div>        
   
     <table class="center" width="100%" style="border-spacing: 0px 0px;margin:0">
         <tr>
@@ -258,10 +257,11 @@ p {
             <td width="50%" style="text-align:right;"> ¿Cuánto gastas en transporte diario a la escuela? &nbsp;  </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ '$ ' .  number_format($estudiante->socioeconomico->gasto_transporte) . '.00' }} </b> </td>
         </tr>
     </table>
-    <footer>
-        <div style="text-align:center;">
-            <img src="{{ $footer }}" alt="Por tiempos mejores" style="width:25cm">
+    <footer style="text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom:2.5cm">
+        <div>
+            {{-- <img src="{{ $footer }}" style="width: 12.5cm;"> --}}
         </div>
     </footer>
+    
 </body>
 </html>

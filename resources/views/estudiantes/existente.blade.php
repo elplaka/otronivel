@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>ALIVIAN4TE - Por tiempos mejores </title>
+        <title>OTRO NIVEL </title>
     
         <!-- Custom fonts for this template-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -25,17 +25,17 @@
 
 <style>
     .btn-dorado {
-      background-color: #b2945e;
+      background-color: #706f6f;
       color: white;
     }
   
     .btn-dorado:hover {
-      background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      background-color: #575757; /* Cambia el color aquí al deseado cuando el mouse esté encima */
       color: white;
     }
 
     .btn-verde {
-      background-color: #3d5b4f;
+      background-color: #00656c;
       color: white;
     }
   
@@ -45,7 +45,7 @@
     }
 
     .btn-guinda {
-      background-color: #5c2134;
+      background-color: #7b003a;
       color: white;
     }
   
@@ -79,11 +79,10 @@
     <div class="container">
         <div class="card-body">
             <div class="row justify-content-center">
-              <div class="row justify-content-center mb-4">
-                <img src="{{ url('img/Logo_y_Escudo.jpg') }}" alt="Por tiempos mejores" style="width: 35%">
-                &nbsp; &nbsp; &nbsp; &nbsp;
-                <img src="{{ url('img/alivianate.jpg') }}" style="width: 20%">
-            </div>
+                <div class="row justify-content-center mb-4">
+                  <img class="col-md-5" src="{{ url('img/Logo_y_Escudo.jpg') }}">
+                  <img class="col-md-4" src="{{ url('img/logo_programa.jpg') }}">
+                </div>
 
                 <div class="col-md-8">
                     @if ($estudiante->cve_status != 4)
@@ -259,7 +258,7 @@
 
     <script>
       function openWhatsApp() {
-          var phoneNumber = "526941088943"; // Coloca el número de teléfono sin el signo "+"
+          var phoneNumber = "526692295855"; // Coloca el número de teléfono sin el signo "+"
           var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
           var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
   

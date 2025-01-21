@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>ALIVIAN4TE :: Información de Registro </title>
+    <title>OTRO NIVEL :: Información de Registro </title>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 <?php 
     //require_once(realpath($_SERVER["DOCUMENT_ROOT"]) .'/include/funciones.php');
@@ -10,7 +10,7 @@
     use SimpleSoftwareIO\QrCode\Facades\QrCode;
     use Illuminate\Support\Facades\URL;
 
-    $path = getcwd() . '/img/alivianate.jpg';
+    $path = getcwd() . '/img/logo_programa.jpg';
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
     $logo_aliviane = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -115,16 +115,16 @@ p {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>ALIVIAN4TE :: Información de Registro</title>
+    <title>OTRO NIVEL :: Información de Registro</title>
 </head>
 <body>
     <header>
         <div style="text-align:center;">
-            <img src="https://alivianate.concordia.gob.mx/img/logo_escudo.jpg" style="width:75%">
+            <img src="https://otronivel.concordia.gob.mx/img/Logo_y_Escudo.jpg" style="width:75%">
         </div>
         <br> 
         <div id="logo_aliviane" style="text-align:center;">
-            <img src="https://alivianate.concordia.gob.mx/img/logo_alivianate.jpg" style="width:50%;"> &nbsp;
+            <img src="https://otronivel.concordia.gob.mx/img/logo_programa.jpg" style="width:50%;"> &nbsp;
         </div>
     </header>
      <br>

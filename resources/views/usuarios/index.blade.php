@@ -29,12 +29,12 @@
                                     <input type="search" name="search" class="form-control mb-2" id="inlineFormInput">
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="btn btn-primary mb-2"> Buscar </button>
+                                    <button type="submit" class="btn btn-rojo mb-2"> Buscar </button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <a href="{{ route('usuarios.create') }}" class="btn btn-primary mb-2">Crear</a>
+                    <a href="{{ route('usuarios.create') }}" class="btn btn-verde mb-2">Crear</a>
                 </div>            
             </div>
             <div class="card-body">
@@ -54,7 +54,7 @@
                                 <td>{{ $usuario->name  }}</td>
                                 <td>{{ $usuario->email }}</td>
                                 <td>
-                                    <a href="{{ route('usuarios.edit', $usuario->id) }}" class="btn btn-success"> Editar </a>
+                                    <a href="{{ route('usuarios.edit', $usuario->id) }}" class="btn btn-verde"> Editar </a>
                                 </td>
                             </tr>                            
                         @endforeach 

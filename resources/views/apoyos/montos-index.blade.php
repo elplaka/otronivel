@@ -73,7 +73,7 @@
              <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800"> <b> Montos </b></h1> &nbsp;&nbsp;
-                <a href="{{ route('apoyos.montos-nuevos', ['id_remesa' => $id_remesa, 'cve_ciudad_escuela' => $cve_ciudad]) }}" title="Nuevos Montos" class="btn btn-primary mb-2"> +</a>
+                <a href="{{ route('apoyos.montos-nuevos', ['id_remesa' => $id_remesa, 'cve_ciudad_escuela' => $cve_ciudad]) }}" title="Nuevos Montos" class="btn btn-verde mb-2"> +</a>
             </div>
         </div>
         <div class="card-body">
@@ -133,9 +133,9 @@
                                 <td>{{ isset($monto->monto) ? '$ ' . $monto->monto : "N/A" }}</td>                               
                                 <td>
                                     @if (isset($monto->monto))
-                                    <a href="{{ route('apoyos.monto-editar', [$monto->id_remesa, $monto->cve_ciudad_escuela, $monto->cve_escuela]) }}" class="btn-sm btn-success"> <i class="fa-solid fa-pen-to-square"></i> </a>
+                                    <a href="{{ route('apoyos.monto-editar', [$monto->id_remesa, $monto->cve_ciudad_escuela, $monto->cve_escuela]) }}" class="btn-sm btn-verde"> <i class="fa-solid fa-pen-to-square"></i> </a>
                                     @else
-                                    <a href="{{ route('apoyos.montos-nuevo-uno', [$monto->id_remesa, $monto->cve_ciudad_escuela, $monto->cve_escuela]) }}" class="btn-sm btn-success"> <i class="fa-solid fa-square-plus"></i> </a>
+                                    <a href="{{ route('apoyos.montos-nuevo-uno', [$monto->id_remesa, $monto->cve_ciudad_escuela, $monto->cve_escuela]) }}" class="btn-sm btn-verde"> <i class="fa-solid fa-square-plus"></i> </a>
                                     @endif
                                 </td>
                             </tr>                            

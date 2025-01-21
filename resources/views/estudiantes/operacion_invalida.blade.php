@@ -71,7 +71,7 @@
             <h1>OPERACIÓN INVÁLIDA</h1>
             <a class="button" href="{{ route('estudiantes.forget') }}">Ir al Inicio de Registro</a>
         </div>
-        <div><img src="{{url('/img/alivianate.jpg')}}" class="alivianate-logo" alt="Alivianate Logo"></div>
+        <div><img src="{{url('/img/logo_programa.jpg')}}" class="alivianate-logo"></div>
     </div>
 </body>
 </html>

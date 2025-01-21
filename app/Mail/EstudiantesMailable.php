@@ -15,7 +15,7 @@ class EstudiantesMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $subject = "CONFIRMACIÓN DE REGISTRO :: ALIVIAN4TE";
+    public $subject = "CONFIRMACIÓN DE REGISTRO :: OTRO NIVEL";
     public $id_estudiante;
 
     /**
@@ -39,6 +39,5 @@ class EstudiantesMailable extends Mailable
         $estudiante = Estudiante::where('id', $id_estudiante)->first();
         $socioeconomico = DatoSocioeconomico::where('id_estudiante', $id_estudiante)->first();
         return $this->view('estudiantes.confirmacion', compact('estudiante', 'socioeconomico'));
-        // return $this->route('estudiantes.registro_pdf', '1')->with('estudiante', $estudiante)->with('socioeconomico', $socioeconomico);
     }
 }

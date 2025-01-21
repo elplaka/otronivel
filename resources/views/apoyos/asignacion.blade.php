@@ -27,6 +27,18 @@
             });
         });    
     </script>
+
+<style>
+    .custom-pagination .pagination .page-item.active .page-link {
+        background-color: #7b003a; /* Color guinda (maroon) para el paginador activo */
+        color: white; /* Cambiar el color del texto a blanco para el paginador activo */
+        /* Ajusta otros estilos según tus preferencias */
+    }
+
+    .custom-pagination .pagination li a {
+        color: #767676; /* Cambia el color del texto a blanco */
+    }
+</style>
     {{-- ***********************************  Ventana MODAL  ************************************************* --}}
     <div class="modal fade" id="exampleModal" name="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -258,7 +270,7 @@
                     @endif
                     @if ($id_remesa != 0 && $i > 1)
                         <div class="col-mx">
-                            <label class="col-form-label float-left">
+                            <label class="col-form-label float-left custom-pagination">
                                 {{ $estudiantes->links('pagination::bootstrap-5') }} 
                             </label>           
                             @if ($usertype == 1)
@@ -277,7 +289,6 @@
                                     @endif
                             </form>
                             @endif
-
                             <form method="GET" id="formReport" action="{{ route('apoyos.asignacion-pdf') }}">
                                 <input id="tituloReporte" name="tituloReporte" type="hidden"  value="" class="form-control">
                                 <input id="idRemesa" name="idRemesa" type="hidden"  value="{{ $id_remesa }}" class="form-control">

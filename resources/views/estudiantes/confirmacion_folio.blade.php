@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>ALIVIAN4TE :: Información de Registro </title>
+    <title>OTRO NIVEL :: Información de Registro </title>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 <?php 
     //require_once(realpath($_SERVER["DOCUMENT_ROOT"]) .'/include/funciones.php');
@@ -10,7 +10,7 @@
     use SimpleSoftwareIO\QrCode\Facades\QrCode;
     use Illuminate\Support\Facades\URL;
 
-    $path = getcwd() . '/img/alivianate.jpg';
+    $path = getcwd() . '/img/logo_programa.jpg';
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
     $logo_aliviane = 'data:image/' . $type . ';base64,' . base64_encode($data);

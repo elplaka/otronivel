@@ -69,12 +69,19 @@
             </div>
             <div class="col-md-8 mx-auto">
                 <div class="row mt-3 mb-0 text-center">
-                    <p style="font-size:12pt">Da clic en el siguiente botón para ir a la PÁGINA DE REGISTRO <br> del Programa de Becas ALIVIAN4TE</p>
+                    <p style="font-size:12pt; background-color: red; color: white; padding: 10px; border-radius: 5px;">
+                        Esta página <b> NO ES PARA INSCRIBIRSE AL SISTEMA DE BECAS. </b>
+                    </p>
+                </div>
+            </div>
+            {{-- <div class="col-md-8 mx-auto">
+                <div class="row mt-3 mb-0 text-center">
+                    <p style="font-size:12pt">Da clic en el siguiente botón para ir a la PÁGINA DE REGISTRO <br> del Programa de Becas OTRO NIVEL</p>
                     <div class="col-md-8 mx-auto d-flex justify-content-center">
                         <a class="btn btn-danger" href="{{ route('estudiantes.forget') }}">Ir a la Página de Registro</a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>

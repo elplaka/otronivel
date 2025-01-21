@@ -10,8 +10,8 @@ use App\Models\Estudiante;
 use App\Models\Escuela;
 use App\Models\Ciudad;
 use Illuminate\Support\Facades\DB;
-// use PDF;
-use Barryvdh\DomPDF\Facade\PDF;
+use PDF;
+//use Barryvdh\DomPDF\Facade\PDF;
 use Dompdf\Dompdf;  
 use DOMDocument;
 
@@ -241,7 +241,6 @@ class ApoyoController extends Controller
                         }
                     });
                 }
-
         }
         else if ($cve_ciudad == 1 || $cve_ciudad > 2)  //DEMÁS CIUDADES
         {

@@ -12,6 +12,7 @@ use App\Mail\EstudiantesFolioMailable;
 use App\Models\Estudiante;
 use App\Http\Middleware\ChecaTipoUsuario;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,16 +73,22 @@ Route::get('/estudiantes/registro_pdf/{id_hex}', [EstudianteController::class, '
 Route::get('/registro/{id_hex}', [EstudianteController::class, 'registro'])->name('estudiantes.registro');
 
 Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudiante){
-    $correo = new EstudiantesMailable($id_estudiante);
+    try {
+        $correo = new EstudiantesMailable($id_estudiante);
 
-    $estudiante = Estudiante::where('id', $id_estudiante)->first();
-    if($estudiante->count() > 0)
-    {
-        $email = $estudiante->email;
-        Mail::to($email)->send($correo);
-        return redirect()->route('estudiantes.formulario_enviado');
+        $estudiante = Estudiante::where('id', $id_estudiante)->first();
+        if($estudiante) {
+            $email = $estudiante->email;
+            Mail::to($email)->send($correo);
+            return redirect()->route('estudiantes.formulario_enviado')->with('status', 'Correo enviado exitosamente.');
+        } else {
+            return view('estudiantes.operacion_invalida')->with('error', 'Estudiante no encontrado.');
+        }
+    } catch (\Exception $e) {
+        // Registrar el error en los logs para su diagnóstico
+        Log::error('Error al enviar el correo: ' . $e->getMessage());
+        return view('estudiantes.operacion_invalida')->with('error', 'Hubo un problema al enviar el correo. Por favor, intenta de nuevo más tarde.');
     }
-    else return view('estudiantes/operacion_invalida');
 })->name('estudiantes.mail_confirmacion');
 
 Route::get('/estudiantes/existente/{id_hex}', [EstudianteController::class, 'existente'])->name('estudiantes.existente');

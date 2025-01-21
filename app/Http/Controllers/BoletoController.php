@@ -11,7 +11,8 @@ use App\Models\Estudiante;
 use App\Models\Escuela;
 use App\Models\Ciclo;
 use Illuminate\Support\Facades\DB;
-use PDF;
+// use PDF;
+use Barryvdh\DomPDF\Facade\PDF;
 use Dompdf\Dompdf;  
 use DOMDocument;
 
@@ -276,9 +277,9 @@ class BoletoController extends Controller
             ->whereIn('estudiantes.id', $ids_asignar)
             ->where('id_remesa', $id_remesa)
             ->where('estudiantes.id_ciclo', $ciclo)
-            ->where(\DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '>=', chr($letra_inicial))
-            ->where(\DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '<=', chr($letra_final))
-            ->orWhere(\DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '=', chr(165))
+            ->where(DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '>=', chr($letra_inicial))
+            ->where(DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '<=', chr($letra_final))
+            ->orWhere(DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '=', chr(165))
             ->orderBy('estudiantes.primer_apellido')
             ->orderBy('estudiantes.segundo_apellido')
             ->orderBy('estudiantes.nombre'); 
@@ -291,8 +292,8 @@ class BoletoController extends Controller
             ->whereIn('estudiantes.id', $ids_asignar)
             ->where('id_remesa', $id_remesa)
             ->where('estudiantes.id_ciclo', $ciclo)
-            ->where(\DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '>=', chr($letra_inicial))
-            ->where(\DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '<=', chr($letra_final))
+            ->where(DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '>=', chr($letra_inicial))
+            ->where(DB::raw('substr(estudiantes.primer_apellido, 1, 1)'), '<=', chr($letra_final))
             ->orderBy('estudiantes.primer_apellido')
             ->orderBy('estudiantes.segundo_apellido')
             ->orderBy('estudiantes.nombre'); 

@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>ALIVIAN4TE - Por tiempos mejores </title>
+        <title>OTRO NIVEL </title>
     
            <!-- Custom fonts for this template-->
            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -75,7 +75,7 @@
   <div class="container">
     <div class="row justify-content-center mb-2">
       <img src="../img/Logo_y_Escudo.jpg" alt="Por tiempos mejores" style="width:35%"> &nbsp; &nbsp; &nbsp;
-      &nbsp; <img src="../img/alivianate.jpg" style="width:20%">
+      &nbsp; <img src="../img/logo_programa.jpg" style="width:20%">
   </div>
     <div class="card-body mb-0">
         <div class="row justify-content-center">

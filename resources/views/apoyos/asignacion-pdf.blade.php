@@ -6,7 +6,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>Sistema ALIVIAN4TE :: Gobierno del Municipio de CONCORDIA</title>
+        <title>Sistema OTRO NIVEL :: Gobierno del Municipio de CONCORDIA</title>
     
         <!-- Custom styles for this template-->
         <link href="{{ public_path('css/sb-admin.min.pdf.css')}}" rel="stylesheet" type="text/css">  
@@ -67,7 +67,7 @@
 <?php 
     use App\Models\ApoyoAsignado;
 
-    $path = getcwd() . '/img/alivianate.jpg';
+    $path = getcwd() . '/img/logo_programa.jpg';
     $type = pathinfo($path, PATHINFO_EXTENSION);
     $data = file_get_contents($path);
     $logo_aliviane = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -88,14 +88,14 @@
  
 ?>
 <body>
-    <header style="text-align:center;">
+    {{-- <header style="text-align:center;">
         <table>
             <tr>
                 <td style="width:7cm">
                     <table>
                         <tr>
                             <td>       
-                                <img src="{{ $logo_admon }}" alt="Por tiempos mejores" style="width:100%">
+                                <img src="{{ $logo_admon }}" style="width:100%">
                             </td>
                         </tr>
                         <tr> 
@@ -114,12 +114,12 @@
                         </tr>
                         <tr > 
                             <td> 
-                                <b> ADMINISTRACIÓN 2021-2024 </b>
+                                <b> ADMINISTRACIÓN 2024-2027 </b>
                             </td> 
                         </tr> 
                         <tr> 
                             <td> 
-                                <h1 style="LINE-HEIGHT:0.25cm"> <b> NÓMINA PARA PAGO DE BECAS CICLO ESCOLAR 2023-2024 </b> </h1>
+                                <h1 style="LINE-HEIGHT:0.25cm"> <b> NÓMINA PARA PAGO DE BECAS CICLO ESCOLAR 2024-2025 </b> </h1>
                             </td> 
                         </tr>
                         <tr> 
@@ -145,7 +145,72 @@
                 </td>
             </tr>
         </table>
+    </header> --}}
+    <header style="text-align:center;">
+        <table>
+            <tr>
+                <td style="width:7cm">
+                    <table>
+                        <tr>
+                            <td>       
+                                <img src="{{ $logo_admon }}" style="width:100%">
+                            </td>
+                        </tr>
+                        <tr> 
+                            <td>
+                                <b>  MCS-810101-FK0 </b>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:12cm;">
+                    <table style="text-align:center; line-height:0.25cm">
+                        <tr> 
+                            <td> 
+                               <h1 style="line-height:0.25cm"> <b> MUNICIPIO DE CONCORDIA, SINALOA </b> </h1>
+                            </td>
+                        </tr>
+                        <tr> 
+                            <td> 
+                                <b> ADMINISTRACIÓN 2024-2027 </b>
+                            </td> 
+                        </tr> 
+                        <tr> 
+                            <td> 
+                                <h1 style="line-height:0.25cm"> <b> NÓMINA PARA PAGO DE BECAS CICLO ESCOLAR 2024-2025 </b> </h1>
+                            </td> 
+                        </tr>
+                        <tr> 
+                            <td> 
+                                <b> PARTIDA 4104-442001 BECAS Y OTRAS AYUDAS PARA PROGRAMAS DE EDUCACIÓN </b>
+                            </td> 
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:8cm"> 
+                    <table style="border-spacing: 0; margin: 0; padding: 0; line-height: 1;">
+                        <tr>
+                            <td style="margin: 0; padding: 0;">
+                                <img src="{{ $logo_aliviane }}" style="width:60%; margin: 0; padding: 0;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="margin: 0; padding: 0; line-height: 1;">       
+                                <b>  PERIODO: <u> {{ $tituloReporte }} </u> </b>
+                            </td>
+                        </tr>
+                        {{-- <tr>  
+                            <td style="margin: 0; padding: 0;">
+                                <b>   </b>
+                            </td>
+                        </tr> --}}
+
+                    </table>
+                </td>
+            </tr>
+        </table>
     </header>
+    
     @php
         $i = 1
     @endphp 

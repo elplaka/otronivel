@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sistema ALIVIAN4TE</title>
+    <title>Sistema OTRO NIVEL</title>
 
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -153,8 +153,12 @@
            background-color: #892641; /* Color rojo en formato hexadecimal */
        }
 
+       .bg-guinda {
+           background-color: #7b003a; /* Color rojo en formato hexadecimal */
+       }
+
    .btn-verde {
-     background-color: #3d5b4f;
+     background-color: #00656c;
      color: white;
    }
  
@@ -169,17 +173,17 @@
     }
 
    .btn-dorado {
-      background-color: #b2945e;
+      background-color: #706f6f;
       color: white;
     }
   
     .btn-dorado:hover {
-      background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      background-color: #ebebeb; /* Cambia el color aquí al deseado cuando el mouse esté encima */
       color: white;
     }
 
     .btn-rojo {
-      background-color: #932f4a;
+      background-color: #7b003a;
       color: white;
     }
   
@@ -217,13 +221,13 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background: linear-gradient(180deg, #7b003a, #5c002c);">
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href={{ url('/home') }}>
                 <div>
                     <i class="fa-solid fa-book-open-reader"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">ALIVIAN4TE </div>                
+                <div class="sidebar-brand-text mx-3">OTRO NIVEL </div>                
             </a>
 
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}" style="margin-top: -30px;">
@@ -437,13 +441,13 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            {{-- <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Por Tiempos Mejores 2021-2024</span>
                     </div>
                 </div>
-            </footer>
+            </footer> --}}
             <!-- End of Footer -->
 
         </div>

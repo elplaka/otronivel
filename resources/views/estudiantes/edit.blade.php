@@ -72,7 +72,7 @@
                                 </div>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-rojo">
+                                        <div class="card-header text-white bg-guinda">
                                             <b>I. INFORMACIÓN PERSONAL</b>
                                         </div>
                                         <div class="card-body">
@@ -192,7 +192,7 @@
                                 <br>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-rojo">
+                                        <div class="card-header text-white bg-guinda">
                                             <b>II. INFORMACIÓN ESCOLAR</b>
                                         </div>
                                         <br>
@@ -292,7 +292,7 @@
                                 <br>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-rojo">
+                                        <div class="card-header text-white bg-guinda">
                                             <b>III. DOCUMENTACIÓN </b>
                                         </div>
                                         <br>
@@ -400,7 +400,7 @@
                                 <br>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white bg-rojo">
+                                        <div class="card-header text-white bg-guinda">
                                             <b>IV. ADICIONAL </b>
                                         </div>
                                         <br>

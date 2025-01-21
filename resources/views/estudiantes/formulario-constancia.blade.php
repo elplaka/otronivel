@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
     
-        <title>ALIVIAN4TE - Por tiempos mejores </title>
+        <title>OTRO NIVEL </title>
     
         <!-- Custom fonts for this template-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -52,6 +52,7 @@
             if (filename.substring(3,11) == 'fakepath')
             {
                 filename = filename.substring(12);
+                $('#vistaPreviaPDF').hide();
             } // Remove c:\fake at beginning from localhost chrome
             else
             {
@@ -60,6 +61,7 @@
             }
             $('#archivo_constancia').html(filename);
             });
+            
         });
 });
 </script>
@@ -94,17 +96,17 @@
 </style>
 <style>
     .btn-dorado {
-      background-color: #b2945e;
+      background-color: #706f6f;
       color: white;
     }
   
     .btn-dorado:hover {
-      background-color: #7c6c42; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+      background-color: #575757; /* Cambia el color aquí al deseado cuando el mouse esté encima */
       color: white;
     }
 
     .btn-verde {
-      background-color: #3d5b4f;
+      background-color: #00656c;
       color: white;
     }
   
@@ -114,7 +116,7 @@
     }
 
     .btn-guinda {
-      background-color: #5c2134;
+      background-color: #7b003a;
       color: white;
     }
   
@@ -176,15 +178,15 @@
                                 @csrf
                                 <div class="text-center">
                                     <a href="/2024-2025">
-                                        <img src="/img/alivianate.jpg" style="width:45%">
+                                        <img src="/img/logo_programa.jpg" style="width:55%">
                                     </a>
                                 </div>
                                 <br>
                                 <div class="row justify-content-center mb-1">
                                     <h1 class="h3 mb-4 text-gray-800 text-center"> <b>{{ __('FORMULARIO DE ACTUALIZACIÓN DE INFORMACIÓN ') }} </b> </h1>
                                 </div>
-                                <div class="card" style="background:#9c5c5f;color:#ffffff">
-                                    <div class="card-header text-white" style="background:#5b5b5e">
+                                <div class="card" style="background:#7b003a;color:#ffffff">
+                                    <div class="card-header text-white" style="background:#00656c">
                                         <i class="fas fa-user"></i> &nbsp; INFORMACIÓN DEL ESTUDIANTE
                                     </div>
                                     <table class="table-striped table-sm">
@@ -211,7 +213,7 @@
                                 <br>
                                 <div class="card">
                                     <div class="form-section">
-                                        <div class="card-header text-white" style="background:#5b5b5e">
+                                        <div class="card-header text-white" style="background:#00656c">
                                             <i class="fas fa-upload"></i> &nbsp; DOCUMENTACIÓN PENDIENTE DE SUBIR
                                         </div>
                                         <br>
@@ -241,7 +243,7 @@
                                             <div class="row mb-1">
                                                 <label class="col-md-5 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> Del Ciclo Escolar 2024-2025 en formato PDF que no pese más de 1MB"><img src="/img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
                                                 <div class="col-md-5">
-                                                    <button type="button" class="btn btn-dorado" id="sel_archivo_constancia" style="border: none;">Selecciona archivo <i class="fas fa-upload"></i></button>
+                                                    <button type="button" class="btn btn-guinda" id="sel_archivo_constancia" style="border: none;">Selecciona archivo <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_constancia" style="font-size:13px" required>                 
                                                         {{$estudiante->img_constancia ?? 'Sin archivo seleccionado' }}
                                                     </div>
@@ -256,13 +258,12 @@
                                                         <b><i class="fa-solid fa-file-pdf text-rojo" style="font-size: 24px;"></i></b> 
                                                     </a>
                                                 </div>
-                                            </div>
-    
+                                            </div>    
                                             <input class="file" type="file" style="display: none" class="form-control" name="img_constancia" id="img_constancia"  accept=".pdf, .PDF" onchange="mostrarVistaPreviaPDF(this)">
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col-12 d-flex justify-content-center">
-                                                <button type="submit" id="btnSiguiente" name="btnSiguiente" class="btn btn-verde mt-2">Guardar</button>
+                                                <button type="submit" id="btnSiguiente" name="btnSiguiente" class="btn btn-dorado mt-2">Guardar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -291,11 +292,15 @@
 
         function ocultarVistaPreviaLink() {
             var vistaPreviaLink = document.getElementById("vistaPreviaLink");
+            var vistaPreviaPDF = document.getElementById("vistaPreviaPDF");
             if (lastSelectedFile === null) {
             vistaPreviaLink.style.display = "none";
+            vistaPreviaPDF.style.display = "inline-block";
             } else {
             vistaPreviaLink.style.display = "inline-block";
+            vistaPreviaPDF.style.display = "none";
             }
+            
         }
 
         function ocultarVistaPreviaLinkInicio(){

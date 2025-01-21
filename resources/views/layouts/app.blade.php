@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- <title>{{ config('app.name', 'Sistema de Expediente Digital') }}</title> --}}
-    <title>Sistema ALIVIAN4TE </title>
+    <title>Sistema OTRO NIVEL </title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -28,7 +28,7 @@
                     {{-- {{ config('app.name', 'Laravel') }}  --}}
                    
                 </a>
-                Sistema ALIVIAN4TE
+                Sistema OTRO NIVEL
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
