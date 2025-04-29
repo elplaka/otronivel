@@ -513,7 +513,7 @@
                                         @endforeach
 
                                     </td>
-                                    @if ($usertype <= 1) <td style="vertical-align:middle">{{ $estudiante->observaciones_admin }} &nbsp;</td> @endif
+                                    @if ($usertype <= 2) <td style="vertical-align:middle">{{ $estudiante->observaciones_admin }} &nbsp;</td> @endif
                                     <td style="vertical-align: middle;">
                                         @if ($usertype <= 1)
                                             <a href="{{ route('estudiantes.edit', $estudiante->id) }}" title="Editar" class="btn btn-verde btn-sm" style="font-size: 10px;"><i class="fas fa-user-edit"></i></a>

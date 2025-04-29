@@ -16,7 +16,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->usertype == 1) return $next($request);
+        if (auth()->user()->usertype <= 2) return $next($request);
         else return redirect('/home');
     }
 }
