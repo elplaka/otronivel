@@ -137,6 +137,11 @@
             {
                 filename = filename.substring(12);
             } // Remove c:\fake at beginning from localhost chrome
+            else
+            {
+                filename = "Sin archivo seleccionado";
+                noQuieroArchivo();
+            }
             $('#archivo_constancia').html(filename);
             });
         });
@@ -255,7 +260,7 @@
                                 @csrf
                                 <div class="row justify-content-center mb-1">
                                     <div class="text-center">
-                                        <a href="/2024-2025">
+                                        <a href="/2025-2026">
                                             <img src="../img/logo_programa.jpg" style="width:45%">
                                         </a>
                                     </div>
@@ -357,18 +362,51 @@
                                                 </div>
                                                 <input class="archivo-input" type="file" style="display: none" class="form-control" name="img_kardex" id="img_kardex" accept=".pdf, .PDF" onchange="mostrarVistaPreviaPDF(this)" >
                                             </div>
- 
-                                            <div class="row mb-1">
-                                                <label class="col-md-6 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> En formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
-                                                <div class="col-md-5 alert alert-danger text-justify" style="padding:5px; margin:0"> <small> <i> Este archivo lo subirás después de que hayas enviado todos los documentos previamente solicitados. </i> </small>
+
+                                            <div class="row mb-3 justify-content-center">
+                                                <div class="col-md-8 text-center" style="background-color: #fce2e2; color: #7b003a; border-radius:20px">
+                                                    <label class="col-12 col-form-label">¿Tienes la <strong> Constancia de Estudios </strong> correspondiente al <strong> Ciclo Escolar 2025-2026 </strong>?</label>
+                                                    <div class="col-12">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="constancia-opcion" id="constancia-si" value="si">
+                                                            <label class="form-check-label" for="constancia-si">Sí</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="constancia-opcion" id="constancia-no" value="no" checked>
+                                                            <label class="form-check-label" for="constancia-no">No</label>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                {{-- <div class="col-md-5">
+                                            </div>
+
+                                            <div id="divConstancia" style="display: none;">
+                                                <div class="row mb-3">
+                                                    <label class="col-md-6 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> Debe ser un documento que avale que estás inscrito en el periodo de Septiembre de 2025 en adelante. En formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
+                                                    <div class="col-md-5">
+                                                        <button type="button" class="btn btn-verde" id="sel_archivo_constancia">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
+                                                        <div id="archivo_constancia" style="font-size:13px">{{$estudiante->img_constancia ?? 'Sin archivo seleccionado' }}</div>
+                                                    </div>
+                                                    <div id="vistaPreviaConstancia" name="vistaPreviaConstancia">
+                                                        <a href="#" onclick="mostrarVistaPrevia('img_constancia')" data-toggle="tooltip" title="Vista preliminar" style="display: inline-block; line-height: 32px; vertical-align: middle;">
+                                                            <b><i class="fa-solid fa-file-pdf text-rojo" style="font-size: 24px;"></i></b>
+                                                        </a>
+                                                    </div>
+                                                    <input class="archivo-input" type="file" style="display: none" class="form-control" name="img_constancia" id="img_constancia" accept=".pdf, .PDF" onchange="mostrarVistaPreviaPDF(this)">
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-danger mb-0" id="mensajeError" style="background-color: #dc3545; color: #ffffff; display:none">
+                                            </div>
+                                            {{-- <div class="row mb-1">
+                                                <label class="col-md-6 col-form-label text-md-right">{{ __('Constancia de Estudios') }} <a data-toggle="tooltip" data-placement="top" data-html="true" title="<b>CONSTANCIA DE ESTUDIOS </b> <br> En formato PDF que no pese más de 1MB"><img src="../img/help.jpg" style="width:12px;cursor:pointer;"></a></label>
+                                               <div class="col-md-5 alert alert-danger text-justify" style="padding:5px; margin:0"> <small> <i> Este archivo lo subirás después de que hayas enviado todos los documentos previamente solicitados. </i> </small>
+                                                </div>
+                                                <div class="col-md-5">
                                                     <button type="button" class="btn btn-success" id="sel_archivo_constancia">Selecciona archivo<small><1M</small> <i class="fas fa-upload"></i></button>
                                                     <div id="archivo_constancia" style="font-size:13px">{{$estudiante->img_constancia ?? 'Sin archivo seleccionado' }}</div>
                                                 </div>
-                                                <input class='file' type="file" style="display: none" class="form-control" name="img_constancia" id="img_constancia" accept="application/pdf" required> --}}
+                                                <input class='file' type="file" style="display: none" class="form-control" name="img_constancia" id="img_constancia" accept="application/pdf" required>
                                             </div>
-                                            {{-- <input id="constancia_hidden" name="constancia_hidden" type="hidden" value="{{ $estudiante->img_constancia ?? '#constancia#' }}"> --}}
+                                            <input id="constancia_hidden" name="constancia_hidden" type="hidden" value="{{ $estudiante->img_constancia ?? '#constancia#' }}"> --}}
                                             <div class="row mb-1 justify-content-center">
                                                 <div class="col-12 text-center">
                                                     <label class="col-form-label mx-1 p-2 col-10" style="font-size: 10pt; text-align: justify; color: #7b003a;">
@@ -379,16 +417,16 @@
                                             </div>
                                         </div> 
                                     </div>
-                                    <div class="alert alert-danger mb-0" id="mensajeError" style="display:none">
-                                    </div>
+                          
                                 </div>
                                 <div class="row mb-1 justify-content-center">
                                     <div class="col-12 text-center">
                                         <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #ebebeb; color: #7b003a;">
-                                            <h4><b>¡¡ IMPORTANTE !!</b></h4>
+                                            <h4 style="text-align: center"><b>¡¡ IMPORTANTE !! <br> Estás en la PRIMER ETAPA DEL PROCESO</b></h4>
                                             <ul>
-                                                <li><strong>Estás en la ETAPA #1 DEL PROCESO:</strong> Asegúrate de completar esta etapa para avanzar en el proceso y poder subir la Constancia de Estudios más adelante.</li>
-                                                <li><strong>Tienes que ENVIAR todos los archivos solicitados:</strong> Es obligatorio subir todos los documentos solicitados.</li>
+                                                <li>Si tienes <strong> todos los documentos solicitados en orden </strong> puedes completar el registro. </li>
+                                                <li>En caso de <strong> no contar con la CONSTANCIA DE ESTUDIOS correspondiente al Ciclo Escolar 2025-2026</strong> debes subir los demás documentos y ENVIAR la solicitud. Posteriormente procederás a subir el documento faltante para completar el registro. </li>
+                                                {{-- <li><strong>Tienes que ENVIAR todos los archivos solicitados:</strong> Es obligatorio subir todos los documentos solicitados.</li> --}}
                                                 <li><strong>La sesión NO QUEDA GUARDADA:</strong> Completa y envía el formulario antes de cerrar esta página.</li>
                                                 <li><strong>Formulario enviado con éxito:</strong> Verás un mensaje de confirmación cuando el envío sea exitoso.</li>
                                             </ul>
@@ -443,8 +481,20 @@
         var archivosValidos = true;
         var mensajeError = '';
 
+        // Obtener la respuesta del usuario sobre la constancia
+        const tieneConstancia = document.getElementById('constancia-si').checked;
+        
+        // Establecer el número de archivos requeridos
+        const archivosRequeridos = tieneConstancia ? 5 : 4;
+
         $(".archivo-input").each(function() {
             var archivo = $(this).prop("files")[0];
+
+            // Verificar si el archivo pertenece a la constancia y si el usuario no la tiene
+            // Si el usuario marcó 'No', se ignora el archivo de constancia
+            if (!tieneConstancia && this.id === 'img_constancia') {
+                return; // Salta la iteración para este archivo
+            }
 
             if (archivo) {
                 archivosCargados++;
@@ -455,25 +505,63 @@
             }
         });
 
-        if (archivosValidos && archivosCargados === 4) {
+        console.log("Archivos válidos: " + archivosValidos);
+        console.log("Archivos cargados: " + archivosCargados);
+        console.log("Archivos requeridos: " + archivosRequeridos);
+
+        if (archivosValidos && archivosCargados === archivosRequeridos) {
             document.getElementById('btnSiguiente').removeAttribute("disabled");
-            // document.getElementById('btnSiguiente').innerText = "Enviar";
-            $("#mensajeError").hide(); // Ocultar el contenido del mensaje de error
+            $("#mensajeError").hide();
         } else {
             document.getElementById('btnSiguiente').setAttribute("disabled", "disabled");
-            // document.getElementById('btnSiguiente').innerText = "Enviar";
-            $("#mensajeError").html(mensajeError); // Mostrar mensaje de error
+            
+            // // Generar un mensaje de error si no se han cargado suficientes archivos
+            // if (archivosCargados < archivosRequeridos) {
+            //     let tipoDoc = tieneConstancia ? 'seis' : 'cinco';
+            //     mensajeError = 'Debes subir los ' + tipoDoc + ' documentos solicitados.<br>' + mensajeError;
+            // }
+
+            $("#mensajeError").html(mensajeError);
 
             if (mensajeError) {
-                $("#mensajeError").show(); // Mostrar el div si hay mensajes de error
+                $("#mensajeError").show();
             } else {
-                $("#mensajeError").hide(); // Ocultar el div si no hay mensajes de error
+                $("#mensajeError").hide();
             }
         }
     }
 
     $(document).ready(function() {
         $(".archivo-input").on("change", validacion);
+    });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const divConstancia = document.getElementById('divConstancia');
+        const radioSi = document.getElementById('constancia-si');
+        const radioNo = document.getElementById('constancia-no');
+
+        // Muestra u oculta el div de la constancia
+        function toggleConstanciaDiv() {
+            if (radioSi.checked) {
+                divConstancia.style.display = 'block';
+            } else {
+                divConstancia.style.display = 'none';
+                validacion();
+                if (currentInputId)
+                { 
+                    var filename = "Sin archivo seleccionado";
+                    noQuieroArchivo();
+                    $('#archivo_constancia').html(filename);
+                }
+            }
+        }
+
+        // Asigna el evento 'change' a los botones de radio
+        radioSi.addEventListener('change', toggleConstanciaDiv);
+        radioNo.addEventListener('change', toggleConstanciaDiv);
+
+        // Llama a la función al cargar la página para reflejar el estado inicial
+        toggleConstanciaDiv();
     });
 </script>
 
@@ -526,6 +614,7 @@
             else if (currentInputId == 'img_comprobante_dom') var vistaPreviaLink = document.getElementById("vistaPreviaComprobante");
             else if (currentInputId == 'img_identificacion') var vistaPreviaLink = document.getElementById("vistaPreviaIdentificacion");
             else if (currentInputId == 'img_kardex') var vistaPreviaLink = document.getElementById("vistaPreviaKardex");
+            else if (currentInputId == 'img_constancia') var vistaPreviaLink = document.getElementById("vistaPreviaConstancia");
 
             // var vistaPreviaLink = document.getElementById(fileType);
             if (lastSelectedFile === null) {
@@ -540,6 +629,7 @@
             ocultarVistaPreviaLink("img_comprobante_dom");
             ocultarVistaPreviaLink("img_identificacion");
             ocultarVistaPreviaLink("img_kardex");
+            ocultarVistaPreviaLink("img_constancia");
         });
         
         function mostrarVistaPreviaPDF(input) {
@@ -551,6 +641,7 @@
                 else if (currentInput == 'img_comprobante_dom') var archivoElement = document.getElementById("archivo_comprobante_dom");
                 else if (currentInput == 'img_identificacion') var archivoElement = document.getElementById("archivo_identificacion");
                 else if (currentInput == 'img_kardex') var archivoElement = document.getElementById("archivo_kardex");
+                else if (currentInput == 'img_constancia') var archivoElement = document.getElementById("archivo_constancia");
                 
                 
                 archivoElement.innerText = "Sin archivo seleccionado";
@@ -622,6 +713,8 @@
             else if (currentInputId == 'img_comprobante_dom') var archivoElement = document.getElementById("archivo_comprobante_dom");
             else if (currentInputId == 'img_identificacion') var archivoElement = document.getElementById("archivo_identificacion");
             else if (currentInputId == 'img_kardex') var archivoElement = document.getElementById("archivo_kardex");
+            else if (currentInputId == 'img_constancia') var archivoElement = document.getElementById("archivo_constancia");
+            
             archivoElement.innerText = "Sin archivo seleccionado";
 
             lastSelectedFile = null;

@@ -29,7 +29,11 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/2024-2025', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+// Route::get('/2025-2026', function () {
+//     return view('estudiantes.mantenimiento');
+// });
+
+Route::get('/2025-2026', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 // Route::get('/2023-2024', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 // Route::get('/2023-2024/xt', [EstudianteController::class, 'forget_xt'])->name('estudiantes.forget_xt');
 
@@ -80,7 +84,7 @@ Route::get('/estudiantes/mail_confirmacion/{id_estudiante}', function($id_estudi
         if($estudiante) {
             $email = $estudiante->email;
             Mail::to($email)->send($correo);
-            return redirect()->route('estudiantes.formulario_enviado')->with('status', 'Correo enviado exitosamente.');
+            return redirect()->route('estudiantes.formulario_enviado')->with('status', 'Correo enviado exitosamente.')->with('estudiante', $estudiante);
         } else {
             return view('estudiantes.operacion_invalida')->with('error', 'Estudiante no encontrado.');
         }

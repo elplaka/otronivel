@@ -87,6 +87,24 @@
     background-color: #2f4fff;
     text-align: left;
 }
+
+.modal-dialog.modal-fullscreen-height {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-fullscreen-height .modal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-fullscreen-height .modal-body {
+    flex-grow: 1;
+    overflow-y: auto; /* Permite el scroll si el contenido es muy largo */
+}
 </style>
 
 <style>
@@ -170,6 +188,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="pdfModalLabel" style="font-size:11pt"><b> Requisitos para el REGISTRO al PROGRAMA OTRO NIVEL </b></h6>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <label class="col-form-label mx-1 p-2" style="font-size: 10pt; background-color: #ebebeb; color: #7b003a; text-align: justify;">
@@ -180,7 +201,7 @@
                     <ul>
                     <li>
                        <i> <strong> Identificación Oficial </strong> </i>
-                       <br> <i> De preferencia la credencial del INE. En caso de no contar con esta credencial se aceptará una identificación de cualquier insitución educativa. </i>
+                       <br> <i> De preferencia la credencial del INE. Únicamente si tienes menos de 18 años puedes subir una identificación de cualquier insitución educativa, con el compromiso de que cuando cumplas la mayoría de edad deberás solicitar tu credencial del INE y actualizar la identificación en el sistema. </i>
                     </li>
                     <li>
                        <i> <strong> Acta de Nacimiento </strong> </i>
@@ -197,7 +218,7 @@
                     </li>
                     <li>
                         <i> <strong> Constancia de Estudios </strong> </i>    <br>
-                        <i> Deberás solicitarla en tu escuela, la cual te acreditará como estudiante del ciclo escolar 2023-2024. </i>
+                        <i> Deberás solicitarla en tu escuela, la cual te acreditará como estudiante del ciclo escolar 2025-2026. </i>
                     </li>
                     </ul>
                     </ul>
@@ -246,16 +267,16 @@
                                                         <ul style="list-style-type: disc; margin: 0; padding: 10px; background-color: #ebebeb;">
                                                             <h4><b>¡¡ IMPORTANTE !!</b></h4>
                                                             @if ($convocatoria_abierta)
-                                                            {{-- <li style="text-align: justify;">
-                                                                El periodo de registro comprende del <b> 26 de Agosto al 20 de Septiembre de 2024. </b>
+                                                            <li style="text-align: justify;">
+                                                                El periodo de registro comprende del <b> 15 de Agosto al 14 de Septiembre de 2025. </b>
                                                             </li>                                               
                                                             @else
                                                             <li style="text-align: justify;">
-                                                                El periodo de registro comprendió del <b> 26 de Agosto al 20 de Septiembre de 2024. </b>
-                                                            </li>                            --}}
-                                                            <li style="text-align: justify;">
+                                                                El periodo de registro comprendió del <b> 15 de Agosto al 14 de Septiembre de 2025. </b>
+                                                            </li>                           
+                                                            {{-- <li style="text-align: justify;">
                                                                 Puedes usar el archivo PDF para <b>descargar tu hoja de registro</b>, <b> subir tu constancia de estudios </b> y <b>consultar información</b> sobre el programa OTRO NIVEL.
-                                                            </li>
+                                                            </li> --}}
                                                             @endif
                                                             <li style="text-align: justify;">
                                                                 Se aceptará el <strong> archivo PDF del CURP con el formato más reciente </strong> que puedes descargar en la página del Gobierno Federal
@@ -265,8 +286,10 @@
                                                                 El archivo PDF del CURP <b> NO se imprime</b>, <b> NO se escanea</b>, <b> NO se le toma foto</b>, <b> NO se comprime </b>. Se debe subir el <b> archivo original </b> previamente descargado.
                                                             </li>
                                                             <li style="text-align: justify;">
-                                                                Procederás a acceder al sistema de registro mediante tu archivo PDF del CURP y subirás el archivo PDF de la <b>Constancia de Estudios del Ciclo Escolar 2024-2025 más reciente</b> para completar el registro.
-                                                            </li> 
+                                                                Para  <strong> acceder al sistema de registro </strong> necesitarás el archivo PDF de tu CURP.
+                                                            </li>
+                                                            <li style="text-align: justify;">
+                                                                Si aún no cuentas con la <b>Constancia de Estudios del Ciclo Escolar 2025-2026</b> puedes continuar con el registro y posteriormente podrás subirla en el mismo sistema.
                                                             {{-- <li style="text-align: justify;">
                                                                 El registro a este programa  <b> se completa en dos etapas</b>:
                                                                 <ul>
@@ -282,9 +305,9 @@
                                                                 Tu registro será completado con éxito hasta que hayas subido <b> TODOS LOS DOCUMENTOS SOLICITADOS</b>. 
                                                             </li>                       --}}
                                                         </ul>
-                                                        {{-- <button type="button" id="btnAbrirModal" class="next btn btn-verde float-right mt-0" style="border: none;" data-toggle="modal" data-target="#requisitosModal">
+                                                        <button type="button" id="btnAbrirModal" class="next btn btn-verde float-right mt-0" style="border: none; border-radius: 30px;" data-toggle="modal" data-target="#requisitosModal">
                                                             Ver requisitos
-                                                        </button> --}}
+                                                        </button>
                                                     </label>
                                                 </div>
                                             </div>

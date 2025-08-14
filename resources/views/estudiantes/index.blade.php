@@ -395,7 +395,7 @@
                                             <div class="col-md-3" style="font-size:13px">
                                                 <div class="search_select_box">
                                                     <select name="selCiclo[]" id="selCiclo" data-style="btn-selectpicker" title="-- TODOS --" class="form-control selectpicker w-50" data-style-base="form-control" autofocus multiple>
-                                                        @foreach ($ciclos as $ciclo)
+                                                        @foreach ($ciclos->where('id_ciclo', '>=', 2425) as $ciclo)
                                                             <option value="{{ $ciclo->id_ciclo }}" @if(in_array($ciclo->id_ciclo, $cicloR)) selected @endif>{{ $ciclo->descripcion }}</option>
                                                         @endforeach
                                                     </select>

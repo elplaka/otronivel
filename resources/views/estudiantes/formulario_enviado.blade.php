@@ -98,6 +98,7 @@
                         <i class="fa-solid fa-download"></i> <b> PDF </b>
                     </a>
                 </div> --}}
+  
                 <div class="row text-justify mb-0">
                   <p class="mb-0"><strong>Revisar tu correo:</strong></p>
                   <ul>
@@ -122,8 +123,10 @@
             </div>       
             <div class="row justify-content-center">
                 <a class="btn btn-guinda" href="{{ route('estudiantes.forget') }}">Nuevo Registro</a> &nbsp;&nbsp;
-              <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Subir Constancia de Estudios</a>
-            </div>
+                @if(session('estudiante') && session('estudiante')->img_constancia === 'PENDIENTE')
+                  <a class="btn btn-verde" href="{{ route('estudiantes.forget') }}">Subir Constancia de Estudios</a>
+                @endif
+              </div>
             <br>
           </div>
         </div>

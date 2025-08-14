@@ -27,14 +27,19 @@
 ?>
 
 <style>
-        @page {
-            margin: 1.5cm 1.5cm 1.5cm 1.5cm !important;                   /*arriba, derecha, abajo, izquierda*/
-        }
+    @page {
+        margin: 1.5cm 1.5cm 1.5cm 1.5cm !important;
+    }
 
 th, td {
-        font-size: 12px;
-      font-family: 'Montserrat', serif;
-      padding-left:5px 
+    font-size: 12px;
+    font-family: 'Montserrat', serif;
+    padding-left: 5px;
+    border: 1px solid #ccc; /* Borde más delgado y color gris claro */
+}
+
+table {
+    border-collapse: collapse; /* Combina los bordes de las celdas */
 }
 
 div {
@@ -48,11 +53,11 @@ div {
 }
     
 p {
-      font-size: 20px;
-      font-family: 'Montserrat', serif;
-  }
+    font-size: 20px;
+    font-family: 'Montserrat', serif;
+}
 
-  h1{
+h1 {
     font-size: 20px;
     font-weight: bold;
     padding-top: 0px;
@@ -61,61 +66,53 @@ p {
     padding-left: 0px;
     margin-bottom: 0px;
     margin-top: 0px;
-  }
-
-  h2{
-      font-size: 16px;
-      font-family: 'Montserrat', serif;
-  }
-
-  h3{
-      font-size: 14px;
-      font-family: 'Montserrat', serif;
-  }
-
-  footer {
-  position: fixed;
-  bottom: -3.5cm;
-  width: 70%;
-  left: 0;
-  right: 0;
-  padding: 10px 10px;
-  /* z-index: 1000; */
 }
 
-  .ha1
-  {
-      font-size: 20px;
-      font-family: 'Montserrat', serif;
-  }
-  .center {
+h2 {
+    font-size: 16px;
+    font-family: 'Montserrat', serif;
+}
+
+h3 {
+    font-size: 14px;
+    font-family: 'Montserrat', serif;
+}
+
+footer {
+    position: fixed;
+    bottom: -3.5cm;
+    width: 70%;
+    left: 0;
+    right: 0;
+    padding: 10px 10px;
+}
+
+.ha1 {
+    font-size: 20px;
+    font-family: 'Montserrat', serif;
+}
+.center {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-     }
+}
 
+.ha1 {
+    font-size: 18px;
+    font-weight: bold;
+}
 
-    .ha1{
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    .celdagris {
-        text-align:left;
-        margin-left:0px;
-        background-color:#EEEEEE;
-    }
+.celdagris {
+    text-align: left;
+    margin-left: 0px;
+    background-color: #EEEEEE;
+}
     
-    #logo_aliviane {
+#logo_aliviane {
     padding: 0px;
 }
 </style>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>OTRO NIVEL :: Información de Registro</title>
 </head>
 <body>
     <header>
@@ -127,14 +124,14 @@ p {
             <img src="https://otronivel.concordia.gob.mx/img/logo_programa.jpg" style="width:50%;"> &nbsp;
         </div>
     </header>
-     <br>
-     <div align="center"> <h2> CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} </h2> </div> 
+    <br>
+    <div align="center"> <h2> CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} </h2> </div> 
     <div align="center"> <h1> DATOS DE REGISTRO <h1> </div>
     {{-- <div align="center">
        <a href="{{ url('/registro/' . $estudiante->id_hex) }}" style="display: inline-block; padding: 10px 20px; background-color: #B12A34; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">Ver Registro</a>
     </div> --}}
     <br>
-    <table width="100%" border="1" cellspacing="0">
+    <table width="100%" border="0" cellspacing="0">
         <tr>
             <td width="30%" align="right"><b>Nombre:</b></td>
             <td width="70%">{{ $estudiante->nombre }} {{ $estudiante->primer_apellido }} {{ $estudiante->segundo_apellido }}</td>
@@ -168,7 +165,7 @@ p {
     <div align="center">
         <h2>INFORMACIÓN ESCOLAR</h2>
     </div>
-    <table width="100%" border="1" cellspacing="0">
+    <table width="100%" border="0" cellspacing="0">
         <tr>
             <td width="30%" align="right"><b>Institución Educativa:</b></td>
             <td width="70%">{{ $estudiante->escuela->escuela }}</td>
@@ -222,7 +219,7 @@ p {
     <div align="center">
         <h2>INFORMACIÓN SOCIOECONÓMICA</h2>
     </div>
-    <table width="100%" border="1" cellspacing="0">
+    <table width="100%" border="0" cellspacing="0">
         <tr>
             <td width="55%" align="right"><b>¿De qué material es el techo de tu vivienda?</b></td>
             <td width="45%">{{ $estudiante->socioeconomico->techo->techo }}</td>
@@ -247,7 +244,7 @@ p {
             <td width="55%" align="right"><b>¿Recibes algún tipo de ayuda económica del gobierno?</b></td>
             <td width="45%">{{ $estudiante->socioeconomico->ayuda_gobierno == 1 ? 'SÍ' : 'NO' }}</td>
         </tr>
-        <?php  
+        <?php   
             $empleo = false;
             if ($estudiante->socioeconomico && strlen($estudiante->socioeconomico->empleo) > 0) {
                 $empleo = true;

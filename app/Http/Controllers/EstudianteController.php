@@ -329,7 +329,7 @@ class EstudianteController extends Controller
 
             // COPIAR ARCHIVO A STORAGE
             $fileExtension = $request->img_curp->getClientOriginalExtension();
-            $newFileName = "CU_" . $estudiante->rfc . '.' . $fileExtension;
+            $newFileName = "CU_" . $estudiante->curp . '.' . $fileExtension;
             Storage::putFileAs('tmp', $request->img_curp, $newFileName);
 
             $estudiante->img_curp = $newFileName;
@@ -541,6 +541,27 @@ class EstudianteController extends Controller
         $fdocumentos = $request->session()->get('fdocumentos');
 
         $estudiante = $request->session()->get('estudiante');
+
+        if (isset($estudiante['img_acta_nac']) && str_ends_with($estudiante['img_acta_nac'], 'OK.PDF')) 
+        {
+            $estudiante->img_acta_nac = null;
+        }
+        if (isset($estudiante['img_comprobante_dom']) && str_ends_with($estudiante['img_comprobante_dom'], 'OK.PDF')) 
+        {
+            $estudiante->img_comprobante_dom = null;
+        }
+        if (isset($estudiante['img_identificacion']) && str_ends_with($estudiante['img_identificacion'], 'OK.PDF')) 
+        {
+            $estudiante->img_identificacion = null;
+        }
+        if (isset($estudiante['img_kardex']) && str_ends_with($estudiante['img_kardex'], 'OK.PDF')) 
+        {
+            $estudiante->img_kardex = null;
+        }
+        if (isset($estudiante['img_constancia']) && str_ends_with($estudiante['img_constancia'], 'OK.PDF')) 
+        {
+            $estudiante->img_constancia = null;
+        }
         if ($fdocumentos) return view('estudiantes/formulario-documentos',compact('estudiante'));
         else return view('estudiantes/operacion_invalida');
     }
@@ -553,11 +574,15 @@ class EstudianteController extends Controller
      */
     public function formulario_documentosPost(Request $request)
     {
+
+        $validarConstancia = $request["constancia-opcion"] == "si" ? true : false;
+
         $validatedData = $request->validate([
             'img_acta_nac' => ['required', 'file','max:1024'],
             'img_comprobante_dom' => ['required', 'file', 'max:1024'],
             'img_identificacion' => ['required', 'file', 'max:1024'],
             'img_kardex' => ['required', 'file', 'max:1024'],
+            'img_constancia' => ['file', 'max:1024'],
             ], [
                 'img_acta_nac.required' => 'El campo <b>ACTA DE NACIMIENTO</b> es obligatorio.',
                 'img_comprobante_dom.required' => 'El campo <b>COMPROBANTE DE DOMICILIO</b> es obligatorio.',
@@ -567,6 +592,7 @@ class EstudianteController extends Controller
                 'img_comprobante_dom.max' => 'El archivo del <b> COMPROBANTE DE DOMICILIO </b> no debe pesar más de 1 MB.',
                 'img_identificacion.max' => 'El archivo de la <b> IDENTIFICACIÓN </b> no debe pesar más de 1 MB.',
                 'img_kardex.max' => 'El archivo del <b> KARDEX </b> no debe pesar más de 1 MB.',
+                'img_constancia.max' => 'El archivo de la <b> CONSTANCIA DE ESTUDIOS </b> no debe pesar más de 1 MB.',
             ]);
 
 
@@ -574,7 +600,7 @@ class EstudianteController extends Controller
         $comprobanteCargado = false;
         $identificacionCargada = false;
         $kardexCargado = false;
-        // $constanciaCargada = false;
+        $constanciaCargada = false;
 
         $estudiante = $request->session()->get('estudiante');
      
@@ -582,6 +608,7 @@ class EstudianteController extends Controller
         if (isset($request->img_comprobante_dom) || (isset($estudiante) && $estudiante->img_comprobante_dom == "COMPROBANTE_OK.pdf")) $comprobanteCargado = true;
         if (isset($request->img_identificacion) || (isset($estudiante) && $estudiante->img_identificacion == "ID_OK.pdf")) $identificacionCargada = true;
         if (isset($request->img_kardex) || (isset($estudiante) && $estudiante->img_kardex == "KARDEX_OK.pdf")) $kardexCargado = true;
+        if (isset($request->img_constancia) || (isset($estudiante) && $estudiante->img_constancia == "CONSTANCIA_OK.pdf")) $constanciaCargada = true;
   
         if ($actaCargada) $extActa = "pdf";
         else $extActa = substr(strrchr($request->acta_hidden, "."), 1);
@@ -591,14 +618,14 @@ class EstudianteController extends Controller
         else $extIdentificacion = substr(strrchr($request->identificacion_hidden, "."), 1);
         if ($kardexCargado) $extKardex = "pdf";
         else $extKardex = substr(strrchr($request->kardex_hidden, "."), 1);
-        // if ($constanciaCargada) $extConstancia = "pdf";
-        // else $extConstancia = substr(strrchr($request->constancia_hidden, "."), 1);
+        if ($constanciaCargada) $extConstancia = "pdf";
+        else $extConstancia = substr(strrchr($request->constancia_hidden, "."), 1);
 
         if (isset($request->img_acta_nac)) $extActa = strtoupper($request->img_acta_nac->getClientOriginalExtension());
         if (isset($request->img_comprobante_dom)) $extComprobante = strtoupper($request->img_comprobante_dom->getClientOriginalExtension());
         if (isset($request->img_identificacion)) $extIdentificacion = strtoupper($request->img_identificacion->getClientOriginalExtension());
         if (isset($request->img_kardex)) $extKardex = strtoupper($request->img_kardex->getClientOriginalExtension());
-        // if (isset($request->img_constancia)) $extConstancia = strtoupper($request->img_constancia->getClientOriginalExtension());
+        if (isset($request->img_constancia)) $extConstancia = strtoupper($request->img_constancia->getClientOriginalExtension());
 
         $message = '<b>ERROR(ES) EN LA INFORMACIÓN: </b> <ul>';
         $errorActa = false;
@@ -628,18 +655,21 @@ class EstudianteController extends Controller
             $message = $message . "<li>El <b>KARDEX</b> es obligatorio.</li>";
             $errorKardex = true;
         }
-        // if (!$constanciaCargada && $request->constancia_hidden == "#constancia#")
-        // {
-        //     $message = $message . "<li>La <b>CONSTANCIA</b> es obligatoria.</li>";
-        //     $errorConstancia = true;
-        // }
-
+        if ($validarConstancia)
+        { 
+            if (!$constanciaCargada && $request->img_constancia == null)
+            {
+                $message = $message . "<li>La <b>CONSTANCIA</b> es obligatoria.</li>";
+                $errorConstancia = true;
+            }
+        }
 
         if (!$errorActa) $estudiante->img_acta_nac = "ACTA_OK." . $extActa;
         if (!$errorComprobante) $estudiante->img_comprobante_dom = "COMPROBANTE_OK." . $extComprobante;
         if (!$errorIdentificacion) $estudiante->img_identificacion = 'ID_OK.' . $extIdentificacion;
         if (!$errorKardex) $estudiante->img_kardex = "KARDEX_OK." . $extKardex;
-        // if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
+        if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
+
         $rfc = $estudiante->rfc;
         $time_int = time() * 999;
         $time_str = strval($time_int);
@@ -674,12 +704,15 @@ class EstudianteController extends Controller
             $message = $message . "<li>El archivo del <b>KARDEX</b> debe ser PDF.</li>";
             $errorKardex = true;
         }
-        // if ($extConstancia != "PDF")
-        // {
-        //     $message = $message . "<li>El archivo de la <b>CONSTANCIA DE ESTUDIOS</b> debe ser PDF.</li>";
-        //     $errorConstancia = true;
-        // }        
-
+        if ($validarConstancia)
+        {
+            if ($extConstancia != "PDF")
+            {
+                $message = $message . "<li>El archivo de la <b>CONSTANCIA DE ESTUDIOS</b> debe ser PDF.</li>";
+                $errorConstancia = true;
+            }
+        }
+        
         if ($errorActa || $errorComprobante || $errorIdentificacion || $errorKardex || $errorConstancia)
         {
             return redirect()->back()->with('message', $message);
@@ -700,33 +733,39 @@ class EstudianteController extends Controller
         //Sólo se copiarán los archivos únicamente cuando estén cargados en el input
         if ($actaCargada) 
         {
-            $newFileName = "AC_" . $estudiante->rfc . '.' . $extActa;
+            $newFileName = "AC_" . $estudiante->curp . '.' . $extActa;
             Storage::putFileAs('actas', $request->img_acta_nac, $newFileName);
             $estudiante->img_acta_nac = $newFileName;
         }  
         if ($comprobanteCargado)
         {
-            $newFileName = "CO_" . $estudiante->rfc . '.' . $extComprobante;
+            $newFileName = "CO_" . $estudiante->curp . '.' . $extComprobante;
             Storage::putFileAs('comprobantes', $request->img_comprobante_dom, $newFileName);
             $estudiante->img_comprobante_dom = $newFileName;
         }
         if ($identificacionCargada)
         {
-            $newFileName = "ID_" . $estudiante->rfc . '.' . $extIdentificacion;
+            $newFileName = "ID_" . $estudiante->curp . '.' . $extIdentificacion;
             Storage::putFileAs('identificaciones', $request->img_identificacion, $newFileName);
             $estudiante->img_identificacion = $newFileName;
         }
         if ($kardexCargado)
         {
-            $newFileName = "KX_" . $estudiante->rfc . '.' . $extKardex;
+            $newFileName = "KX_" . $estudiante->curp . '.' . $extKardex;
             Storage::putFileAs('kardex', $request->img_kardex, $newFileName);
             $estudiante->img_kardex = $newFileName;
         }
-        // if ($constanciaCargada)
-        // {
-        //     $archivo = 'CN_' . $rfc . '.' . $extConstancia;
-        //     $request->img_constancia->move('img/constancias', $archivo);
-        // }
+        if ($constanciaCargada)
+        {
+            $newFileName = "CN_" . $estudiante->curp . '.' . $extKardex;
+            Storage::putFileAs('constancias', $request->img_constancia, $newFileName);
+            $estudiante->img_constancia = $newFileName;
+        }
+        else
+        {
+            $estudiante->img_constancia = 'PENDIENTE';
+        } 
+   
 
          // Obtener la ruta del archivo original
         $archivoOriginal = 'tmp/' . $estudiante->img_curp;
@@ -769,7 +808,7 @@ class EstudianteController extends Controller
             $estudianteBD->img_comprobante_dom = $estudiante['img_comprobante_dom'];
             $estudianteBD->img_identificacion = $estudiante['img_identificacion'];
             $estudianteBD->img_kardex = $estudiante['img_kardex'];
-            $estudianteBD->img_constancia = "PENDIENTE";
+            $estudianteBD->img_constancia = $estudiante['img_constancia'];
             $estudianteBD->id_hex = $estudiante['id_hex'];  
         
             // Guardar el estudiante en la base de datos
@@ -872,7 +911,7 @@ class EstudianteController extends Controller
 
         if ($constanciaCargada)
         {
-            $newFileName = "CN_" . $estudiante->rfc . '.' . $extConstancia;
+            $newFileName = "CN_" . $estudiante->curp . '.' . $extConstancia;
             Storage::putFileAs('constancias', $request->img_constancia, $newFileName);
             $estudiante->img_constancia = $newFileName;
         }
@@ -919,7 +958,7 @@ class EstudianteController extends Controller
             $socioeconomico = DatoSocioeconomico::where('id_estudiante', $id_estudiante)->first();
             $pdf = PDF::loadView('estudiantes.registro_pdf',['estudiante'=>$estudiante, 'socioeconomico'=>$socioeconomico]);
             $pdf->setPaper("Letter", "portrait");
-            return $pdf->stream('alivianate.pdf');
+            return $pdf->stream('registroEstudiante.pdf');
 
             return view('estudiantes.registro_pdf');
         }
@@ -935,7 +974,7 @@ class EstudianteController extends Controller
             $socioeconomico = DatoSocioeconomico::where('id_estudiante', $id_estudiante)->first();
             $pdf = PDF::loadView('estudiantes.registro_pdf',['estudiante'=>$estudiante, 'socioeconomico'=>$socioeconomico]);
             $pdf->setPaper("Letter", "portrait");
-            return $pdf->stream('alivianate.pdf');
+            return $pdf->stream('RegistroEstudiante.pdf');
             return view('estudiantes.registro_pdf');
         }
         else return view('estudiantes/operacion_invalida');     
