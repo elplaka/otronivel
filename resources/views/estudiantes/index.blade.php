@@ -381,7 +381,7 @@
                                             </div>
                                             <div class="col-md-2" style="font-size:13px">
                                                 <div class="search_select_box">
-                                                    <select name="selDocumentacion" id="selDocumentacion" data-style="btn-selectpicker" class="form-control selectpicker" data-style-base="form-control" autofocus>
+                                                    <select name="selDocumentacion" id="selDocumentacion"  data-style="btn-selectpicker" class="form-control selectpicker" data-style-base="form-control" autofocus>
                                                         <option value="" selected> -- TODOS -- </option>
                                                         <option value=1 {{ $documentacionR == 1 ? 'selected' : '' }}> COMPLETA </option>
                                                         <option value=2 {{ $documentacionR == 2 ? 'selected' : '' }}> INCOMPLETA </option>
