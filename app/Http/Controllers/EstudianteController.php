@@ -1251,7 +1251,6 @@ class EstudianteController extends Controller
         $kardexCargado = false;
         $constanciaCargada = false;
 
-
         $archivoConstancia = $estudiante->img_constancia;
 
         if (isset($request->img_acta_nac)) $actaCargada = true;
@@ -1310,6 +1309,7 @@ class EstudianteController extends Controller
         if ($observacionesAdmin !== null) {
             $observacionesAdmin = strlen($observacionesAdmin) ? trim(mb_strtoupper($observacionesAdmin)) : null;
         }
+
 
         $estudiante->update([
             'nombre' => trim(mb_strtoupper($request->nombre)),
