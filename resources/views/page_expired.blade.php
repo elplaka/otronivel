@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gobierno del Municipio de Concordia</title>
+    <title>Sesión Expirada - Gobierno de Concordia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
 
     <style>
-        /* Definimos el color institucional global */
         :root {
             --color-municipio: #820826;
             --color-municipio-hover: #61061d;
         }
-
         .bg-institucional { background-color: var(--color-municipio); }
         .text-institucional { color: var(--color-municipio); }
         .border-institucional { border-color: var(--color-municipio); }
@@ -47,12 +45,9 @@
             
            <div class="mb-10 flex justify-center items-center">
                 <div class="flex items-center space-x-4">
-                   <div class="flex-shrink-0 overflow-hidden" style="width: 60px;"> <img 
-                        src="{{ asset('img/Logo_y_Escudo.jpg') }}" 
-                        alt="Escudo de Concordia" 
-                        class="h-20 max-w-none object-cover object-left"
-                        style="width: 80px;" 
-                    ></div>
+                   <div class="flex-shrink-0 overflow-hidden" style="width: 60px;"> 
+                        <img src="{{ asset('img/Logo_y_Escudo.jpg') }}" alt="Escudo de Concordia" class="h-20 max-w-none object-cover object-left" style="width: 80px;">
+                    </div>
 
                     <div class="pl-4 border-l-4 border-institucional py-1">
                         <span class="block text-2xl font-black tracking-tighter text-gray-800 leading-none uppercase">
@@ -64,33 +59,33 @@
 
             <div class="relative flex justify-center mb-10">
                 <div class="text-[14rem] font-black text-gray-100 select-none leading-none">
-                    404
+                    419
                 </div>
                 
                 <div class="absolute inset-0 flex items-center justify-center animate-float">
                     <div class="bg-white p-8 rounded-2xl shadow-2xl border-b-8 border-institucional">
                         <svg class="w-20 h-20 text-institucional" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                 </div>
             </div>
 
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">Página no encontrada</h1>
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">La sesión ha expirado</h1>
             <p class="text-lg text-gray-600 mb-10 leading-relaxed">
-                Lo sentimos, el enlace al que intentas acceder no está disponible o ha cambiado de ubicación en el sistema municipal.
+                Por seguridad, tu sesión se ha cerrado tras un periodo de inactividad. No te preocupes, puedes volver a intentarlo regresando al formulario.
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="{{ url('https://www.concordia.gob.mx') }}" 
-                   class="w-full sm:w-auto px-10 py-4 bg-institucional text-white font-semibold rounded-full shadow-lg hover-bg-institucional transition duration-300 transform hover:scale-105 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    Ir al portal del Gobierno
-                </a>
+                <button onclick="window.location.reload()" 
+                    class="w-full sm:w-auto px-10 py-4 bg-institucional text-white font-semibold rounded-full shadow-lg hover-bg-institucional transition duration-300 transform hover:scale-105 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Actualizar página
+                </button>
                 
                 <button onclick="window.history.back()" 
                         class="w-full sm:w-auto px-10 py-4 bg-white border-2 border-institucional text-institucional font-semibold rounded-full hover:bg-red-50 transition duration-300">
-                    Regresar
+                    Regresar al formulario
                 </button>
             </div>
 

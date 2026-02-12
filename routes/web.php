@@ -33,26 +33,25 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //     return view('estudiantes.mantenimiento');
 // });
 
-Route::get('/2025-2026', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+// Route::get('/2025-2026', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 // Route::get('/2023-2024', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 // Route::get('/2023-2024/xt', [EstudianteController::class, 'forget_xt'])->name('estudiantes.forget_xt');
 
 Route::middleware(['auth'])->get('/estudiantes/nuevo-xt', [EstudianteController::class, 'nuevo_xt'])->name('estudiantes.nuevo-xt')->middleware('admin.user');
 Route::middleware(['auth'])->post('/estudiantes/crea-xt', [EstudianteController::class, 'crea_xt'])->name('estudiantes.crea-xt')->middleware('admin.user');
 
-
 Route::middleware('check.inicio.registro')->group(function () {
     Route::get('/estudiantes/formulario-curp', [EstudianteController::class, 'formulario_curp'])->name('estudiantes.formulario-curp');
 });
 
-Route::post('/estudiantes/formulario-curp', [EstudianteController::class, 'formulario_curpPost'])->name('estudiantes.formulario-curp.post');
+// Route::post('/estudiantes/formulario-curp', [EstudianteController::class, 'formulario_curpPost'])->name('estudiantes.formulario-curp.post');
 
 // Route::middleware(['auth'])->group(function () {
     Route::get('/estudiantes/formulario-documentos', [EstudianteController::class, 'formulario_documentos'])->name('estudiantes.formulario-documentos');
     Route::post('/estudiantes/formulario-documentos', [EstudianteController::class, 'formulario_documentosPost'])->name('estudiantes.formulario-documentos.post');   
 // });
 
-Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+// Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 
 Route::get('/', function () {
     return redirect()->route('home');

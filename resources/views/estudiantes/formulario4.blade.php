@@ -1,334 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>OTRO NIVEL - Información Socioeconómica</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
+
     
-        <title>OTRO NIVEL </title>
-    
-        <!-- Custom fonts for this template-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
-    
-        <!-- Custom styles for this template-->
-        <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">  
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-<script language="JavaScript" type="text/javascript">
-    // A function that disables button
-    // function disableButton() {
-    //     document.getElementById('btnSiguiente').setAttribute("disabled","disabled");
-    //     document.getElementById('btnSiguiente').innerText = "Enviando...";
-    // }
+    <style>
+        :root {
+            --rojo-institucional: #7b003a;
+            --verde-boton: #00656c;
+            --verde-hover: #4a826a;
+            --gris-fondo: #f8f9fc;
+            --gris-anterior: #6e707e;
+            --gris-anterior-hover: #3a3b45;
+        }
 
-    $(document).ready(function(){
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip({
-            trigger : 'click'
-            })
-            $('[data-toggle="tooltip"]').mouseleave(function(){
-            $(this).tooltip('hide');
-            });    
-        });
+        body { background-color: white; }
 
-        var $myForm = $("#my_form");
-        $myForm.submit(function(){
-            // disableButton();
-            $myForm.submit(function(){
-                return false;
-            });
-        });
-    });
-</script>
+        /* --- UI MODERNA --- */
+        .custom-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            background: #fff;
+        }
 
-<script>
-       // showDiv('hidden_div', this)  
-        // function showDiv(divId, element)
-        // {
-        //     document.getElementById(divId).style.display = element.value == 1 ? 'block' : 'none';
-        // }
+        .section-header-modern {
+            background-color: var(--rojo-institucional);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-        $(document).ready(function() {
-    const selectEmpleo = $('#select_empleo');
-    const divEmpleo = $('#hidden_div');
+        .header-content { display: flex; align-items: center; color: #ffffff; }
+        .header-content i { font-size: 1.2rem; margin-right: 15px; opacity: 0.9; }
+        .header-text { 
+            font-size: 0.95rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+        }
+        .header-line { width: 40px; height: 3px; background-color: rgba(255, 255, 255, 0.4); border-radius: 2px; margin-left: 35px; }
 
-    if (selectEmpleo.val() === '1') {
-        divEmpleo.show();
-    } else {
-        divEmpleo.hide();
-    }
+        /* Formulario */
+        .form-label-custom { font-weight: 600; color: #4b4b4b; margin-bottom: 8px; display: block; }
+        .form-control {
+            height: 42px !important;
+            border-radius: 8px !important;
+            border: 1px solid #d1d3e2;
+        }
+        .form-control:focus {
+            border-color: var(--rojo-institucional);
+            box-shadow: 0 0 0 0.2rem rgba(123, 0, 58, 0.15);
+        }
 
-    selectEmpleo.on('change', function() {
-        showDiv('hidden_div', this);
-    });
-});
+        /* Banner de Estudiante */
+        .student-banner {
+            background-color: #f1f3f9;
+            color: var(--rojo-institucional);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            border-left: 4px solid var(--rojo-institucional);
+        }
 
-function showDiv(divId, element) {
-    const div = $('#' + divId);
+        /* Botones */
+        .btn-verde {
+            background-color: var(--verde-boton);
+            color: white;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-verde:hover { background-color: var(--verde-hover); color: white; }
 
-    if ($(element).val() === '1') {
-        div.show();
-    } else {
-        div.hide();
-    }
-}
-</script>
+        .btn-anterior {
+            background-color: var(--gris-anterior) !important;
+            color: white !important;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-anterior:hover { background-color: var(--gris-anterior-hover) !important; }
 
-<style>
-    .tooltip-inner {
-    max-width: 350px;
-    /* If max-width does not work, try using width instead */
-    width: 350px; 
-    max-height: 100px;
-    background-color: #2f4fff;
-    text-align: left;
-}
+        @media (max-width: 576px) {
+            .btn-mobile-block { width: 100%; display: block; margin-bottom: 10px; }
+        }
 
-#hidden_div {
-    display: none;
-}
-</style>
-
-<style>
-    .bg-rojo {
-           background-color: #7b003a; /* Color rojo en formato hexadecimal */
-       }
-
-   .btn-verde {
-     background-color: #00656c;
-     color: white;
-   }
- 
-   .btn-verde:hover {
-     background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-     color: white;
-   }
-
-   .btn-verde:active {
-        background-color: #5ca265; /* Cambia el color aquí al deseado cuando el botón está activado (clic) */
-        color: white;
-    }
-</style>
+        .container-adaptable { padding-bottom: 3rem; }
+        
+        @media (max-width: 576px) {
+            .container-adaptable { padding-bottom: 18rem !important; }
+            .btn-mobile-block { width: 100%; display: block; margin-bottom: 10px; }
+            .header-text { font-size: 0.85rem; letter-spacing: 1px; }
+            body { min-height: 120vh; }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card-body">
-            <div class="row justify-content-center">
-                <div class="col-md-7">
-                    <div class="row justify-content-center mb-4">
-                        <img src="../img/Logo_y_Escudo.jpg" style="width:70%">
+
+<div class="container py-5 container-adaptable">
+    <div class="row justify-content-center">
+        <div class="col-md-9">            
+            <div class="text-center mb-4">
+                <img src="../img/Logo_y_Escudo.jpg" class="img-fluid mb-3" style="width: 100%; max-width: 450px; height: auto;">
+                <div class="mb-4">
+                    <a href="/2025-2026">
+                        <img src="../img/logo_programa.jpg" class="img-fluid" style="max-width: 280px;">
+                    </a>
+                </div>
+                <h1 class="h3 font-weight-bold text-dark">{{ __('FORMULARIO DE REGISTRO') }}</h1>
+            </div>
+
+            <div class="custom-card mb-4">
+                <div class="section-header-modern">
+                    <div class="header-content">
+                        <i class="fas fa-home"></i>
+                        <span class="header-text">Información Socioeconómica</span>
                     </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <form class="contact-form" method="POST" action="{{ route('estudiantes.formulario4.post') }}">
-                                @csrf
-                                <div class="row justify-content-center mb-1">
-                                    <div class="text-center">
-                                        <a href="/2024-2025">
-                                            <img src="../img/logo_programa.jpg" style="width:45%">
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="row justify-content-center mb-1">
-                                    <h1 class="h3 mb-4 text-gray-800"> <b>{{ __('FORMULARIO DE REGISTRO') }} </b> </h1>
-                                </div>
-                                <div class="card">
-                                    <div class="form-section">
-                                        <div class="card-header text-white bg-rojo">
-                                            <b>INFORMACIÓN SOCIOECONÓMICA</b>
+                    <div class="header-line"></div>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="student-banner mb-4 text-center">
+                        <i class="fas fa-user-graduate mr-2"></i> Estudiante: <b>{{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }}</b>
+                    </div>
+
+                    <form id="my_form" method="POST" action="{{ route('estudiantes.formulario4.post') }}">
+                        @csrf
+                        
+                        <div class="row">
+                            <div class="col-md-12 mb-4">
+                                <label class="form-label-custom">¿De qué material es el techo de tu vivienda?*</label>
+                                <select name="cve_techo_vivienda" class="form-control" required>
+                                    <option value="" selected disabled>-- Selecciona una opción --</option>
+                                    @foreach ($techos as $techo)
+                                        <option value="{{ $techo->cve_techo }}" {{ (isset($socioeconomico->cve_techo_vivienda) && $techo->cve_techo == $socioeconomico->cve_techo_vivienda) ? 'selected' : '' }}>
+                                            {{ $techo->techo }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">¿Cuántos cuartos y baños disponen?*</label>
+                                <input type="number" name="cuartos_vivienda" class="form-control" min="1" max="20" value="{{ old('cuartos_vivienda', $socioeconomico->cuartos_vivienda ?? '') }}" required>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">¿Cuántas personas viven ahí?*</label>
+                                <input type="number" name="personas_vivienda" class="form-control" min="1" max="20" value="{{ old('personas_vivienda', $socioeconomico->personas_vivienda ?? '') }}" required>
+                            </div>
+
+                            <div class="col-md-12 mb-4">
+                                <label class="form-label-custom">¿Cuál es el monto mensual que entra a tu hogar?*</label>
+                                <select name="cve_monto_mensual" class="form-control" required>
+                                    <option value="" selected disabled>-- Selecciona el rango --</option>
+                                    @foreach ($montos as $monto)
+                                        <option value="{{ $monto->cve_monto }}" {{ (isset($socioeconomico->cve_monto_mensual) && $monto->cve_monto == $socioeconomico->cve_monto_mensual) ? 'selected' : '' }}>
+                                            {{ $monto->monto }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">¿Recibes beca de estudios?*</label>
+                                <select name="beca_estudios" class="form-control" required>
+                                    <option value="" disabled selected>--</option>
+                                    <option value="1" {{ ($socioeconomico->beca_estudios ?? '') == '1' ? 'selected' : '' }}>SÍ</option>
+                                    <option value="0" {{ ($socioeconomico->beca_estudios ?? '') == '0' ? 'selected' : '' }}>NO</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">¿Recibes ayuda del gobierno?*</label>
+                                <select name="apoyo_gobierno" class="form-control" required>
+                                    <option value="" disabled selected>--</option>
+                                    <option value="1" {{ ($socioeconomico->apoyo_gobierno ?? '') == '1' ? 'selected' : '' }}>SÍ</option>
+                                    <option value="0" {{ ($socioeconomico->apoyo_gobierno ?? '') == '0' ? 'selected' : '' }}>NO</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">¿Tienes algún empleo?*</label>
+                                <select id="select_empleo" name="select_empleo" class="form-control" required>
+                                    @php $tiene_empleo = !empty($socioeconomico->empleo); @endphp
+                                    <option value="" disabled selected>--</option>
+                                    <option value="1" {{ $tiene_empleo ? 'selected' : '' }}>SÍ</option>
+                                    <option value="0" {{ (isset($socioeconomico) && !$tiene_empleo) ? 'selected' : '' }}>NO</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4" id="hidden_div" style="display: {{ $tiene_empleo ? 'block' : 'none' }}">
+                                <label class="form-label-custom">Especifique empleo:*</label>
+                                <input id="input_empleo" name="empleo" type="text" class="form-control" value="{{ old('empleo', $socioeconomico->empleo ?? '') }}">
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label-custom">Gasto transporte diario ($)*</label>
+                                <input name="gasto_transporte" type="number" step="1" class="form-control" value="{{ old('gasto_transporte', $socioeconomico->gasto_transporte ?? '') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column flex-sm-row justify-content-between mt-2 mb-3">
+                            <a href="{{ route('estudiantes.formulario3') }}" class="btn btn-anterior btn-mobile-block mb-2">
+                                <i class="fas fa-chevron-left mr-2"></i> Anterior
+                            </a>
+                            <button type="submit" id="btnSiguiente" class="btn btn-verde btn-mobile-block mb-2">
+                                Siguiente <i class="fas fa-chevron-right ml-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="support-container mt-2">
+                        <div class="p-3 rounded shadow-sm border-left-highlight" 
+                            style="background: #ffffff; border: 1px solid #e3e6f0; border-left: 5px solid #7b003a; font-size: 0.9rem;">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 mb-3 mb-md-0 border-right-md">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-circle bg-whatsapp-light mr-3">
+                                            <i class="fab fa-whatsapp" style="color: #25D366; font-size: 1.4rem;"></i>
                                         </div>
                                         <div>
-                                            @if (session()->has('message'))
-                                            <br>
-                                            <div class="alert alert-danger mb-0">                        
-                                                <button type="button" class="close" data-dismiss="alert">
-                                                    &times;
-                                                </button>                        
-                                                {!! html_entity_decode(session()->get('message')) !!}
-                                            </div> 
-                                            @endif 
+                                            <span class="text-muted d-block small uppercase font-weight-bold">¿Necesitas ayuda?</span>
+                                            <a href="javascript:void(0);" onclick="openWhatsApp('526949568140')" 
+                                            class="support-link" style="color: #7b003a; font-size: 1.1rem; font-weight: 700; text-decoration: none;">
+                                            694 956 8140
+                                            </a>
                                         </div>
-                                        <div class="card-body">
-                                            <div class="row mb-3 justify-content-center" style="background-color: #ebebeb; color: #7b003a;">
-                                                Estudiante: &nbsp; <b> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} </b>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <p class="text-justify px-3 mb-1">
-                                                    ¿De qué material es el techo de tu vivienda?
-                                                </p>  
-                                                <?php $cve_techo_vivienda = $socioeconomico->cve_techo_vivienda  ?? '' ?>
-                                                <div class="col-md-7">
-                                                    <select id="cve_techo_vivienda" name="cve_techo_vivienda" class="form-control" required>
-                                                        <option value="" selected>--SELECCIONA UNA OPCIÓN--</option>
-                                                        @foreach ($techos as $techo)
-                                                        <option value={{ old('cve_techo_vivienda', $techo->cve_techo) }} {{ $techo->cve_techo == $cve_techo_vivienda ? 'selected' : '' }}>{{ $techo->techo }}</option>
-                                                    @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <p class="text-justify px-3 mb-1">
-                                                    ¿Cuántos cuartos y baños disponen en tu vivienda? (Incluye cocina, sala, etc.)
-                                                </p>                     
-                                                <div class="col-md-3">
-                                                    <input id="cuartos_vivienda" name="cuartos_vivienda" type="number" step="1" min="1" max="20" class="form-control @error('cuartos_vivienda') is-invalid @enderror" name="cuartos_vivienda" value="{{ old('cuartos_vivienda', $socioeconomico->cuartos_vivienda  ?? '') }}"  autocomplete="cuartos_vivienda" required>
-                                                    @error('cuartos_vivienda')   
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                 <p class="text-justify px-3 mb-1">
-                                                    ¿Cuántas personas viven normalmente en tu vivienda? (Incluye a personas de todas las edades que vivan ahí.)
-                                                </p>                  
-                                                <div class="col-md-3">
-                                                    <input id="personas_vivienda" name="personas_vivienda" type="number" step="1" min="1" max="20" class="form-control @error('personas_vivienda') is-invalid @enderror" name="personas_vivienda" value="{{ old('personas_vivienda', $socioeconomico->personas_vivienda  ?? '') }}"  autocomplete="personas_vivienda" required>
-                                                    @error('personas_vivienda')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <p class="text-justify px-3 mb-1">
-                                                    ¿Cuál es el monto mensual que entra a tu hogar? (Incluye el sueldo de cualquier persona que viva en tu vivienda.) 
-                                                </p>
-                                                <?php $cve_monto_mensual = $socioeconomico->cve_monto_mensual  ?? '' ?>
-                                                <div class="col-md-7">
-                                                    <select id="cve_monto_mensual" name="cve_monto_mensual" class="form-control" required>
-                                                        <option value="" selected>--SELECCIONA UNA OPCIÓN--</option>
-                                                        @foreach ($montos as $monto)
-                                                        <option value={{ $monto->cve_monto }} {{ $monto->cve_monto == $cve_monto_mensual ? 'selected' : '' }}>{{ $monto->monto }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <p class="text-justify px-3 mb-1">
-                                                    ¿Recibes alguna beca para apoyar tus estudios?
-                                                </p>
-                                                <?php
-                                                    $beca_estudios = isset($socioeconomico->beca_estudios) ? $socioeconomico->beca_estudios : null;
-                                                ?>
-                                                <div class="col-md-3">
-                                                    <select id="beca_estudios" name="beca_estudios" class="form-control" required>
-                                                        <option value="" {{ $beca_estudios === null ? 'selected' : '' }}>--</option>
-                                                        <option value="1" {{ ($beca_estudios === '1' || $beca_estudios === 1) ? 'selected' : '' }}>SÍ</option>
-                                                        <option value="0" {{ ($beca_estudios === '0' || $beca_estudios === 0) ? 'selected' : '' }}>NO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <p class="text-justify px-3 mb-1">
-                                                    ¿Recibes algún tipo de ayuda económica del gobierno?
-                                                </p>
-                                                <?php
-                                                    $apoyo_gobierno = isset($socioeconomico->apoyo_gobierno) ? $socioeconomico->apoyo_gobierno : null;
-                                                ?>
-                                                <div class="col-md-3">
-                                                    <select id="apoyo_gobierno" name="apoyo_gobierno" class="form-control" required>
-                                                        <option value="" {{ $apoyo_gobierno === null ? 'selected' : '' }}>--</option>
-                                                        <option value="1" {{ ($apoyo_gobierno === '1' || $apoyo_gobierno === 1) ? 'selected' : '' }}>SÍ</option>
-                                                        <option value="0" {{ ($apoyo_gobierno === '0' || $apoyo_gobierno === 0) ? 'selected' : '' }}>NO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <p class="text-justify px-3 mb-1 col-md-10">
-                                                    ¿Tienes algún empleo? 
-                                                </p>
-                                                <?php
-                                                    $empleo = isset($socioeconomico->empleo) ? $socioeconomico->empleo : null;
-                                                ?>
-                                                {{-- <div class="col-md-3">
-                                                    <select id="select_empleo" class="form-control" required>
-                                                        <option value="" {{ $empleo === null ? 'selected' : '' }}>--</option>
-                                                        <option value="1" {{ $empleo !== null && strlen(trim($empleo)) > 0 ? 'selected' : '' }}>SÍ</option>
-                                                        <option value="0" {{ $empleo !== null && strlen(trim($empleo)) === 0 ? 'selected' : '' }}>NO</option>
-                                                    </select>
-                                                </div> --}}
-                                                <div class="col-md-3">
-                                                    <select id="select_empleo" name="select_empleo" class="form-control" required>
-                                                        <option value="" {{ $empleo === null ? 'selected' : '' }}>--</option>
-                                                        <option value="1" {{ $empleo !== null && $empleo !== false && strlen(trim($empleo)) > 0 ? 'selected' : '' }}>SÍ</option>
-                                                        <option value="0" {{ $empleo !== null && ($empleo === false || strlen(trim($empleo)) === 0) ? 'selected' : '' }}>NO</option>
-                                                    </select>
-                                                </div>                                               
-                                                <div class="row mb-3" id="hidden_div" name="hidden_div" style="display: {{ $empleo == '1' ? 'block' : 'none' }}">
-                                                    <p class="text-justify px-3 mb-1">
-                                                        Especifica:
-                                                    </p>
-                                                    <div class="col-md-12">
-                                                        <input id="empleo" name="empleo" type="text" class="form-control @error('empleo') is-invalid @enderror" name="empleo" value="{{ old('empleo', $empleo  ?? '') }}"  autocomplete="empleo" {{ $empleo == '1' ? 'required' : '' }}>
-                                                        @error('empleo')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                    </div>
-                                                </div>                                                
-                                            </div>
-                                            <div class="row mb-3">
-                                                <p class="text-justify px-3 mb-1 col-md-10">
-                                                    ¿Cuánto gastas en transporte diario a la escuela?(Taxi, camión, etc.) 
-                                                </p>
-                                                <div class="col-md-3">
-                                                    <input id="gasto_transporte" name="gasto_transporte" type="number" step="5" min="0" max="1000" class="form-control @error('gasto_transporte') is-invalid @enderror" name="gasto_transporte" value="{{ old('gasto_transporte', $socioeconomico->gasto_transporte  ?? '') }}"  autocomplete="gasto_transporte" required>
-                                                    @error('gasto_transporte')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> 
+                                    </div>
                                 </div>
-                                <a href="{{ route('estudiantes.formulario3') }}" class="next btn btn-verde float-left mt-2">Anterior</a>
-                                <button type="submit" id="btnSiguiente" name="btnSiguiente" class="next btn btn-verde float-right mt-2">Siguiente</button>
-                            </form>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-university mr-3 mt-1 text-muted" style="font-size: 1.1rem;"></i>
+                                        <div>
+                                            <span class="text-muted d-block small uppercase font-weight-bold">Atención Presencial</span>
+                                            <span class="text-dark">
+                                                Presidencia Municipal <br>
+                                                <small class="text-secondary">
+                                                    <i class="far fa-clock mr-1"></i> Lunes a Viernes • 8:30 a.m. a 3:00 p.m.
+                                                </small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mb-1 justify-content-center">
-                        <div class="col-12 text-center">
-                            <label class="col-form-label mx-1 p-2 col-12" style="font-size: 10pt; text-align: justify; background-color: #ebebeb; color: #7b003a;">
-                                * <b> <i class="fab fa-whatsapp"></i> <a href="javascript:void(0);" onclick="openWhatsApp()" style="color: inherit; text-decoration: none;">6692295855</a></b> para soporte técnico y dudas sobre el registro en línea. <br>
-                                * Mayores informes en la presidencia municipal de <b> Lunes a Viernes de 8:30 a.m. a 3 p.m. </b>
-                            </label>
-                        </div>
-                    </div>
+                    <style>
+                        .bg-whatsapp-light {
+                            background-color: #e8f9ee;
+                            width: 45px;
+                            height: 45px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 50%;
+                        }
+                        .border-left-highlight {
+                            transition: transform 0.2s ease;
+                        }
+                        .border-left-highlight:hover {
+                            transform: translateY(-2px);
+                        }
+                        .support-link:hover {
+                            color: #a3004d !important;
+                        }
+                        .uppercase { text-transform: uppercase; letter-spacing: 0.5px; }
+                        
+                        @media (min-width: 768px) {
+                            .border-right-md { border-right: 1px solid #e3e6f0; }
+                        }
+                    </style>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function openWhatsApp() {
-            var phoneNumber = "526692295855"; // Coloca el número de teléfono sin el signo "+"
-            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
-    
-            window.open(url + phoneNumber, "_blank");
-        }
-    </script>
+<script>
+    $(document).ready(function() {
+        // Lógica mostrar/ocultar empleo
+        $('#select_empleo').on('change', function() {
+            if ($(this).val() === '1') {
+                $('#hidden_div').fadeIn();
+                $('#input_empleo').attr('required', true);
+            } else {
+                $('#hidden_div').fadeOut();
+                $('#input_empleo').attr('required', false).val('');
+            }
+        });
 
-    {{-- <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a> --}}
-    <script src="{{ asset('js/jquery.js') }}"></script>
+        // Prevenir doble envío
+        $('#my_form').submit(function() {
+            $('#btnSiguiente').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i> Enviando...');
+        });
+    });
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ mix('js/app.js') }}"></script>
+    function openWhatsApp(phoneNumber) {
+        // var phoneNumber = "526692295855";
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
+        window.open(url + phoneNumber, "_blank");
+    }
+</script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="{{ asset('js/sb-admin.min.js') }}"></script>
 </body>
-</html>
+</html> 

@@ -22,8 +22,13 @@
 
     // $qrcode2 = base64_encode(QrCode::format('png')->size(50)->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
     // $qrcode = QrCode::format('png')->size(185)->errorCorrection('H')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex);
-    $qrcode = base64_encode(\QrCode::size(300)->errorCorrection('H')->encoding('UTF-8')->format('png')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
+    // $qrcode = base64_encode(\QrCode::size(300)->errorCorrection('H')->encoding('UTF-8')->format('png')->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
     // $qrcode = base64_encode(QrCode::format('png')->size(300)->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
+    // $qrcode = base64_encode(\QrCode::size(300)
+    //         ->errorCorrection('H')
+    //         ->encoding('UTF-8')
+    //         ->format('svg') // <--- Cambiado a SVG
+    //         ->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
 ?>
 
 <style>

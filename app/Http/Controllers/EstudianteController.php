@@ -25,11 +25,11 @@ use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Str;
 
 class EstudianteController extends Controller
 {
-    private $archivoCurp, $cicloR;
+    private $archivoCurp, $cicloR, $periodoR;
 
     private function calcula_ano($ano_2dig)
     {
@@ -51,6 +51,7 @@ class EstudianteController extends Controller
     public function forget(Request $request)
     {
         $request->session()->forget('ciclo');
+        $request->session()->forget('periodo');
         $request->session()->forget('estudiante');
         $request->session()->forget('socioeconomico');
         $request->session()->forget('existente');
@@ -64,8 +65,10 @@ class EstudianteController extends Controller
         $request->session()->forget('fin');
 
         $ciclo = $this->getCiclo();
+        $periodo = $this->getPeriodo();
 
         $request->session()->put('ciclo', $ciclo);
+        $request->session()->put('periodo', $periodo);
         $request->session()->put('fcurp', true);
 
         return redirect()->route('estudiantes.formulario-curp');
@@ -128,6 +131,7 @@ class EstudianteController extends Controller
         {
             $estudiante = Estudiante::where('curp', $curp)
                         ->orderByDesc('id_ciclo')
+                        ->orderByDesc('periodo')
                         ->first();
 
 
@@ -179,6 +183,15 @@ class EstudianteController extends Controller
         return $cicloActual;
     }
 
+    public function getPeriodo()
+    {
+        $configFilePath = config_path('ciclo_actual.ini');
+        $config = parse_ini_file($configFilePath, true);
+
+        $cicloActual = $config['Ciclo']['PeriodoActual'];
+        return $cicloActual;
+    }
+
     public function getCicloDescripcion($id_ciclo)
     {
         $ciclo = Ciclo::findOrFail($id_ciclo);
@@ -189,8 +202,10 @@ class EstudianteController extends Controller
     public function formulario_curp(Request $request)
     {
         $ciclo = $this->getCiclo();
+        $periodo = $this->getPeriodo();
 
         $request->session()->put('ciclo', $ciclo);
+        $request->session()->put('periodo', $periodo);
 
         $fcurp = $request->session()->get('fcurp');
 
@@ -208,15 +223,16 @@ class EstudianteController extends Controller
     public function nuevo_xt(Request $request)
     {
         $ciclo = $request->session()->get('ciclo');
+        $periodo = $request->session()->get('periodo');
 
-        $estudiantes_xt = EstudianteXT::where('id_ciclo', $ciclo)->get();
+        $estudiantes_xt = EstudianteXT::where('id_ciclo', $ciclo)->where('periodo', $periodo)->get();
 
         return view('estudiantes/nuevo_xt', compact('estudiantes_xt'));
     }
 
-    public function existe_xt($id_ciclo, $curp)
+    public function existe_xt($id_ciclo, $periodo, $curp)
     {
-        $estudiante_xt = EstudianteXT::where('id_ciclo', $id_ciclo)->where('curp',$curp)->exists();
+        $estudiante_xt = EstudianteXT::where('id_ciclo', $id_ciclo)->where('periodo', $periodo)->where('curp',$curp)->exists();
 
         return $estudiante_xt;
     }
@@ -224,6 +240,7 @@ class EstudianteController extends Controller
     public function crea_xt(Request $request)
     {
         $ciclo = $request->session()->get('ciclo');
+        $periodo = $request->session()->get('periodo');
 
         $validatedData = $request->validate([
             'curp' => 'required|string|size:18',
@@ -233,14 +250,15 @@ class EstudianteController extends Controller
 
         if ($this->esCURP($curp)) 
         {
-            if ($this->existe_xt($ciclo, $curp))
+            if ($this->existe_xt($ciclo, $periodo, $curp))
             {
-                return redirect()->back()->with('message', 'CURP ya existe en el ciclo actual.')->with('tipo_msg', 'danger');
+                return redirect()->back()->with('message', 'CURP ya existe en el ciclo y periodo actuales.')->with('tipo_msg', 'danger');
             }
             else
             {
                 $estudianteXT = EstudianteXT::create([
                     'id_ciclo' => $ciclo,
+                    'periodo' => $periodo,
                     'curp' => $curp,
                 ]);
                 return redirect()->back()->with('message', 'CURP agregado con éxito a los estudiantes extemporáneos.')->with('tipo_msg', 'success');
@@ -310,9 +328,10 @@ class EstudianteController extends Controller
 
         $this->archivoCurp = $request->img_curp;
         $ciclo = $request->session()->get('ciclo');
+        $periodo = $request->session()->get('periodo');
         $convocatoria_abierta = $this->convocatoria_abierta($ciclo);
 
-        if ($ciclo == $estudiante->id_ciclo)   //YA EXISTE EN EL CICLO ACTUAL
+        if ($ciclo == $estudiante->id_ciclo && $periodo == $estudiante->periodo)   //YA EXISTE EN EL CICLO Y PERIDOO ACTUAL
         {
             if ($estudiante->cve_status == 1 || $estudiante->cve_status == 2 || $estudiante->cve_status == 3 || $estudiante->cve_status == 5 ||  $estudiante->cve_status == 6 || $estudiante->cve_status == 7)
             {
@@ -322,7 +341,7 @@ class EstudianteController extends Controller
             else return view('estudiantes.convocatoria-cerrada'); 
         }
 
-        if ($convocatoria_abierta || $this->existe_xt($ciclo, $estudiante->curp))
+        if ($convocatoria_abierta || $this->existe_xt($ciclo, $periodo, $estudiante->curp))
         {
             $request->session()->put('fcurp', false);
             $request->session()->put('f2', true);
@@ -353,10 +372,11 @@ class EstudianteController extends Controller
             if (isset($estudiante))  //EXISTE EL ESTUDIANTE EN EL CICLO ACTUAL
             {
                 $ciclo = $this->getCicloDescripcion($request->session()->get('ciclo'));
+                $periodo = $this->getPeriodo();
                 $prox_remesa = BoletosRemesa::where('id_ciclo', $request->session()->get('ciclo'))->orderBy('fecha', 'desc')->first();
                 $request->session()->put('estudiante', $estudiante);
                 $request->session()->put('fconstancia', true);
-                return view('estudiantes/existente', compact('ciclo', 'estudiante', 'prox_remesa'));
+                return view('estudiantes/existente', compact('ciclo', 'periodo', 'estudiante', 'prox_remesa'));
             }
             else return view('estudiantes/operacion_invalida');
         }
@@ -379,11 +399,13 @@ class EstudianteController extends Controller
     public function formulario2Post(Request $request)
     {
         $id_ciclo = $request->session()->get('ciclo');
+        $periodo = $request->session()->get('periodo');
 
         $curp = $request->input('curp');
 
         $id_hex = Estudiante::where('curp', $curp)
         ->where('id_ciclo', $id_ciclo)
+        ->where('periodo', $periodo)
         ->value('id_hex');
 
         $validatedData = $request->validate([
@@ -392,8 +414,8 @@ class EstudianteController extends Controller
             'segundo_apellido' => ['required', 'max:20'],
             'curp' => [
                 'required',
-                Rule::unique('estudiantes')->where(function ($query) use ($id_ciclo) {
-                    return $query->where('id_ciclo', $id_ciclo);
+                Rule::unique('estudiantes')->where(function ($query) use ($id_ciclo, $periodo) {
+                    return $query->where('id_ciclo', $id_ciclo)->where('periodo', $periodo);
                 }),
                 'min:18',
                 'max:18'
@@ -442,13 +464,17 @@ class EstudianteController extends Controller
         {
             // $escuelas = Escuela::orderBy('escuela', 'ASC')->get();
             $escuelas = Escuela::where('cve_escuela', '!=', '999')->orderBy('escuela', 'ASC')->get();
-            $ciudades = Ciudad::all();
+            $ciudades = Ciudad::where('cve_ciudad', '<>', 3)->where('cve_ciudad', '<>', 7)->get();
             $turnos = Turno::all();
             $estudiante = $request->session()->get('estudiante');
             $f3OK = $request->session()->get('f3OK');    
             if (!$f3OK)  //Si es la primera vez que se carga el formulario 3
             {
-                $estudiante->ano_escolar = $this->getAnoSiguiente($estudiante->ano_escolar);
+                $periodo = $this->getPeriodo();
+                if ($periodo == 1)
+                {
+                    $estudiante->ano_escolar = $this->getAnoSiguiente($estudiante->ano_escolar);
+                }
                 $estudiante->promedio = 0.00;
             }
             $request->session()->put('f3OK', true);  //Ya se cargó el formulario 3 por primera vez
@@ -671,10 +697,21 @@ class EstudianteController extends Controller
         if (!$errorConstancia) $estudiante->img_constancia = "CONSTANCIA_OK." . $extConstancia;
 
         $rfc = $estudiante->rfc;
-        $time_int = time() * 999;
-        $time_str = strval($time_int);
-        $time_hex = dechex($time_str);
-        $estudiante->id_hex = $time_hex;
+        // $time_int = time() * 999;
+        // $time_str = strval($time_int);
+        // $time_hex = dechex($time_str);
+        // $estudiante->id_hex = $time_hex;
+        do {
+            // Generamos el ID aleatorio
+            $nuevoId = Str::random(12);
+            
+            // Buscamos si existe alguno que coincida ignorando mayúsculas/minúsculas
+            // LOWER() convierte el valor de la base de datos a minúsculas para comparar
+            $existe = Estudiante::whereRaw('LOWER(id_hex) = ?', [strtolower($nuevoId)])->exists();
+
+        } while ($existe); // Si existe, el bucle se repite y genera uno nuevo
+
+        $estudiante->id_hex = $nuevoId;
 
         $message = $message . "</ul>";
 
@@ -719,8 +756,10 @@ class EstudianteController extends Controller
         }
         
         $ciclo = $request->session()->get('ciclo');
+        $periodo = $request->session()->get('periodo');
 
         $estudianteCurp = Estudiante::where('id_ciclo', $ciclo)
+                              ->where('periodo', $periodo)
                               ->where('curp', $estudiante->curp)
                               ->first();
 
@@ -787,6 +826,7 @@ class EstudianteController extends Controller
     
             // Asignar los valores individualmente
             $estudianteBD->id_ciclo = $ciclo;
+            $estudianteBD->periodo = $periodo;
             $estudianteBD->nombre = $estudiante['nombre'];
             $estudianteBD->primer_apellido = $estudiante['primer_apellido'];
             $estudianteBD->segundo_apellido = $estudiante['segundo_apellido'];
@@ -983,8 +1023,9 @@ class EstudianteController extends Controller
     public function registro(Request $request, $id_hex)
     {
         $cicloR = $this->getCiclo();
+        $periodoR = $this->getPeriodo();
 
-        $estudiante = Estudiante::where('id_ciclo', $cicloR)->where('id_hex', $id_hex)->first();
+        $estudiante = Estudiante::where('id_ciclo', $cicloR)->where('periodo', $periodoR)->where('id_hex', $id_hex)->first();
         if (isset($estudiante))
         {
             $id_estudiante = $estudiante->id;
@@ -999,6 +1040,7 @@ class EstudianteController extends Controller
     {
         // Código a ejecutar cuando la página se carga por primera vez
         $this->cicloR[0] = $this->getCiclo();
+        $this->periodoR[0] = $this->getPeriodo();
     }
 
     public function index(Request $request)
@@ -1011,6 +1053,10 @@ class EstudianteController extends Controller
         $localidades = Localidad::orderBy('localidad')->get();
         $turnos = Turno::all();
         $ciclos = Ciclo::all();
+        $periodos = collect([
+            (object) ['id' => 1, 'descripcion' => 'Periodo 1'],
+            (object) ['id' => 2, 'descripcion' => 'Periodo 2'],
+        ]);
 
         $searchR = mb_strtoupper(isset($request->search) ? $request->search: "");
         $statusR = $request->selStatus;
@@ -1026,13 +1072,23 @@ class EstudianteController extends Controller
         $documentacionR = $request->selDocumentacion;
         $observacionesAdminR = $request->observacionesAdmin;
         $cicloR = isset($request->selCiclo) ? $request->selCiclo : $this->cicloR;
+        $periodoR = isset($request->selPeriodo) ? $request->selPeriodo : $this->periodoR;
 
-        $totEstudiantes = Estudiante::select('id_ciclo', \DB::raw('count(*) as total_estudiantes'))
+
+        // $totEstudiantes = Estudiante::select('id_ciclo', \DB::raw('count(*) as total_estudiantes'))
+        //     ->whereIn('id_ciclo', $cicloR)
+        //     ->groupBy('id_ciclo')
+        //     ->get()
+        //     ->pluck('total_estudiantes', 'id_ciclo')
+        //     ->toArray();
+            
+        $totEstudiantes = Estudiante::select('id_ciclo', 'periodo', \DB::raw('count(*) as total_estudiantes'))
             ->whereIn('id_ciclo', $cicloR)
-            ->groupBy('id_ciclo')
+            ->groupBy('id_ciclo', 'periodo')
             ->get()
-            ->pluck('total_estudiantes', 'id_ciclo')
-            ->toArray();
+            ->pluck('total_estudiantes', 'id_ciclo', 'periodo') // Intentaremos algo similar al original
+        ->toArray();
+
 
         $estudiantes = Estudiante::where(function($query) use($request){
             if (isset($request->selCiclo))
@@ -1044,6 +1100,17 @@ class EstudianteController extends Controller
             {
                 $cicloR = $this->cicloR;
                 $query->whereIn('id_ciclo', $cicloR);
+            }
+
+            if (isset($request->selPeriodo))
+            {
+                $periodoR = $request->selPeriodo;
+                $query->whereIn('periodo', $periodoR);
+            }
+            else
+            {
+                $periodoR = $this->periodoR;
+                $query->whereIn('periodo', $periodoR);
             }
             if (isset($request->selStatus))
             {
@@ -1204,7 +1271,7 @@ class EstudianteController extends Controller
             'estudiantes', 'totEstudiantes', 'searchR', 'status', 
             'statusR', 'escuelas', 'cve_escuelaR', 'ciudades',
             'cve_ciudadR', 'carreraR', 'localidades', 'cve_localidadOR', 
-            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R', 'documentacionR', 'ciclos', 'cicloR', 'observacionesAdminR'));
+            'turnos', 'cve_turnoR', 'ano_escolarR', 'promedioR', 'socioeconomicaR', 'orderBy1R', 'documentacionR', 'ciclos', 'cicloR', 'periodos', 'periodoR','observacionesAdminR'));
     }
 
     public function ver_constancia(Request $request)
@@ -1262,7 +1329,7 @@ class EstudianteController extends Controller
         if ($actaCargada) 
         {
             $extActa = strtoupper($request->img_acta_nac->getClientOriginalExtension());
-            $newFileName = "AC_" . $estudiante->rfc . '.' . $extActa;
+            $newFileName = "AC_" . $estudiante->curp . '.' . $extActa;
             Storage::putFileAs('actas', $request->img_acta_nac, $newFileName);
             $estudiante->img_acta_nac = $newFileName;
             $archivoActa = $newFileName;
@@ -1270,7 +1337,7 @@ class EstudianteController extends Controller
         if ($comprobanteCargado)
         {
             $extComprobante = strtoupper($request->img_comprobante_dom->getClientOriginalExtension());
-            $newFileName = "CO_" . $estudiante->rfc . '.' . $extComprobante;
+            $newFileName = "CO_" . $estudiante->curp . '.' . $extComprobante;
             Storage::putFileAs('comprobantes', $request->img_comprobante_dom, $newFileName);
             $estudiante->img_comprobante_dom = $newFileName;
             $archivoComprobante = $newFileName;
@@ -1278,7 +1345,7 @@ class EstudianteController extends Controller
         if ($identificacionCargada)
         {
             $extIdentificacion = strtoupper($request->img_identificacion->getClientOriginalExtension());
-            $newFileName = "ID_" . $estudiante->rfc . '.' . $extIdentificacion;
+            $newFileName = "ID_" . $estudiante->curp . '.' . $extIdentificacion;
             Storage::putFileAs('identificaciones', $request->img_identificacion, $newFileName);
             $estudiante->img_identificacion = $newFileName;
             $archivoIdentificacion = $newFileName;
@@ -1287,14 +1354,14 @@ class EstudianteController extends Controller
         if ($kardexCargado)
         {
             $extKardex = strtoupper($request->img_kardex->getClientOriginalExtension());
-            $newFileName = "KX_" . $estudiante->rfc . '.' . $extKardex;
+            $newFileName = "KX_" . $estudiante->curp . '.' . $extKardex;
             Storage::putFileAs('kardex', $request->img_kardex, $newFileName);
             $archivoKardex = $newFileName;
         }
         if ($constanciaCargada)
         {
             $extConstancia = strtoupper($request->img_constancia->getClientOriginalExtension());
-            $newFileName = "CN_" . $estudiante->rfc . '.' . $extConstancia;
+            $newFileName = "CN_" . $estudiante->curp . '.' . $extConstancia;
             Storage::putFileAs('constancias', $request->img_constancia, $newFileName);
             $archivoConstancia = $newFileName;
         }

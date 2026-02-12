@@ -76,40 +76,46 @@
 
 </head>
 <body>
-    <div class="container">
-        <div class="card-body">
-            <div class="row justify-content-center">
-                {{-- <div class="col-md-7">
-                    <div class="text-center">
-                        <h4 style="text-align: center;"><b> Hola <small>«</small> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} <small>»</small> </b> </h4>
-                    </div>
-                    <div class="text-justify">
-                        <p> <br> Aquí puedes descargar el archivo PDF que contiene tu <b> HOJA DE REGISTRO </b> para el Ciclo Escolar {{ $ciclo }}. </p>
-                        <div class="text-center"> 
-                          <a href="{{ route('estudiantes.registro_pdf') }}" class="next btn btn-rojo"><i class="fa-solid fa-download"></i> <b> PDF </b></a>
-                      </div>
-                    </div>
-                    <div class="text-justify">
-                      <p> <br> También puedes subir la <b> CONSTANCIA DE ESTUDIOS DEL PERIODO ACTUAL </b> para concluir el proceso de registro </b>. </p>
-                      <div class="text-center"> 
-                        <a href="{{ route('estudiantes.formulario_constancia', $estudiante->id_hex) }}" title="Completar registro" class="btn btn-verde btn-md"> <b> <i class="fa-solid fa-upload"></i> Subir CONSTANCIA </b> </a>
-                    </div>
+    <div class="container mt-5">
+      <div class="card border-0 shadow-lg" style="border-radius: 20px;">
+          <div class="card-body p-5 text-center">
+              
+              <div class="row justify-content-center align-items-center mb-5">
+                  <div class="col-6 col-md-4 mb-3 mb-md-0">
+                      <img src="{{ url('img/Logo_y_Escudo.jpg') }}" class="img-fluid" style="max-height: 80px;">
                   </div>
-                </div> --}}
-            </div>
-            <div class="row justify-content-center">
-                      </div> <br>
-                  <div class="row justify-content-center mb-4">
-                      <img src="{{ url('img/Logo_y_Escudo.jpg') }}" style="width: 35%">
-                      &nbsp; &nbsp; &nbsp; &nbsp;
-                      <img src="{{ url('img/logo_programa.jpg') }}" style="width: 20%">
+                  <div class="col-5 col-md-3">
+                      <img src="{{ url('img/logo_programa.jpg') }}" class="img-fluid" style="max-height: 80px;">
                   </div>
-                  <div class="row justify-content-center">
-                      <a class="btn btn-dorado" href="{{ route('estudiantes.forget') }}">Ir al Inicio</a>
+              </div>
+
+              <div class="py-4">
+                  <div class="display-1 text-danger mb-4">
+                      <i class="fas fa-calendar-times"></i>
                   </div>
-        </div>
-    </div>
-            
+                  <h2 class="font-weight-bold text-dark">Convocatoria Finalizada</h2>
+                  <div class="alert alert-danger d-inline-block px-4 py-3 mt-3" style="border-radius: 10px; border-left: 5px solid #690116ff;">
+                      <p class="mb-0" style="font-size: 1.1rem;">
+                          Lo sentimos, el periodo de registro para este programa ha <strong>concluido</strong>.
+                      </p>
+                  </div>
+                  <p class="text-muted mt-3">Te invitamos a estar pendiente de nuestras próximas fechas y redes sociales.</p>
+              </div>
+
+              <hr class="my-4" style="width: 20%; margin: auto;">
+
+              <div class="mt-2">
+                  <a class="btn btn-rojo btn-lg px-5 rounded-pill shadow-sm" 
+                    href="{{ route('estudiantes.forget') }}"
+                    style="font-weight: 600; transition: transform 0.2s;">
+                      <i class="fas fa-home mr-2"></i>Regresar al Inicio
+                  </a>
+              </div>
+
+          </div>
+      </div>
+  </div>
+    
     <script src="{{ asset('js/jquery.js') }}"></script>
 
     <!-- Bootstrap core JavaScript-->

@@ -1,267 +1,252 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>OTRO NIVEL :: Información de Registro </title>
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-<?php 
-    //require_once(realpath($_SERVER["DOCUMENT_ROOT"]) .'/include/funciones.php');
+    <title>OTRO NIVEL :: Información de Registro</title>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet'>
+    <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
 
-    use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
-    $path = getcwd() . '/img/logo_programa.jpg';
-    $type = pathinfo($path, PATHINFO_EXTENSION);
-    $data = file_get_contents($path);
-    $logo_aliviane = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
-    $path = getcwd() . '/img/Logo_y_Escudo.jpg';
-    $type = pathinfo($path, PATHINFO_EXTENSION);
-    $data = file_get_contents($path);
-    $logo_admon = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
-    $path = getcwd() . '/img/Pattern_Footer.jpg';
-    $type = pathinfo($path, PATHINFO_EXTENSION);
-    $data = file_get_contents($path);
-    $footer = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
-    $qrcode = base64_encode(QrCode::format('png')->size(300)->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
-
-    //$qrcode = base64_encode(\QrCode::format('png')->size(300)->generate(URL::to("/") . '/registro/' . $estudiante->id_hex));
-
-    
-?>
-
-<style>
-        @page {
-            margin: 1cm 1.5cm 1.5cm 1.5cm !important;                   /*arriba, derecha, abajo, izquierda*/
-        }
-
-th, td {
-        font-size: 12px;
-      font-family: 'Montserrat', serif;
-}
-
-div {
-    font-size: 13px;
-    font-family: 'Montserrat', serif;
-    padding-top: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin-bottom: 0px;
-}
-    
-p {
-      font-size: 20px;
-      font-family: 'Montserrat', serif;
-
-  }
-
-  h1{
-    font-size: 36px;
-    font-weight: bold;
-    padding-top: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-  }
-
-  h2{
-      font-size: 16px;
-      font-family: 'Montserrat', serif;
-  }
-
-  h3{
-      font-size: 14px;
-      font-family: 'Montserrat', serif;
-  }
-
-  footer {
-  position: fixed;
-  bottom: -3.5cm;
-  width: 70%;
-  left: 0;
-  right: 0;
-  padding: 10px 10px;
-  /* z-index: 1000; */
-}
-
-  .ha1
-  {
-      font-size: 20px;
-      font-family: 'Montserrat', serif;
-  }
-  .center {
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-     }
-
-
-    .ha1{
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    .celdagris {
-        text-align:left;
-        margin-left:0px;
-        background-color:#EEEEEE;
-    }
-    
-    #logo_aliviane {
-    padding: 0px;
-}
-</style>
-
-</head>
-<body style="font-family: 'Montserrat'; -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
-    <header>
-        <div style="text-align:center;">
-            <img src="{{ $logo_admon }}" style="width:55%">
-        </div>
-    </header>
-    <div id="logo_aliviane" style="text-align:center;">
-        <img src="{{ $logo_aliviane }}" style="width:45%;";>
-    </div>
-    <div style="text-align:center;" class="mb-0"> <h2> CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} </h2> </div>        
-  
-    <table class="center" width="100%" style="border-spacing: 0px 0px;margin:0">
-        <tr>
-            <td width="85%" style="text-align:center;">  <h1> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DATOS DE REGISTRO <h1> </td>
-            <td width="15%"> <img src="data:image/png;base64, {!! $qrcode !!}" style="width:95%;"> </td>
-        </tr>
-    </table> 
-    <div style="text-align:center;"> <h2> INFORMACIÓN PERSONAL </h2> </div>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="20%" style="text-align:right;"> Nombre: &nbsp;  </td> <td class="celdagris" width="80%"> &nbsp; <b> {{ $estudiante->nombre . ' ' . $estudiante->primer_apellido . ' ' . $estudiante->segundo_apellido }} </b> </td>
-        </tr>
-    </table>  
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="20%" style="text-align:right;"> CURP: &nbsp;  </td> <td class="celdagris" width="25%"> &nbsp; <b> {{ $estudiante->curp }} </b> </td>
-            <td width="20%" style="text-align:right;"> Fecha Nacimiento: &nbsp;  </td> <td class="celdagris" width="13%"> &nbsp; <b> {{ date('d', strtotime($estudiante->fecha_nac)) . '-' . date('m', strtotime($estudiante->fecha_nac)) . '-' . date('Y', strtotime($estudiante->fecha_nac)) }}  </b> </td>
-            <td width="10%" style="text-align:right;"> Celular: &nbsp;  </td> <td class="celdagris" width="13%"> &nbsp; <b> {{ $estudiante->celular }} </b> </td>
-     </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-          <td width="20%" style="text-align:right;"> E-mail: &nbsp;  </td> <td class="celdagris" width="80%"> &nbsp; <b> {{ $estudiante->email }} </b> </td>
-        </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="20%" style="text-align:right;"> Lugar Origen: &nbsp;  </td> <td class="celdagris" width="80%"> &nbsp; <b> {{ $estudiante->localidad_origen->localidad }} </b> </td> 
-            {{-- <td width="17%" style="text-align:right;"> Lugar Transporte: &nbsp; </td> <td class="celdagris" width="31%"> &nbsp; <b> {{ $estudiante->localidad_actual->localidad }} </b> </td> --}}
-        </tr>
-    </table>
-    <div style="text-align:center;"> <h2> INFORMACIÓN ESCOLAR </h2> </div>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="26%" style="text-align:right;"> Institución Educativa: &nbsp;  </td> <td class="celdagris" width="74%"> &nbsp; <b> {{ $estudiante->escuela->escuela }} </b> </td>
-        </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="26%" style="text-align:right;"> Carrera: &nbsp;  </td> <td class="celdagris" width="74%"> &nbsp; <b> {{ $estudiante->carrera }} </b> </td>
-        </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="26%" style="text-align:right;"> Ciudad Escuela: &nbsp;  </td> <td class="celdagris" width="24%"> &nbsp; <b> {{ $estudiante->ciudad->ciudad }} </b> </td>
-            <td width="26%" style="text-align:right;"> Turno Escuela: &nbsp;  </td> <td class="celdagris" width="24%"> &nbsp; <b> {{ $estudiante->turno->turno }} </b> </td>
-        </tr>
-    </table>
     <?php 
-        switch ($estudiante->ano_escolar)
-        {
-            case 1:
-                $ano_escolar = "PRIMERO";
-                break;
-            case 2:
-                $ano_escolar = "SEGUNDO";
-                break;
-            case 3:
-                $ano_escolar = "TERCERO";
-                break;
-            case 4:
-                $ano_escolar = "CUARTO";
-                break;
-            case 5:
-                $ano_escolar = "QUINTO";
-                break;
-            case 6:
-                $ano_escolar = "SEXTO";
-                break;      
+        use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+        // Carga de Imágenes a Base64
+        function imageToBase64($path) {
+            if (file_exists($path)) {
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+                $data = file_get_contents($path);
+                return 'data:image/' . $type . ';base64,' . base64_encode($data);
+            }
+            return null;
         }
 
+        $logo_aliviane = imageToBase64(getcwd() . '/img/logo_programa.jpg');
+        $logo_admon    = imageToBase64(getcwd() . '/img/Logo_y_Escudo.jpg');
+        $footer_pattern = imageToBase64(getcwd() . '/img/Pattern_Footer.jpg');
+
+        // Generación de QR (Formato PNG es más compatible con dompdf que SVG)
+        $qrcode = base64_encode(QrCode::format('svg')->size(300)->margin(1)->generate(URL::to("/") . '/registro' . '/' . $estudiante->id_hex));
+
+        // Lógica de Año Escolar
+        $anos = [1 => "PRIMERO", 2 => "SEGUNDO", 3 => "TERCERO", 4 => "CUARTO", 5 => "QUINTO", 6 => "SEXTO"];
+        $ano_escolar_txt = $anos[$estudiante->ano_escolar] ?? "N/A";
     ?>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="26%" style="text-align:right;"> Año Escolar: &nbsp;  </td> <td class="celdagris" width="24%"> &nbsp; <b> {{ $ano_escolar }} </b> </td>
-            <td width="26%" style="text-align:right;"> Promedio Actual: &nbsp;  </td> <td class="celdagris" width="24%"> &nbsp; <b> {{ $estudiante->promedio }} </b> </td>
-        </tr>
-    </table> 
-    <div style="text-align:center;"> <h2> INFORMACIÓN SOCIOECONÓMICA </h2> </div>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="50%" style="text-align:right;"> ¿De qué material es el techo de tu vivienda? &nbsp;  </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ $estudiante->socioeconomico->techo->techo }} </b> </td>
-        </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="50%" style="text-align:right;"> ¿Cuántos cuartos y baños disponen en tu vivienda? &nbsp;  </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ $estudiante->socioeconomico->cuartos_vivienda }} </b> </td>
-        </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="50%" style="text-align:right;"> ¿Cuántas personas viven normalmente en tu vivienda? &nbsp;  </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ $estudiante->socioeconomico->personas_vivienda }} </b> </td>
-        </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="50%" style="text-align:right;"> ¿Cuál es el monto mensual que entra a tu hogar? &nbsp;  </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ $estudiante->socioeconomico->monto_mensual->monto }} </b> </td>
-        </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="50%" style="text-align:right;"> ¿Recibes alguna beca para apoyar tus estudios? &nbsp;  </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ $estudiante->socioeconomico->beca_estudios == 1 ? 'SÍ' : 'NO' }} </b> </td>
-        </tr>
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="50%" style="text-align:right;"> ¿Recibes algún tipo de ayuda económica del gobierno?? &nbsp;  </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ $estudiante->socioeconomico->ayuda_gobierno == 1 ? 'SÍ' : 'NO' }} </b> </td>
-        </tr>
-    </table>
-    <?php  
-        if (isset($estudiante->socioeconomico->empleo) && strlen($estudiante->socioeconomico->empleo) > 0) {
-            $empleo = true;
-        } else {
-            $empleo = false;
+
+    <style>
+        @page { margin: 1cm 1.5cm; }
+        
+        body {
+            font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.2;
+            font-size: 11px;
         }
-    ?>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            @if ($empleo)
-            <td width="50%" style="text-align:right;">  ¿Tienes algún empleo? &nbsp; </td> <td class="celdagris" width="5%"> &nbsp; <b> {{ $empleo ? 'SÍ' : 'NO' }} </b> </td>
-            <td width="11%"style="text-align:right;">Especifica: &nbsp; </td> <td width="34%" class="celdagris"> &nbsp; <b> {{ $estudiante->socioeconomico->empleo }} </b> </td>
-            @else
-            <td width="50%" style="text-align:right;">  ¿Tienes algún empleo? &nbsp; </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ $empleo ? 'SÍ' : 'NO' }} </b> </td>
-            @endif
-        </tr>   
-    </table>
-    <table class="center" width="100%" style="border-spacing: 0px 2px;">
-        <tr style="padding-bottom:1px">
-            <td width="50%" style="text-align:right;"> ¿Cuánto gastas en transporte diario a la escuela? &nbsp;  </td> <td class="celdagris" width="50%"> &nbsp; <b> {{ '$ ' .  number_format($estudiante->socioeconomico->gasto_transporte) . '.00' }} </b> </td>
+
+        /* Cabecera */
+        .header-container { text-align: center; margin-bottom: 10px; }
+        .logo-admon { width: 55%; margin-bottom: 5px; }
+        .logo-programa { width: 38%; }
+
+        /* QR Flotante */
+        .qr-box {
+            position: absolute;
+            top: 135px;
+            right: 0;
+            text-align: center;
+            width: 90px;
+        }
+        .qr-box img { width: 100%; border: 1px solid #eee; }
+        .qr-box span { font-size: 8px; color: #666; display: block; margin-top: 2px; }
+
+        /* Títulos */
+        .main-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #000;
+            margin: 10px 0 2px 0;
+            text-transform: uppercase;
+        }
+        .ciclo-label {
+            text-align: center;
+            font-size: 13px;
+            color: #7b003a;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Secciones */
+        .section-bar {
+            background-color: #ffffff;    /* Fondo blanco */
+            color: #7b003a;               /* Texto en color guinda */
+            padding: 5px 10px;            /* Espaciado interno */
+            font-weight: bold;
+            font-size: 16px;              /* Un poco más grande para resaltar */
+            margin-top: 20px;             /* Espacio con la sección anterior */
+            margin-bottom: 5px;           /* Espacio con la tabla de abajo */
+            
+            /* Borde izquierdo grueso */
+            border-left: 6px solid #7b003a; 
+            
+            /* Opcional: un borde inferior muy tenue para delimitar la sección */
+            border-bottom: 1px solid #f0f0f0;
+            
+            clear: both;
+            text-transform: uppercase;    /* Hace que se vea más institucional */
+        }
+
+        /* Tablas de datos */
+        .table-data {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 4px;
+            margin-top: 5px;
+        }
+        .table-data td { padding: 5px 8px; }
+        .label {
+            background-color: #f0f0f0;
+            color: #555;
+            font-weight: bold;
+            text-align: right;
+            width: 25%;
+            border-radius: 3px 0 0 3px;
+        }
+        .value {
+            background-color: #fafafa;
+            border-bottom: 1px solid #eeeeee;
+            border-radius: 0 3px 3px 0;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0cm;
+            left: 0cm;
+            right: 0cm;
+            height: 2cm; /* Espacio total asignado al footer */
+            text-align: center; /* Centra el contenido (imagen y texto) */
+        }
+
+        .footer-pattern {
+            width: 10cm;      /* <--- ASIGNA AQUÍ EL ANCHO FIJO QUE DESEES */
+            height: auto;     /* <--- IMPORTANTE: 'auto' evita que la imagen se aplaste */
+            display: block;   /* Permite que el margen sea automático */
+            margin: 0 auto;   /* Centra la imagen horizontalmente */
+        }
+
+        .footer-text {
+            font-size: 9px;
+            color: #666;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <img src="{{ $logo_admon }}" class="logo-admon"><br>
+        <img src="{{ $logo_aliviane }}" class="logo-programa">
+    </div>
+
+    <div class="qr-box">
+        <img src="data:image/png;base64, {!! $qrcode !!}">
+        <span>ID: {{ $estudiante->id_hex }}</span>
+    </div>
+
+    <div class="main-title">Datos de Registro</div>
+    <div class="ciclo-label">CICLO ESCOLAR {{ $estudiante->ciclo->descripcion }} - PERIODO # {{ $estudiante->periodo }}</div>
+
+    <div class="section-bar">INFORMACIÓN PERSONAL</div>
+    <table class="table-data">
+        <tr>
+            <td class="label" style="width: 20%;">Nombre:</td>
+            <td class="value" colspan="3"><b>{{ $estudiante->nombre }} {{ $estudiante->primer_apellido }} {{ $estudiante->segundo_apellido }}</b></td>
+        </tr>
+
+        <tr>
+            <td class="label" style="width: 20%;">CURP:</td>
+            <td class="value" style="width: 50%;"><b>{{ $estudiante->curp }}</b></td>
+            
+            <td class="label" style="width: 15%;">Nacimiento:</td> 
+            <td class="value" style="width: 15%;"><b>{{ date('d-m-Y', strtotime($estudiante->fecha_nac)) }}</b></td>
+        </tr>
+
+        <tr>
+            <td class="label" style="width: 20%;">E-mail:</td>
+            <td class="value" style="width: 50%;"><b>{{ $estudiante->email }}</b></td>
+            
+            <td class="label" style="width: 15%;">Celular:</td>
+            <td class="value" style="width: 15%;"><b>{{ $estudiante->celular }}</b></td>
+        </tr>
+
+        <tr>
+            <td class="label" style="width: 20%;">Origen:</td>
+            <td class="value" colspan="3"><b>{{ $estudiante->localidad_origen->localidad }}</b></td>
         </tr>
     </table>
-    <footer style="text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom:2.5cm">
-        <div>
-            {{-- <img src="{{ $footer }}" style="width: 12.5cm;"> --}}
-        </div>
+
+    <div class="section-bar">INFORMACIÓN ESCOLAR</div>
+    <table class="table-data">
+        <tr>
+            <td class="label">Institución:</td>
+            <td class="value" colspan="3"><b>{{ $estudiante->escuela->escuela }}</b></td>
+        </tr>
+        <tr>
+            <td class="label">Carrera:</td>
+            <td class="value" colspan="3"><b>{{ $estudiante->carrera }}</b></td>
+        </tr>
+        <tr>
+            <td class="label">Año Escolar:</td>
+            <td class="value"><b>{{ $ano_escolar_txt }}</b></td>
+            <td class="label" style="width: 15%;">Promedio:</td>
+            <td class="value"><b>{{ $estudiante->promedio }}</b></td>
+        </tr>
+        <tr>
+            <td class="label">Ciudad:</td>
+            <td class="value"><b>{{ $estudiante->ciudad->ciudad }}</b></td>
+            <td class="label">Turno:</td>
+            <td class="value"><b>{{ $estudiante->turno->turno }}</b></td>
+        </tr>
+    </table>
+
+    <div class="section-bar">INFORMACIÓN SOCIOECONÓMICA</div>
+    <table class="table-data">
+        <tr>
+            <td class="label" style="width: 45%;">Material de techo:</td>
+            <td class="value"><b>{{ $estudiante->socioeconomico->techo->techo }}</b></td>
+        </tr>
+        <tr>
+            <td class="label">Personas en vivienda:</td>
+            <td class="value"><b>{{ $estudiante->socioeconomico->personas_vivienda }}</b></td>
+        </tr>
+        <tr>
+            <td class="label">Monto mensual hogar:</td>
+            <td class="value"><b>{{ $estudiante->socioeconomico->monto_mensual->monto }}</b></td>
+        </tr>
+        <tr>
+            <td class="label">¿Recibe otras becas / ayuda?</td>
+            <td class="value">
+                <b>Beca: {{ $estudiante->socioeconomico->beca_estudios == 1 ? 'SÍ' : 'NO' }}</b> / 
+                <b>Ayuda Gob: {{ $estudiante->socioeconomico->ayuda_gobierno == 1 ? 'SÍ' : 'NO' }}</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">¿Tiene empleo?</td>
+            <td class="value">
+                <b>{{ $estudiante->socioeconomico->empleo ? 'SÍ ('.$estudiante->socioeconomico->empleo.')' : 'NO' }}</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Gasto transporte diario:</td>
+            <td class="value"><b>$ {{ number_format($estudiante->socioeconomico->gasto_transporte, 2) }}</b></td>
+        </tr>
+    </table>
+
+    <footer>
+        @if($footer_pattern)
+            <img src="{{ $footer_pattern }}" class="footer-pattern">
+        @endif
+        <!-- <div class="footer-text">
+            Documento informativo generado el {{ date('d/m/Y H:i') }}
+        </div> -->
     </footer>
-    
 </body>
 </html>

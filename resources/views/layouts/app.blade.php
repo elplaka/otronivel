@@ -7,7 +7,6 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- <title>{{ config('app.name', 'Sistema de Expediente Digital') }}</title> --}}
     <title>Sistema OTRO NIVEL </title>
 
     <!-- Scripts -->
@@ -15,10 +14,11 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> -->
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
 </head>
 <body>
     <div id="app">
