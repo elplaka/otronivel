@@ -25,8 +25,15 @@ class PdfController extends Controller
     
             return response()->file($archivo);
         } else {
-            // Archivo no encontrado, devolver una respuesta de error o redireccionar a una página de error
-            abort(404, 'Archivo no encontrado');
-        }
+            // Si el archivo NO existe, devolvemos el PDF de aviso
+            $avisoPath = public_path('img/not_found.pdf');
+            
+            if (file_exists($avisoPath)) {
+                return response()->file($avisoPath);
+            }
+
+            // Último recurso si ni el aviso existe
+            abort(404);
+                }
     }
 }

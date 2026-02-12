@@ -51,7 +51,7 @@ Route::middleware('check.inicio.registro')->group(function () {
     Route::post('/estudiantes/formulario-documentos', [EstudianteController::class, 'formulario_documentosPost'])->name('estudiantes.formulario-documentos.post');   
 // });
 
-// Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
+Route::get('/estudiantes/forget', [EstudianteController::class, 'forget'])->name('estudiantes.forget');
 
 Route::get('/', function () {
     return redirect()->route('home');
