@@ -23,13 +23,19 @@ class PdfController extends Controller
         if (Storage::exists($rutaArchivo)) {
             $archivo = Storage::path($rutaArchivo);
     
-            return response()->file($archivo);
+            // return response()->file($archivo);
+
+            return response()->file($archivo, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$filename.'"'
+            ]);
         } else {
             // Si el archivo NO existe, devolvemos el PDF de aviso
             $avisoPath = public_path('img/not_found.pdf');
             
             if (file_exists($avisoPath)) {
                 return response()->file($avisoPath);
+                
             }
 
             // Último recurso si ni el aviso existe
