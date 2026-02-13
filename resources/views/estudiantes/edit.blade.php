@@ -208,7 +208,7 @@
                         </div>
                         <div class="col-12 col-md-6 text-right">
                             <button type="button" class="btn btn-rojo px-4 shadow-sm" data-dismiss="modal" style="border-radius: 8px; font-weight: 600;">
-                                <i class="fas fa-check-circle mr-2"></i>Entendido
+                                <i class="fas fa-circle-xmark mr-2"></i>Cerrar Visualizador
                             </button>
                         </div>
                     </div>
@@ -1210,8 +1210,129 @@
 //     });
 // });
 
+
+//NO FUNCIONA CALIDAD DEL PDF Y SÍ FUNCIONA EL ANCHO AL 100% SIEMPRE
+// document.addEventListener('DOMContentLoaded', function() {
+//     console.log("🚀 Script PDF cargado y listo.");
+
+//     const pdfjsLib = window['pdfjs-dist/build/pdf'];
+//     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+//     document.querySelectorAll('.pdf-link').forEach(button => {
+//         button.addEventListener('click', function() {
+//             const url = this.getAttribute('data-pdf-url');
+//             const container = document.getElementById('pdfContainer');
+//             const modal = $('#pdfPreviewModal');
+//             const loader = document.getElementById('pdf-loader');            
+            
+//             container.style.opacity = '0';
+//             if(loader) loader.style.display = 'block';
+            
+//             modal.modal('show');
+
+//             modal.one('shown.bs.modal', function() {
+//                 // DEBUG 1: Estado inmediato al abrir
+//                 console.group("🔍 DEBUG PDF: Inicio de renderizado");
+                
+//                 setTimeout(() => {
+//                     const modalBody = document.querySelector('.modal-body');
+                    
+//                     // Capturamos medidas de varios puntos para comparar
+//                     const debugMeasures = {
+//                         "Modal Body offsetWidth": modalBody ? modalBody.offsetWidth : "No encontrado",
+//                         "Container clientWidth": container.clientWidth,
+//                         "Window InnerWidth": window.innerWidth,
+//                         "Document Body clientWidth": document.body.clientWidth
+//                     };
+//                     console.table(debugMeasures);
+
+//                     const loadingTask = pdfjsLib.getDocument({
+//                         url: url,
+//                         verbosity: 0,
+//                         stopAtErrors: false
+//                     });
+
+//                     loadingTask.promise.then(pdf => {
+//                         container.innerHTML = ''; 
+
+//                         pdf.getPage(1).then(page => {
+//                             const viewportOriginal = page.getViewport({ scale: 1 });
+//                             const CALIDAD_BASE = 4.0;
+//                             const escalaFinal = (viewportOriginal.width < 350) ? CALIDAD_BASE * 1.5 : CALIDAD_BASE;
+
+//                             const renderPage = (pageNum, callback) => {
+//                                 pdf.getPage(pageNum).then(page => {
+//                                     const pageContainer = document.createElement('div');
+//                                     pageContainer.className = 'pdf-page mb-3';
+//                                     pageContainer.style.width = '100%'; 
+                                    
+//                                     const canvas = document.createElement('canvas');
+//                                     const context = canvas.getContext('2d', { alpha: false });
+
+//                                     // 🛠️ EL CORRECTOR DINÁMICO:
+//                                     // Si offsetWidth es muy pequeño (menor a 100px), algo anda mal con el modal.
+//                                     let containerWidth = modalBody ? modalBody.offsetWidth : container.clientWidth;
+                                    
+//                                     // DEBUG 2: Medida por página
+//                                     console.log(`📄 Página ${pageNum} - Ancho calculado: ${containerWidth}px`);
+
+//                                     const viewport = page.getViewport({ scale: escalaFinal });
+//                                     const escalaAjuste = containerWidth / viewport.width;
+                                    
+//                                     const viewportAjustado = page.getViewport({ 
+//                                         scale: escalaFinal * escalaAjuste 
+//                                     });
+
+//                                     // DEBUG 3: Escalas finales
+//                                     if(pageNum === 1) {
+//                                         console.log("🎯 Factor de escala ajuste:", escalaAjuste);
+//                                         console.log("🎯 Resolución final Canvas:", viewportAjustado.width, "x", viewportAjustado.height);
+//                                     }
+
+//                                     canvas.width = viewportAjustado.width;
+//                                     canvas.height = viewportAjustado.height;
+//                                     canvas.style.width = '100%'; 
+//                                     canvas.style.height = 'auto';
+//                                     canvas.style.display = 'block';
+
+//                                     pageContainer.appendChild(canvas);
+//                                     container.appendChild(pageContainer);
+
+//                                     page.render({
+//                                         canvasContext: context,
+//                                         viewport: viewportAjustado,
+//                                         intent: 'print'
+//                                     }).promise.then(() => {
+//                                         if(loader) loader.style.display = 'none';
+//                                         container.style.opacity = '1';
+//                                         if (callback) callback();
+//                                     }).catch(() => { if (callback) callback(); });
+//                                 });
+//                             };
+
+//                             let currentPage = 1;
+//                             const renderNextPage = () => {
+//                                 if (currentPage <= pdf.numPages) {
+//                                     renderPage(currentPage, renderNextPage);
+//                                     currentPage++;
+//                                 } else {
+//                                     console.groupEnd();
+//                                 }
+//                             };
+//                             renderNextPage();
+//                         });
+//                     }).catch(err => {
+//                         console.error("❌ Error:", err);
+//                         console.groupEnd();
+//                     });
+//                 }, 250); // Aumentado a 250ms para asegurar estabilidad en servidor
+//             });
+//         });
+//     });
+// });
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("🚀 Script PDF cargado y listo.");
+    console.log("🚀 Script PDF unificado cargado.");
 
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
@@ -1227,22 +1348,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if(loader) loader.style.display = 'block';
             modal.modal('show');
 
+            // Usamos .one para evitar duplicar eventos
             modal.one('shown.bs.modal', function() {
-                // DEBUG 1: Estado inmediato al abrir
-                console.group("🔍 DEBUG PDF: Inicio de renderizado");
                 
+                // 1. ESPERA DE ESTABILIDAD (Clave para el 100% de ancho)
                 setTimeout(() => {
                     const modalBody = document.querySelector('.modal-body');
                     
-                    // Capturamos medidas de varios puntos para comparar
-                    const debugMeasures = {
-                        "Modal Body offsetWidth": modalBody ? modalBody.offsetWidth : "No encontrado",
-                        "Container clientWidth": container.clientWidth,
-                        "Window InnerWidth": window.innerWidth,
-                        "Document Body clientWidth": document.body.clientWidth
-                    };
-                    console.table(debugMeasures);
-
+                    // Configuramos la tarea con verbosity 0 para evitar los warnings TT
                     const loadingTask = pdfjsLib.getDocument({
                         url: url,
                         verbosity: 0,
@@ -1254,7 +1367,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         pdf.getPage(1).then(page => {
                             const viewportOriginal = page.getViewport({ scale: 1 });
-                            const CALIDAD_BASE = 4.0;
+                            
+                            // 🔥 CONFIGURACIÓN DE ALTA CALIDAD
+                            const CALIDAD_BASE = 4.0; // 4.0 es excelente para lectura
                             const escalaFinal = (viewportOriginal.width < 350) ? CALIDAD_BASE * 1.5 : CALIDAD_BASE;
 
                             const renderPage = (pageNum, callback) => {
@@ -1264,41 +1379,47 @@ document.addEventListener('DOMContentLoaded', function() {
                                     pageContainer.style.width = '100%'; 
                                     
                                     const canvas = document.createElement('canvas');
-                                    const context = canvas.getContext('2d', { alpha: false });
-
-                                    // 🛠️ EL CORRECTOR DINÁMICO:
-                                    // Si offsetWidth es muy pequeño (menor a 100px), algo anda mal con el modal.
-                                    let containerWidth = modalBody ? modalBody.offsetWidth : container.clientWidth;
                                     
-                                    // DEBUG 2: Medida por página
-                                    console.log(`📄 Página ${pageNum} - Ancho calculado: ${containerWidth}px`);
+                                    // 🎯 CONTEXTO DE ALTA CALIDAD (De tu versión 2)
+                                    const context = canvas.getContext('2d', { 
+                                        alpha: false,
+                                        desynchronized: true // Mejora rendimiento en renders pesados
+                                    });
+
+                                    // 🎯 MEDICIÓN REAL DEL ANCHO (De tu versión 1)
+                                    // Usamos el ancho del modal-body para asegurar el 100%
+                                    let containerWidth = modalBody ? modalBody.clientWidth : container.clientWidth;
+                                    // Si hay padding en el modal, lo restamos para que no salga scroll
+                                    const padding = modalBody ? parseFloat(window.getComputedStyle(modalBody).paddingLeft) * 2 : 40;
+                                    const targetWidth = containerWidth - padding;
 
                                     const viewport = page.getViewport({ scale: escalaFinal });
-                                    const escalaAjuste = containerWidth / viewport.width;
+                                    const escalaAjuste = targetWidth / viewport.width;
                                     
                                     const viewportAjustado = page.getViewport({ 
                                         scale: escalaFinal * escalaAjuste 
                                     });
 
-                                    // DEBUG 3: Escalas finales
-                                    if(pageNum === 1) {
-                                        console.log("🎯 Factor de escala ajuste:", escalaAjuste);
-                                        console.log("🎯 Resolución final Canvas:", viewportAjustado.width, "x", viewportAjustado.height);
-                                    }
-
+                                    // Dimensiones del Canvas (Píxeles reales)
                                     canvas.width = viewportAjustado.width;
                                     canvas.height = viewportAjustado.height;
+                                    
+                                    // Dimensiones CSS (Lo que el usuario ve)
                                     canvas.style.width = '100%'; 
                                     canvas.style.height = 'auto';
                                     canvas.style.display = 'block';
+                                    canvas.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
 
                                     pageContainer.appendChild(canvas);
                                     container.appendChild(pageContainer);
 
+                                    // 🎯 RENDERIZADO PRO (Unión de ambas técnicas)
                                     page.render({
                                         canvasContext: context,
                                         viewport: viewportAjustado,
-                                        intent: 'print'
+                                        intent: 'print', // Optimiza para claridad de texto
+                                        enableWebGL: true,
+                                        background: 'white'
                                     }).promise.then(() => {
                                         if(loader) loader.style.display = 'none';
                                         container.style.opacity = '1';
@@ -1312,20 +1433,19 @@ document.addEventListener('DOMContentLoaded', function() {
                                 if (currentPage <= pdf.numPages) {
                                     renderPage(currentPage, renderNextPage);
                                     currentPage++;
-                                } else {
-                                    console.groupEnd();
                                 }
                             };
                             renderNextPage();
                         });
                     }).catch(err => {
                         console.error("❌ Error:", err);
-                        console.groupEnd();
+                        if(loader) loader.style.display = 'none';
                     });
-                }, 250); // Aumentado a 250ms para asegurar estabilidad en servidor
+                }, 200); // Retraso suficiente para que el CSS de Bootstrap asiente
             });
         });
     });
 });
+
 
 </script>
