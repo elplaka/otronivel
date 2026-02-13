@@ -92,7 +92,7 @@
 /* 3. Canvas - AHORA SÍ SE ADAPTAN */
 #pdfContainer canvas {
     max-width: 100% !important;     /* ✅ NUNCA se desborda */
-    width: auto !important;
+    width: 100% !important;
     height: auto !important;
     min-width: 0 !important;        /* ✅ Elimina el mínimo fijo */
     
@@ -1071,6 +1071,144 @@
 //     });
 // });
 
+//FUNCIONA CALIDAD DEL PDF PERO NO FUNCIONA EL ANCHO AL 100% SIEMPRE
+// document.addEventListener('DOMContentLoaded', function() {
+//     console.log("🚀 Script PDF cargado y listo.");
+
+//     const pdfjsLib = window['pdfjs-dist/build/pdf'];
+//     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+//     document.querySelectorAll('.pdf-link').forEach(button => {
+//         button.addEventListener('click', function() {
+//             const url = this.getAttribute('data-pdf-url');
+//             const container = document.getElementById('pdfContainer');
+//             const modal = $('#pdfPreviewModal');
+//             const loader = document.getElementById('pdf-loader');            
+            
+//             console.log("📂 Click detectado. Intentando cargar:", url);
+            
+//             container.style.opacity = '0';
+//             // 1. Mostrar spinner y abrir modal
+//             // container.innerHTML = '<div class="text-center text-white mt-5"><div class="spinner-border text-light"></div><p>Procesando HD...</p></div>';
+//             // container.style.transition = 'opacity 0.3s ease-in';
+//             if(loader) loader.style.display = 'block';
+//             modal.modal('show');
+
+//             if (!pdfjsLib) {
+//                 console.error("❌ Error: La librería PDF.js no se ha cargado correctamente.");
+//                 return;
+//             }
+
+//             // 2. Esperar a que el modal esté visible
+//             modal.on('shown.bs.modal', function onModalShown() {
+//                 modal.off('shown.bs.modal', onModalShown);
+                
+//                 // 3. Cargar el documento
+//                 pdfjsLib.getDocument(url).promise.then(pdf => {
+//                     console.log(`✅ PDF cargado. Total páginas: ${pdf.numPages}`);
+//                     container.innerHTML = ''; // Limpiar spinner
+
+//                     // 4. Obtener primera página para calcular escala
+//                     pdf.getPage(1).then(page => {
+//                         const viewportOriginal = page.getViewport({ scale: 1 });
+//                         const anchoOriginal = viewportOriginal.width;
+                        
+//                         console.log("📊 Dimensiones Base:", { ancho: anchoOriginal, alto: viewportOriginal.height });
+
+//                         // 🔥 SOLO CAMBIA ESTE VALOR PARA MEJORAR LA CALIDAD
+//                         // 2.0 = Normal, 3.0 = Buena, 4.0 = Excelente, 5.0 = Máxima
+//                         const CALIDAD_BASE = 4.0;
+                        
+//                         // Si el PDF es muy pequeño, aumentar calidad automáticamente
+//                         const escalaFinal = (anchoOriginal < 350) ? CALIDAD_BASE * 1.5 : CALIDAD_BASE;
+//                         console.log(`🔎 Calidad final: ${escalaFinal}x`);
+
+//                         // 5. Función de renderizado MEJORADA - CON AJUSTE PREVENTIVO
+//                         const renderPage = (pageNum, callback) => {
+//                             pdf.getPage(pageNum).then(page => {
+//                                 // Crear contenedor para evitar superposición
+//                                 const pageContainer = document.createElement('div');
+//                                 pageContainer.className = 'pdf-page mb-3';
+//                                 pageContainer.style.textAlign = 'center';
+//                                 pageContainer.style.width = '100%'; // Asegurar ancho completo
+                                
+//                                 const canvas = document.createElement('canvas');
+                                
+//                                 // 🎯 CONTEXTO OPTIMIZADO PARA CALIDAD
+//                                 const context = canvas.getContext('2d', {
+//                                     alpha: false,
+//                                     desynchronized: true
+//                                 });
+
+//                                 // 🎯 CALCULAR EL ANCHO DISPONIBLE ANTES DE RENDERIZAR
+//                                 const containerWidth = container.clientWidth;
+                                
+//                                 // 🎯 ESCALA BASE (tu calidad)
+//                                 const viewport = page.getViewport({ scale: escalaFinal });
+                                
+//                                 // 🎯 CALCULAR ESCALA PARA AJUSTAR AL CONTENEDOR
+//                                 const escalaAjuste = containerWidth / viewport.width;
+                                
+//                                 // 🎯 NUEVO VIEWPORT CON AMBAS ESCALAS (calidad + ajuste)
+//                                 const viewportAjustado = page.getViewport({ 
+//                                     scale: escalaFinal * escalaAjuste 
+//                                 });
+
+//                                 // 🎯 DIMENSIONES EXACTAS - YA AJUSTADAS AL CONTENEDOR
+//                                 canvas.width = viewportAjustado.width;
+//                                 canvas.height = viewportAjustado.height;
+
+//                                 // 🎯 CSS - Tamaño natural (coincide con el canvas)
+//                                 canvas.style.width = '100%';      // Ocupa todo el ancho
+//                                 canvas.style.height = 'auto';     // Altura proporcional
+//                                 canvas.style.maxWidth = '100%';
+                                
+//                                 // Resto de estilos...
+//                                 canvas.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+//                                 canvas.style.borderRadius = '4px';
+//                                 canvas.style.display = 'block';
+//                                 canvas.style.margin = '0 auto';
+
+//                                 pageContainer.appendChild(canvas);
+//                                 container.appendChild(pageContainer);
+
+//                                 console.log(`🖌️ Renderizando página ${pageNum}: ${canvas.width}x${canvas.height}px`);
+
+//                                 // 🎯 RENDERIZADO CON MÁXIMA CALIDAD
+//                                 page.render({
+//                                     canvasContext: context,
+//                                     viewport: viewportAjustado,  // Usamos el viewport ajustado
+//                                     intent: 'print',
+//                                     enableWebGL: true,
+//                                     renderInteractiveForms: false,
+//                                     background: 'white'
+//                                 }).promise.then(() => {
+//                                     if(loader) loader.style.display = 'none'; // Escondemos spinner
+//                                     container.style.opacity = '1';
+//                                     if (callback) callback();
+//                                 });
+//                             });
+//                         };
+
+//                         // 6. Renderizar una página a la vez (evita superposición)
+//                         let currentPage = 1;
+//                         const renderNextPage = () => {
+//                             if (currentPage <= pdf.numPages) {
+//                                 renderPage(currentPage, renderNextPage);
+//                                 currentPage++;
+//                             }
+//                         };
+                        
+//                         renderNextPage();
+//                     });
+//                 }).catch(err => {
+//                     console.error("❌ Error crítico al cargar PDF:", err);
+//                     container.innerHTML = `<div class="alert alert-danger m-3">Error: ${err.message}</div>`;
+//                 });
+//             });
+//         });
+//     });
+// });
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("🚀 Script PDF cargado y listo.");
@@ -1085,126 +1223,106 @@ document.addEventListener('DOMContentLoaded', function() {
             const modal = $('#pdfPreviewModal');
             const loader = document.getElementById('pdf-loader');            
             
-            console.log("📂 Click detectado. Intentando cargar:", url);
-            
             container.style.opacity = '0';
-            // 1. Mostrar spinner y abrir modal
-            // container.innerHTML = '<div class="text-center text-white mt-5"><div class="spinner-border text-light"></div><p>Procesando HD...</p></div>';
-            // container.style.transition = 'opacity 0.3s ease-in';
             if(loader) loader.style.display = 'block';
             modal.modal('show');
 
-            if (!pdfjsLib) {
-                console.error("❌ Error: La librería PDF.js no se ha cargado correctamente.");
-                return;
-            }
-
-            // 2. Esperar a que el modal esté visible
-            modal.on('shown.bs.modal', function onModalShown() {
-                modal.off('shown.bs.modal', onModalShown);
+            modal.one('shown.bs.modal', function() {
+                // DEBUG 1: Estado inmediato al abrir
+                console.group("🔍 DEBUG PDF: Inicio de renderizado");
                 
-                // 3. Cargar el documento
-                pdfjsLib.getDocument(url).promise.then(pdf => {
-                    console.log(`✅ PDF cargado. Total páginas: ${pdf.numPages}`);
-                    container.innerHTML = ''; // Limpiar spinner
+                setTimeout(() => {
+                    const modalBody = document.querySelector('.modal-body');
+                    
+                    // Capturamos medidas de varios puntos para comparar
+                    const debugMeasures = {
+                        "Modal Body offsetWidth": modalBody ? modalBody.offsetWidth : "No encontrado",
+                        "Container clientWidth": container.clientWidth,
+                        "Window InnerWidth": window.innerWidth,
+                        "Document Body clientWidth": document.body.clientWidth
+                    };
+                    console.table(debugMeasures);
 
-                    // 4. Obtener primera página para calcular escala
-                    pdf.getPage(1).then(page => {
-                        const viewportOriginal = page.getViewport({ scale: 1 });
-                        const anchoOriginal = viewportOriginal.width;
-                        
-                        console.log("📊 Dimensiones Base:", { ancho: anchoOriginal, alto: viewportOriginal.height });
-
-                        // 🔥 SOLO CAMBIA ESTE VALOR PARA MEJORAR LA CALIDAD
-                        // 2.0 = Normal, 3.0 = Buena, 4.0 = Excelente, 5.0 = Máxima
-                        const CALIDAD_BASE = 4.0;
-                        
-                        // Si el PDF es muy pequeño, aumentar calidad automáticamente
-                        const escalaFinal = (anchoOriginal < 350) ? CALIDAD_BASE * 1.5 : CALIDAD_BASE;
-                        console.log(`🔎 Calidad final: ${escalaFinal}x`);
-
-                        // 5. Función de renderizado MEJORADA - CON AJUSTE PREVENTIVO
-                        const renderPage = (pageNum, callback) => {
-                            pdf.getPage(pageNum).then(page => {
-                                // Crear contenedor para evitar superposición
-                                const pageContainer = document.createElement('div');
-                                pageContainer.className = 'pdf-page mb-3';
-                                pageContainer.style.textAlign = 'center';
-                                pageContainer.style.width = '100%'; // Asegurar ancho completo
-                                
-                                const canvas = document.createElement('canvas');
-                                
-                                // 🎯 CONTEXTO OPTIMIZADO PARA CALIDAD
-                                const context = canvas.getContext('2d', {
-                                    alpha: false,
-                                    desynchronized: true
-                                });
-
-                                // 🎯 CALCULAR EL ANCHO DISPONIBLE ANTES DE RENDERIZAR
-                                const containerWidth = container.clientWidth;
-                                
-                                // 🎯 ESCALA BASE (tu calidad)
-                                const viewport = page.getViewport({ scale: escalaFinal });
-                                
-                                // 🎯 CALCULAR ESCALA PARA AJUSTAR AL CONTENEDOR
-                                const escalaAjuste = containerWidth / viewport.width;
-                                
-                                // 🎯 NUEVO VIEWPORT CON AMBAS ESCALAS (calidad + ajuste)
-                                const viewportAjustado = page.getViewport({ 
-                                    scale: escalaFinal * escalaAjuste 
-                                });
-
-                                // 🎯 DIMENSIONES EXACTAS - YA AJUSTADAS AL CONTENEDOR
-                                canvas.width = viewportAjustado.width;
-                                canvas.height = viewportAjustado.height;
-
-                                // 🎯 CSS - Tamaño natural (coincide con el canvas)
-                                canvas.style.width = '100%';      // Ocupa todo el ancho
-                                canvas.style.height = 'auto';     // Altura proporcional
-                                canvas.style.maxWidth = '100%';
-                                
-                                // Resto de estilos...
-                                canvas.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-                                canvas.style.borderRadius = '4px';
-                                canvas.style.display = 'block';
-                                canvas.style.margin = '0 auto';
-
-                                pageContainer.appendChild(canvas);
-                                container.appendChild(pageContainer);
-
-                                console.log(`🖌️ Renderizando página ${pageNum}: ${canvas.width}x${canvas.height}px`);
-
-                                // 🎯 RENDERIZADO CON MÁXIMA CALIDAD
-                                page.render({
-                                    canvasContext: context,
-                                    viewport: viewportAjustado,  // Usamos el viewport ajustado
-                                    intent: 'print',
-                                    enableWebGL: true,
-                                    renderInteractiveForms: false,
-                                    background: 'white'
-                                }).promise.then(() => {
-                                    if(loader) loader.style.display = 'none'; // Escondemos spinner
-                                    container.style.opacity = '1';
-                                    if (callback) callback();
-                                });
-                            });
-                        };
-
-                        // 6. Renderizar una página a la vez (evita superposición)
-                        let currentPage = 1;
-                        const renderNextPage = () => {
-                            if (currentPage <= pdf.numPages) {
-                                renderPage(currentPage, renderNextPage);
-                                currentPage++;
-                            }
-                        };
-                        
-                        renderNextPage();
+                    const loadingTask = pdfjsLib.getDocument({
+                        url: url,
+                        verbosity: 0,
+                        stopAtErrors: false
                     });
-                }).catch(err => {
-                    console.error("❌ Error crítico al cargar PDF:", err);
-                    container.innerHTML = `<div class="alert alert-danger m-3">Error: ${err.message}</div>`;
-                });
+
+                    loadingTask.promise.then(pdf => {
+                        container.innerHTML = ''; 
+
+                        pdf.getPage(1).then(page => {
+                            const viewportOriginal = page.getViewport({ scale: 1 });
+                            const CALIDAD_BASE = 4.0;
+                            const escalaFinal = (viewportOriginal.width < 350) ? CALIDAD_BASE * 1.5 : CALIDAD_BASE;
+
+                            const renderPage = (pageNum, callback) => {
+                                pdf.getPage(pageNum).then(page => {
+                                    const pageContainer = document.createElement('div');
+                                    pageContainer.className = 'pdf-page mb-3';
+                                    pageContainer.style.width = '100%'; 
+                                    
+                                    const canvas = document.createElement('canvas');
+                                    const context = canvas.getContext('2d', { alpha: false });
+
+                                    // 🛠️ EL CORRECTOR DINÁMICO:
+                                    // Si offsetWidth es muy pequeño (menor a 100px), algo anda mal con el modal.
+                                    let containerWidth = modalBody ? modalBody.offsetWidth : container.clientWidth;
+                                    
+                                    // DEBUG 2: Medida por página
+                                    console.log(`📄 Página ${pageNum} - Ancho calculado: ${containerWidth}px`);
+
+                                    const viewport = page.getViewport({ scale: escalaFinal });
+                                    const escalaAjuste = containerWidth / viewport.width;
+                                    
+                                    const viewportAjustado = page.getViewport({ 
+                                        scale: escalaFinal * escalaAjuste 
+                                    });
+
+                                    // DEBUG 3: Escalas finales
+                                    if(pageNum === 1) {
+                                        console.log("🎯 Factor de escala ajuste:", escalaAjuste);
+                                        console.log("🎯 Resolución final Canvas:", viewportAjustado.width, "x", viewportAjustado.height);
+                                    }
+
+                                    canvas.width = viewportAjustado.width;
+                                    canvas.height = viewportAjustado.height;
+                                    canvas.style.width = '100%'; 
+                                    canvas.style.height = 'auto';
+                                    canvas.style.display = 'block';
+
+                                    pageContainer.appendChild(canvas);
+                                    container.appendChild(pageContainer);
+
+                                    page.render({
+                                        canvasContext: context,
+                                        viewport: viewportAjustado,
+                                        intent: 'print'
+                                    }).promise.then(() => {
+                                        if(loader) loader.style.display = 'none';
+                                        container.style.opacity = '1';
+                                        if (callback) callback();
+                                    }).catch(() => { if (callback) callback(); });
+                                });
+                            };
+
+                            let currentPage = 1;
+                            const renderNextPage = () => {
+                                if (currentPage <= pdf.numPages) {
+                                    renderPage(currentPage, renderNextPage);
+                                    currentPage++;
+                                } else {
+                                    console.groupEnd();
+                                }
+                            };
+                            renderNextPage();
+                        });
+                    }).catch(err => {
+                        console.error("❌ Error:", err);
+                        console.groupEnd();
+                    });
+                }, 250); // Aumentado a 250ms para asegurar estabilidad en servidor
             });
         });
     });
