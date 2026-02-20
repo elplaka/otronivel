@@ -280,11 +280,16 @@
                             <div class="status-box status-pending">
                                 <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
                                 <div>
-                                    <strong>DOCUMENTACIÓN CON OBSERVACIONES:</strong> Revisa los detalles abajo para corregir tu registro.
-                                    <!-- <br>
-                                    <a href="javascript:void(0);" onclick="openWhatsApp()" class="badge badge-primary p-2 mt-2">
-                                        <i class="fab fa-whatsapp"></i> Contactar Soporte
-                                    </a> -->
+                                    <strong>DOCUMENTACIÓN CON OBSERVACIONES:</strong> Comunícate con la persona responsable del sistema para más información.
+                                </div>
+                            </div>
+                        @endif
+
+                         @if ($estudiante->cve_status == 5)
+                            <div class="status-box status-warning">
+                                <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
+                                <div>
+                                    <strong>DOCUMENTACIÓN VALIDADA:</strong> Mantente al tanto de los próximos avisos.
                                 </div>
                             </div>
                         @endif

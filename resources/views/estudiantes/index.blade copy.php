@@ -706,12 +706,11 @@
             background: white;
             border: none;
             border-radius: 16px;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            padding: 0rem!important;
         }
 
         .student-card:hover {
@@ -945,27 +944,7 @@
                                 <div class="card-body card-body-tech">
                                     <form method="GET" action="{{ route('estudiantes.index') }}">
                                         <div class="row align-items-end mb-4">
-                                            <div class="col-md-2">
-                                                <div class="form-group-tech">
-                                                    <label class="label-tech"><i class="fas fa-book"></i> CICLO ESCOLAR</label>
-                                                    <select name="selCiclo[]" id="selCiclo" data-style="btn-select-tech" title="-- TODOS --" class="form-control selectpicker show-tick" autofocus multiple>
-                                                        @foreach ($ciclos as $ciclo)
-                                                            <option value="{{ $ciclo->id_ciclo }}" @if(in_array($ciclo->id_ciclo, $cicloR)) selected @endif>{{ $ciclo->descripcion }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group-tech">
-                                                    <label class="label-tech"><i class="fas fa-layer-group"></i> PERIODO</label>
-                                                    <select name="selPeriodo[]" id="selPeriodo" data-style="btn-select-tech" title="-- TODOS --" class="form-control selectpicker show-tick" autofocus multiple>
-                                                        @foreach ($periodos as $periodo)
-                                                            <option value="{{ $periodo->periodo }}" @if(in_array($periodo->periodo, $periodoR)) selected @endif>{{ $periodo->periodo }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <div class="form-group-tech">
                                                     <label class="label-tech"><i class="fas fa-user"></i> Nombre / Apellidos</label>
                                                     <input type="search" name="search" class="form-control input-tech" value="{{ old('search', $searchR) }}" placeholder="Buscar por nombre..." autofocus>
@@ -1003,7 +982,7 @@
                                                 </div>
                                             </div>
                                             @endif
-                                            <!-- <div class="col-md-3">
+                                            <div class="col-md-3">
                                                 <div class="form-group-tech">
                                                     <label class="label-tech"><i class="fas fa-file-invoice-dollar"></i> Info. Socioeconómica</label>
                                                     <select name="selSocioeconomica" id="selSocioeconomica" class="form-control selectpicker" data-style="btn-select-tech">
@@ -1012,8 +991,9 @@
                                                         <option value=2 {{ $socioeconomicaR == 2 ? 'selected' : '' }}>CON OBSERVACIONES</option>
                                                     </select>
                                                 </div>
-                                            </div> -->
+                                            </div>
                                         </div>
+
                                         <div class="row align-items-end mb-4">
                                             <div class="col-md-3">
                                                 <div class="form-group-tech">
@@ -1088,12 +1068,7 @@
                                             </div>
 
                                             <div class="col-lg-4 col-md-12 d-flex justify-content-lg-end justify-content-center align-items-center action-buttons-wrapper">
-                                                <button type="reset" class="btn btn-outline-secondary btn-tech-sm px-4 mr-3" 
-                                                style=" border-radius: 10px;
-                                                        padding: 0.6rem 1.2rem;
-                                                        font-size: 0.9rem;
-                                                        font-weight: 600;
-                                                        transition: all 0.3s ease;">
+                                                <button type="reset" class="btn btn-outline-secondary btn-tech-sm px-4 mr-3">
                                                     <i class="fas fa-eraser mr-1"></i> Limpiar
                                                 </button>
                                                 <button type="submit" class="btn btn-tech-gradient btn-tech-lg shadow-sm">
@@ -1111,7 +1086,7 @@
             @php
                 $j = 1;
             @endphp
-           <div class="student-container">
+           <!-- <div class="student-container">
             @foreach ($estudiantes as $estudiante)
                 @php
                     // Definición de colores de estatus
@@ -1153,59 +1128,36 @@
                     </div>
                     
                     <div class="card-body p-3" style="padding-left: 52px !important;"> 
-                        <div class="row align-items-center">                            
+                        <div class="row align-items-center">
+                            
                             <div class="col-md-4">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar-ui me-3" 
                                         style="
-                                            background: white; 
-                                            color: #2d3748; 
-                                            border: 2px solid {{ $estudiante->promedio >= 8 ? '#16a34a' : '#ae0000ff' }}; 
+                                            background: {{ $estudiante->promedio < 8 
+                                                ? 'linear-gradient(45deg, transparent 48%, #7b003a 48%, #7b003a 52%, transparent 52%) white' 
+                                                : 'white' }}; 
+                                            color: {{ $estudiante->promedio < 8 ? '#2d3748' : '#2d3748' }}; 
+                                            border: 2px solid {{ $estudiante->promedio >= 8 ? '#16a34a' : '#7b003a' }}; 
                                             min-width: 45px; 
                                             height: 45px;
-                                            position: relative;
-                                            border-radius: 20%;">
+                                            position: relative;                                           
+                                        ">
                                         <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                                            
-                                            <span style="
-                                                font-size: 1rem; 
-                                                font-weight: 800; 
-                                                line-height: 1;
-                                                text-decoration: {{ $estudiante->promedio < 8 ? 'line-through' : 'none' }};
-                                                text-decoration-color: #ae0000ff;
-                                               ">
-                                                {{ $estudiante->promedio }}
-                                            </span>
-
-                                            <span style="
-                                                font-size: 0.45rem; 
-                                                font-weight: 700; 
-                                                text-transform: uppercase;
-                                                text-decoration: {{ $estudiante->promedio < 8 ? 'line-through' : 'none' }};
-                                                text-decoration-color: #ae0000ff;
-                                                ">
-                                                Prom
-                                            </span>
-
+                                            <span style="font-size: 1rem; font-weight: 800; line-height: 1;">{{ $estudiante->promedio }}</span>
+                                            <span style="font-size: 0.45rem; font-weight: 700; text-transform: uppercase;">Prom</span>
                                         </div>
                                     </div>
                                     <div class="overflow-hidden ml-2">
-                                        <h6 class="user-name mb-0 text-uppercase text-truncate" style="font-size: 0.85rem; letter-spacing: -0.1px; font-weight:700">
+                                        <h6 class="user-name mb-0 text-uppercase text-truncate" style="font-size: 0.85rem; letter-spacing: 0.2px;">
                                             {{ $estudiante->primer_apellido }} {{ $estudiante->segundo_apellido }} {{ $estudiante->nombre }}
                                         </h6>
                                         <div class="d-flex align-items-center flex-wrap gap-2 mt-1">
-                                            <span class="small text-muted mr-4 d-flex align-items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-id-card-icon lucide-id-card mr-1">
-                                                <path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/>
-                                                <rect x="2" y="5" width="20" height="14" rx="2"/></svg> 
-                                                <b style="font-family: 'Nunito', sans-serif;">{{ $estudiante->id }}</b>
-                                            </span>
-                                            <span class="small text-muted d-none d-sm-inline mr-4">
-                                                <i class="fas fa-book me-1 mr-1" style="font-size: 0.7rem;"></i><b style="font-family: 'Nunito', sans-serif;"> {{ $estudiante->ciclo->descripcion }}</b>
+                                            <span class="small text-muted mr-2">
+                                                ID: <b style="letter-spacing: -1.25px; font-family: 'Nunito', sans-serif;">{{ $estudiante->id }}</b>
                                             </span>
                                             <span class="small text-muted d-none d-sm-inline">
-                                                <i class="fas fa-layer-group me-1 mr-1" style="font-size: 0.7rem;"></i><b style="font-family: 'Nunito', sans-serif;"> {{ $estudiante->periodo }}</b>
+                                                <i class="fas fa-fingerprint me-1 mr-1" style="font-size: 0.7rem;"></i>{{ $estudiante->curp }}
                                             </span>
                                         </div>
                                     </div>
@@ -1270,7 +1222,7 @@
                     </div>
                 </div>
             @endforeach                
-                <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 mb-1 px-3">
+                <div class="d-flex justify-content-between align-items-center flex-wrap mt-4 mb-5 px-3">
                     <div class="pagination-wrapper">
                         @if($estudiantes->hasPages())
                             {{ $estudiantes->links('pagination::bootstrap-5') }}
@@ -1287,6 +1239,92 @@
                         </button>
                     </form>
                 </div>
+            </div> -->
+            <div class="table-responsive shadow-sm rounded-lg border">
+                <table class="table table-hover align-middle mb-0 bg-white shadow-sm">
+                    <thead class="bg-light-tech text-dark">
+                        <tr>
+                            <th class="border-0 ps-3" style="width: 50px;">#</th>
+                            <th class="border-0">Estudiante / CURP</th>
+                            <th class="border-0 text-center">Promedio</th>
+                            <th class="border-0">Escuela / Carrera</th>
+                            <th class="border-0">Años</th>
+                            <th class="border-0 d-none d-lg-table-cell">Observaciones</th>
+                            <th class="border-0 text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($estudiantes as $estudiante)
+                            @php
+                                $statusColors = [1=>'#9944d9', 2=>'#0071bc', 3=>'#7dc3f5', 4=>'#ff0000', 5=>'#ffe26e', 6=>'#00ff00', 7=>'#ff00ff', 8=>'#00a135', 9=>'#ff8000'];
+                                $color = $statusColors[$estudiante->cve_status] ?? '#ddd';
+                                
+                                $aniosEscolares = \App\Models\Estudiante::where('curp', $estudiante->curp)->distinct()->pluck('ano_escolar');
+                                $badgeColors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+                            @endphp
+                            <tr>
+                                <td class="ps-3" style="border-left: 5px solid {{ $color }};">
+                                    <span class="fw-bold text-muted">{{ $j++ }}</span>
+                                </td>
+                                
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm-table me-3">
+                                            {{ substr($estudiante->nombre, 0, 1) }}{{ substr($estudiante->primer_apellido, 0, 1) }}
+                                        </div>
+                                        <div>
+                                            <div class="text-uppercase fw-bold mb-0" style="font-size: 0.85rem;">
+                                                {{ $estudiante->primer_apellido }} {{ $estudiante->segundo_apellido }} {{ $estudiante->nombre }}
+                                            </div>
+                                            <div class="text-muted small">
+                                                <i class="fas fa-fingerprint me-1"></i> {{ $estudiante->curp }} | <span class="badge bg-light text-dark border">ID: {{ $estudiante->id }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="promedio-circle {{ $estudiante->promedio < 8 ? 'bajo' : 'alto' }}">
+                                        {{ number_format($estudiante->promedio, 1) }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="fw-bold text-primary mb-0" style="font-size: 0.8rem;">
+                                        {{ $estudiante->escuela->escuela_abreviatura }} — {{ $estudiante->ano_escolar }}° Año
+                                    </div>
+                                    <div class="text-muted text-truncate" style="max-width: 200px; font-size: 0.75rem;" title="{{ $estudiante->carrera }}">
+                                        {{ $estudiante->carrera }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex gap-1 flex-wrap">
+                                        @foreach ($aniosEscolares as $index => $anio)
+                                            <span class="badge-pill-year bg-{{ $badgeColors[$index % count($badgeColors)] }}">
+                                                {{ $anio }}
+                                            </td>
+                                        @endforeach
+                                    </div>
+                                </td>
+
+                                <td class="d-none d-lg-table-cell">
+                                    <div class="text-muted small text-truncate" style="max-width: 150px;">
+                                        {{ $estudiante->observaciones_admin ?: '---' }}
+                                    </div>
+                                </td>
+
+                                <td class="text-end pe-3">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ route('estudiantes.edit', $estudiante->id) }}" class="btn-table-action edit"><i class="fas fa-pen"></i></a>
+                                        <a href="{{ route('estudiantes.registro_pdf_post', $estudiante->id_hex) }}" class="btn-table-action print"><i class="fas fa-file-pdf"></i></a>
+                                        <a href="{{ route('estudiantes.download-zip', $estudiante->id) }}" class="btn-table-action download"><i class="fas fa-archive"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

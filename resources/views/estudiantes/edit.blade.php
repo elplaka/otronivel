@@ -169,23 +169,30 @@
         <div class="modal-content border-0 shadow-lg">
             
             <div class="modal-header modal-header-tech d-flex align-items-center py-3">
-                <div class="d-flex align-items-center">
-                    <div class="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
-                        <i class="fas fa-file-pdf text-danger" style="font-size: 1.3rem;"></i>
-                    </div>
-                    <div>
-                        <h5 class="modal-title font-weight-bold mb-0" id="pdfPreviewModalLabel" style="color: #2c3e50;">
-                            Visualizador de Documentos
-                        </h5>
-                        <span class="status-badge">
-                            <i class="fas fa-shield-alt mr-1"></i> Entorno Seguro
-                        </span>
-                    </div>
-                </div>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="outline: none;">
-                    <span aria-hidden="true" style="font-size: 1.5rem;">&times;</span>
-                </button>
+    <div class="d-flex align-items-center">
+        <div class="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center mr-3" style="width: 42px; height: 42px; border: 1px solid #f1f2f6;">
+            <i class="fas fa-file-pdf text-danger" style="font-size: 1.4rem;"></i>
+        </div>
+        
+        <div>
+            <h5 class="modal-title font-weight-bold mb-0" id="pdfPreviewModalLabel" style="color: #1a2a3a; line-height: 1.2;">
+                Documento Digital
+            </h5>
+            <div class="d-flex align-items-center mt-1">
+                <span class="status-badge" style="font-size: 0.75rem; color: #27ae60; background: #ebfaf0; padding: 2px 8px; border-radius: 4px; font-weight: 600;">
+                    <i class="fas fa-lock mr-1"></i> Vista Protegida
+                </span>
+                <span class="text-muted ml-2 small" style="font-size: 0.7rem; letter-spacing: 0.5px; text-transform: uppercase;">
+                    • Expediente Digital de Estudiantes
+                </span>
             </div>
+        </div>
+    </div>
+
+    <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Cerrar" style="outline: none; opacity: 0.5; transition: 0.3s;">
+        <span aria-hidden="true" style="font-size: 1.8rem;">&times;</span>
+    </button>
+</div>
             
             <div class="modal-body p-0 modern-pdf-body">
                 <div id="pdf-loader" class="text-center text-white mt-5 loading-placeholder">
@@ -464,11 +471,9 @@
             transform: translateY(0);
         }
     </style>
-
-            <div class="container py-5">
+            <div class="container py-0">
                 <div class="row justify-content-center">
                     <div class="col-md-10 col-lg-9">
-                        
                         <div class="d-flex justify-content-start mb-4">
                             <a href="{{ route('estudiantes.index') }}" class="btn-back">
                                 <i class="fas fa-arrow-left mr-2"></i> {{ __('Regresar') }}
@@ -739,9 +744,9 @@
                                                 $documentos = [
                                                     ['label' => 'CURP', 'field' => 'img_curp', 'hidden' => 'curp_hidden', 'msg' => 'Curp'],
                                                     ['label' => 'Acta de Nacimiento', 'field' => 'img_acta_nac', 'hidden' => 'acta_hidden', 'msg' => 'Acta'],
-                                                    ['label' => 'Comprobante Domicilio', 'field' => 'img_comprobante_dom', 'hidden' => 'comprobante_hidden', 'msg' => 'Comprobante'],
-                                                    ['label' => 'Identificación Oficial', 'field' => 'img_identificacion', 'hidden' => 'identificacion_hidden', 'msg' => 'Identificacion'],
-                                                    ['label' => 'Kardex Académico', 'field' => 'img_kardex', 'hidden' => 'kardex_hidden', 'msg' => 'Kardex'],
+                                                    ['label' => 'Comprobante de Domicilio', 'field' => 'img_comprobante_dom', 'hidden' => 'comprobante_hidden', 'msg' => 'Comprobante'],
+                                                    ['label' => 'Identificación', 'field' => 'img_identificacion', 'hidden' => 'identificacion_hidden', 'msg' => 'Identificacion'],
+                                                    ['label' => 'Kardex', 'field' => 'img_kardex', 'hidden' => 'kardex_hidden', 'msg' => 'Kardex'],
                                                     ['label' => 'Constancia de Estudios', 'field' => 'img_constancia', 'hidden' => 'constancia_hidden', 'msg' => 'Constancia']
                                                 ];
                                             @endphp
@@ -759,6 +764,7 @@
                                                                 <a href="javascript:void(0);" 
                                                                 class="btn btn-sm btn-outline-guinda pdf-link py-1" 
                                                                 data-pdf-url="{{ route('pdf.show', ['filename' => $estudiante->{$doc['field']}]) }}"
+                                                                data-title="{{ $doc['label'] }}"
                                                                 title="Visualizar documento actual">
                                                                     <i class="fas fa-eye"></i> 
                                                                     <span class="d-none d-sm-inline">Ver PDF</span> 
@@ -982,94 +988,6 @@
             });
         }
     });
-
-//     document.addEventListener('DOMContentLoaded', function() {
-//     console.log("🚀 Script PDF cargado y listo.");
-
-//     const pdfjsLib = window['pdfjs-dist/build/pdf'];
-//     // Asegúrate de que esta URL sea accesible, si no, fallará todo el motor
-//     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-
-//     document.querySelectorAll('.pdf-link').forEach(button => {
-//         button.addEventListener('click', function() {
-//             const url = this.getAttribute('data-pdf-url');
-//             const container = document.getElementById('pdfContainer');
-            
-//             console.log("📂 Click detectado. Intentando cargar:", url);
-            
-//             // 1. Mostrar spinner inicial y abrir modal
-//             container.innerHTML = '<div class="text-center text-white mt-5"><div class="spinner-border text-light"></div><p>Procesando HD...</p></div>';
-//             $('#pdfPreviewModal').modal('show'); 
-
-//             if (!pdfjsLib) {
-//                 console.error("❌ Error: La librería PDF.js no se ha cargado correctamente.");
-//                 return;
-//             }
-
-//             // 2. Cargar el documento
-//             pdfjsLib.getDocument(url).promise.then(pdf => {
-//                 console.log(`✅ PDF cargado. Total páginas: ${pdf.numPages}`);
-//                 container.innerHTML = ''; // Limpiamos el spinner
-
-//                 // 3. Obtener la primera página para calcular la escala global
-//                 pdf.getPage(1).then(page => {
-//                     const viewportOriginal = page.getViewport({ scale: 1 });
-//                     const anchoOriginal = viewportOriginal.width;
-                    
-//                     console.log("📊 Dimensiones Base:", { ancho: anchoOriginal, alto: viewportOriginal.height });
-
-//                     let escalaFinal = (anchoOriginal < 350) ? 4.5 : 2.0;
-//                     console.log(`🔎 Escala elegida: ${escalaFinal} (${anchoOriginal < 350 ? 'Chico' : 'Estándar'})`);
-
-//                     // 4. Función de renderizado corregida
-//                     // Pasamos las variables necesarias como argumentos o las tomamos del cierre (closure)
-//                     const renderPage = (pageNum) => {
-//                         pdf.getPage(pageNum).then(page => {
-//                             const canvas = document.createElement('canvas');
-//                             const context = canvas.getContext('2d');
-
-//                             const dpr = window.devicePixelRatio || 1;
-//                             const nitidezExtra = 2.0; 
-//                             const ratio = dpr * nitidezExtra;
-
-//                             const viewport = page.getViewport({ scale: escalaFinal });
-
-//                             // Ajuste de resolución física
-//                             canvas.width = Math.floor(viewport.width * ratio);
-//                             canvas.height = Math.floor(viewport.height * ratio);
-
-//                             // Ajuste visual CSS
-//                             canvas.style.width = viewport.width + "px";
-//                             canvas.style.height = viewport.height + "px";
-
-//                             context.setTransform(ratio, 0, 0, ratio, 0, 0);
-//                             container.appendChild(canvas);
-
-//                             console.log(`🖌️ Renderizando página ${pageNum} a resolución: ${canvas.width}x${canvas.height}px`);
-
-//                             page.render({
-//                                 canvasContext: context,
-//                                 viewport: viewport,
-//                                 intent: 'print',
-//                                 disableCanvasInterface: false
-//                             }).promise.then(() => {
-//                                 console.log(`✨ Página ${pageNum} lista.`);
-//                             });
-//                         });
-//                     };
-
-//                     // 5. Bucle de renderizado
-//                     for (let i = 1; i <= pdf.numPages; i++) {
-//                         renderPage(i);
-//                     }
-//                 });
-//             }).catch(err => {
-//                 console.error("❌ Error crítico al cargar PDF:", err);
-//                 container.innerHTML = `<div class="alert alert-danger m-3">Error: ${err.message}</div>`;
-//             });
-//         });
-//     });
-// });
 
 //FUNCIONA CALIDAD DEL PDF PERO NO FUNCIONA EL ANCHO AL 100% SIEMPRE
 // document.addEventListener('DOMContentLoaded', function() {
@@ -1342,11 +1260,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const url = this.getAttribute('data-pdf-url');
             const container = document.getElementById('pdfContainer');
             const modal = $('#pdfPreviewModal');
-            const loader = document.getElementById('pdf-loader');            
+            const loader = document.getElementById('pdf-loader');
+            const tituloDocumento = this.getAttribute('data-title');           
             
             container.style.opacity = '0';
             if(loader) loader.style.display = 'block';
             modal.modal('show');
+            document.querySelector('#pdfPreviewModal .modal-title').textContent = `Documento Digital: ${tituloDocumento}`;
 
             // Usamos .one para evitar duplicar eventos
             modal.one('shown.bs.modal', function() {

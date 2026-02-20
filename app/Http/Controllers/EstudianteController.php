@@ -1053,10 +1053,14 @@ class EstudianteController extends Controller
         $localidades = Localidad::orderBy('localidad')->get();
         $turnos = Turno::all();
         $ciclos = Ciclo::all();
-        $periodos = collect([
-            (object) ['id' => 1, 'descripcion' => 'Periodo 1'],
-            (object) ['id' => 2, 'descripcion' => 'Periodo 2'],
-        ]);
+        // $periodos = collect([
+        //     (object) ['id' => 1, 'descripcion' => 'Periodo 1'],
+        //     (object) ['id' => 2, 'descripcion' => 'Periodo 2'],
+        // ]);
+
+        $periodos = Estudiante::select('periodo')->where('id_ciclo', isset($request->selCiclo) ? $request->selCiclo : $this->cicloR)
+        ->distinct()
+        ->get();
 
         $searchR = mb_strtoupper(isset($request->search) ? $request->search: "");
         $statusR = $request->selStatus;
@@ -1084,6 +1088,7 @@ class EstudianteController extends Controller
             
         $totEstudiantes = Estudiante::select('id_ciclo', 'periodo', \DB::raw('count(*) as total_estudiantes'))
             ->whereIn('id_ciclo', $cicloR)
+            ->whereIn('periodo', $periodoR)
             ->groupBy('id_ciclo', 'periodo')
             ->get()
             ->pluck('total_estudiantes', 'id_ciclo', 'periodo') // Intentaremos algo similar al original
@@ -1265,7 +1270,7 @@ class EstudianteController extends Controller
             }
         }
 
-        $estudiantes = $estudiantes->paginate(25)->withQueryString();
+        $estudiantes = $estudiantes->paginate(10)->withQueryString();
 
         return view('estudiantes.index', compact(
             'estudiantes', 'totEstudiantes', 'searchR', 'status', 
