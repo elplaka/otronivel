@@ -17,476 +17,506 @@
     
         <!-- Custom styles for this template-->
         <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">  
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+       
         <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-        <script>
-        // IMPORTANTE: usa la MISMA versión para el worker
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js";
-        </script>
-
-
-
-
-
-        <script language="JavaScript" type="text/javascript">
-            $(document).ready(function(){
-                $(function () {
-                    $('[data-toggle="tooltip"]').tooltip({
-                    trigger : 'click'
-                    })
-                    $('[data-toggle="tooltip"]').mouseleave(function(){
-                    $(this).tooltip('hide');
-                    });    
-                });
-            });
-        </script>
-
-    <script>
-    //     $(document).ready( function() {
-    //         $('#sel_archivo_curp').click(function(){
-    //         $('#img_curp').trigger('click');
-    //         $('#img_curp').change(function() {
-    //             var filename = $('#img_curp').val();
-    //             if (filename.substring(3,11) == 'fakepath')
-    //             {
-    //                 filename = filename.substring(12);
-    //             } // Remove c:\fake at beginning from localhost chrome
-    //             else
-    //             {
-    //                 filename = "Sin archivo seleccionado";
-    //                 noQuieroArchivo();
-    //             }
-    //             $('#archivo_curp').html(filename);
-    //             });
-    //         });
-    // });
-    // Utilidad: muestra u oculta el ojo según haya archivo
-    function actualizarIconoVistaPrevia(nombreArchivo) {
-        var pdfIcon = document.getElementById('iconPdf');
-        var linkOjo = document.getElementById('vistaPreviaLink');
-        if (!linkOjo) return;
-        if (!pdfIcon) return;
-
-        const texto = (nombreArchivo || '').trim();
-        const sinArchivo = (texto === '' || texto.toLowerCase().includes('sin archivo'));
-
-        if (sinArchivo) {
-        linkOjo.classList.add('d-none');
-        pdfIcon.classList.add('d-none');
-        } else {
-        linkOjo.classList.remove('d-none');
-        pdfIcon.classList.remove('d-none');
-        }
-    }
-
-    function reiniciarFormularioArchivo() {
-        // 1. Limpiamos el input file físicamente
-        $('#img_curp').val(''); 
-        
-        // 2. Restauramos el texto por defecto
-        const defaultText = 'Sin archivo seleccionado';
-        $('#archivo_curp').text(defaultText);
-        
-        // 3. Actualizamos la visibilidad de los iconos
-        actualizarIconoVistaPrevia(defaultText);
-    }
-
-    $(document).ready(function () {
-        // Abre el selector de archivos al hacer click en el botón proxy
-        $('#sel_archivo_curp').on('click', function () {
-            $('#img_curp').trigger('click');
-        });
-
-        // Maneja el cambio de archivo UNA SOLA VEZ
-        $('#img_curp').on('change', function (e) {
-            let filename = 'Sin archivo seleccionado';
-
-            // Si hay archivo seleccionado, toma el nombre real
-            if (e.target.files && e.target.files.length > 0) {
-                filename = e.target.files[0].name;
-            } else {
-                // Si no hay archivo, ejecuta tu lógica de descarte
-                noQuieroArchivo && typeof noQuieroArchivo === 'function' && noQuieroArchivo();
+            <style>
+            /* Estilos base (Computadora) */
+            .my-custom-popup-class {
+                border-radius: 20px !important;
             }
-
-            // Asigna el nombre al span
-            $('#archivo_curp').text(filename);
-
-            // Muestra/oculta el ojo según corresponda
-            actualizarIconoVistaPrevia(filename);
-        });
-
-        $(window).on('pageshow', function(event) {
-            // Forzamos el reinicio al cargar la página o volver atrás
-            // if ($('.swal2-container').length > 0 || {{ $errors->any() ? 'true' : 'false' }}) {
-                reiniciarFormularioArchivo(); 
-            // }
-        });
-
-        // Estado inicial (por si viene desde Blade con valor o vacío)
-        const inicial = ($('#archivo_curp').text() || '').trim();
-        actualizarIconoVistaPrevia(inicial);
-    });
-    </script>
-
-    <script language="JavaScript" type="text/javascript">
-        // A function that disables button
-        function disableButton() {
-            document.getElementById('btnSiguiente').setAttribute("disabled","disabled");
-            document.getElementById('btnSiguiente').innerText = "Cargando...";
-        }
-
-        $(document).ready(function(){
-            var $myForm = $("#my_form");
-            $myForm.submit(function(){
-                disableButton();
-                $myForm.submit(function(){
-                    return false;
-                });
-            });
-        });
-    </script>
-
-<style>
-    html, body {
-    /* Permitir scroll natural */
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: auto !important; /* Permite que el contenido dicte el largo */
-    min-height: 100%;
-    -webkit-overflow-scrolling: touch; /* Hace que el scroll en iPhone sea suave */
-}
-
-/* Ajuste para que el contenedor no se pegue a los bordes en móvil */
-.container {
-    padding-bottom: 80px !important; /* Espacio extra al final para que el botón de WhatsApp no se corte */
-}
-
-/* Si usas SweetAlert, esto evita que la página "salte" al abrirlo */
-body.swal2-shown {
-    overflow-y: auto !important;
-    padding-right: 0 !important;
-}
-    .tooltip-inner {
-    max-width: 350px;
-    /* If max-width does not work, try using width instead */
-    width: 350px; 
-    max-height: 120px;
-    background-color: #2f4fff;
-    text-align: left;
-}
-
-.modal-dialog.modal-fullscreen-height {
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-fullscreen-height .modal-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-fullscreen-height .modal-body {
-    flex-grow: 1;
-    overflow-y: auto; /* Permite el scroll si el contenido es muy largo */
-}
-
-.upload-zone {
-        border: 2px dashed #e0e0e0;
-        border-radius: 25px;
-        background-color: #ffffff;
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        cursor: pointer;
-    }
-
-    .upload-zone:hover {
-        border-color: #7b003a;
-        background-color: #fdfafb;
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
-    }
-
-    /* Animación de Pulso para el Icono */
-    .upload-icon-wrapper {
-        position: relative;
-        display: inline-block;
-    }
-
-    .pulse-animation {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80px;
-        height: 80px;
-        background-color: rgba(123, 0, 58, 0.05);
-        border-radius: 50%;
-        z-index: 1;
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
-        100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
-    }
-
-    /* Botón Siguiente (Para el final del form) */
-    .btn-verde-modern {
-        background-color: #28a745;
-        color: white;
-        border-radius: 12px;
-        padding: 10px 30px;
-        font-weight: bold;
-        transition: all 0.3s;
-    }
     
-    .btn-verde-modern:hover {
-        background-color: #218838;
-        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-    }
-
-    .hover-elevate:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
-        background-color: #5f5f5fff !important;
-        color: white !important;
-        border-color: #5f5f5fff !important;
-    }
-
-    .icon-acento {
-        color: #7b003a !important;
-    }
-
-    #sel_archivo_curp {
-        transition: all 0.3s ease; /* Suaviza los cambios de color */
-        cursor: pointer;
-    }
-
-    /* Efecto al pasar el mouse (Hover) */
-    #sel_archivo_curp:hover {
-        background-color: #ad0051ff !important; /* Un tono más claro del guinda */
-        transform: translateY(-2px); /* Un pequeño salto hacia arriba */
-        shadow: 0 4px 15px rgba(0,0,0,0.3); /* Sombra más profunda */
-    }
-
-    /* Efecto al hacer click (Active) */
-    #sel_archivo_curp:active {
-        background-color: #5a002a !important; /* Un tono más oscuro */
-        transform: translateY(0); /* Regresa a su posición original */
-        box-shadow: inset 0 3px 5px rgba(0,0,0,0.2); /* Sombra interna para efecto de "hundido" */
-    }
-</style>
-
-<style>
-    .btn-dorado {
-      background-color: #706f6f;
-      color: white;
-    }
-  
-    .btn-dorado:hover {
-      background-color: #575757; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-      color: white;
-    }
-
-    .btn-verde {
-      background-color: #00656c;
-      color: white;
-    }
-  
-    .btn-verde:hover {
-      background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-      color: white;
-    }
-
-    .btn-verde:active {
-        background-color: #356b5d; /* Cambia el color aquí al deseado cuando el botón está activado (clic) */
-        color: white;
-    }
-
-    .btn-guinda {
-      background-color: #7b003a;
-      color: white;
-    }
-  
-    .btn-guinda:hover {
-      background-color: #932f4a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-      color: white;
-    }
-
-    .btn-rojo {
-      background-color: #932f4a;
-      color: white;
-    }
-  
-    .btn-rojo:hover {
-      background-color: #5c2134; /* Cambia el color aquí al deseado cuando el mouse esté encima */
-      color: white;
-    }
-
-    .text-rojo {
-            color: #932f4a;
-        }
-
-        .text-rojo:hover {
-            color: #5c2134;
-        }
-
-        /* --- CONFIGURACIÓN DEL SCROLL EN MÓVIL --- */
-        .scroll-container-pdf {
-            height: 70vh; /* Altura fija para forzar el scroll */
-            overflow-y: auto !important;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
-            position: relative;
-        }
-
-        .pdf-wrapper {
-            padding: 1rem;
-            min-height: calc(70vh + 2px); /* Obliga al scroll a existir */
-            display: flex;
-            justify-content: center;
-        }
-
-        #pdfCanvas {
-            max-width: 100% !important;
-            height: auto !important;
-            /* IMPORTANTE: pointer-events permite que el scroll funcione 
-            al arrastrar el dedo sobre el canvas en celulares */
-            pointer-events: none; 
-        }
-
-        /* --- ESTILOS DE BOTONES PERSONALIZADOS --- */
-        .custom-btn-confirm {
-            background-color: #00656c; /* O tu color verde */
-            color: white;
-            border-radius: 20px;
-            font-weight: 600;
-            min-width: 130px;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .custom-btn-confirm:hover {
-            background-color: #218838;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .custom-btn-confirm:active {
-            transform: translateY(0);
-            filter: brightness(0.8);
-        }
-
-        .custom-btn-discard {
-            border-radius: 20px;
-            font-weight: 600;
-            min-width: 110px;
-            transition: all 0.3s ease;
-        }
-
-        /* --- AJUSTES PARA PANTALLAS PEQUEÑAS --- */
-        @media (max-width: 576px) {
-            .modal-header {
-                text-align: center;
+            .my-custom-button-class {
+                border-radius: 50px !important;
+                padding: 10px 24px !important;
             }
-            
-            .scroll-container-pdf {
-                height: 60vh; /* Un poco menos de altura en móviles para dejar ver el header */
+    
+            /* --- AJUSTES PARA CELULAR --- */
+            @media (max-width: 576px) {
+                /* Reduce el tamaño del texto de la ventana completa */
+                .my-custom-popup-class {
+                    font-size: 0.85rem !important; /* Texto base más pequeño */
+                    width: 95% !important;        /* Opcional: que no pegue a las orillas */
+                    border-radius: 15px !important;
+                }
+    
+                /* Reduce específicamente el título */
+                .my-custom-popup-class .swal2-title {
+                    font-size: 1.25rem !important;
+                }
+    
+                /* Reduce el texto del botón */
+                .my-custom-button-class {
+                    font-size: 0.9rem !important;
+                    border-radius: 20px !important;
+                    padding: 8px 18px !important;
+                }
             }
-
-            /* En móvil los botones se reparten el ancho */
-            .w-100.w-md-auto .btn {
-                flex: 1;
-            }
-        }
-
-        /* Clase personalizada para el contenedor inteligente */
-        .contenedor-adaptable {
-            overflow-x: hidden; /* Siempre oculto el horizontal */
-        }
-
-        /* Solo para celulares y tablets (Pantallas menores a 768px) */
-        @media (max-width: 767px) {
-            .contenedor-adaptable {
-                max-height: 75vh; /* Un poco menos para que se vea el fondo */
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
-                padding-bottom: 20px;
-                border-bottom: 1px solid #eee; /* Una línea sutil para indicar final */
-            }
-        }
-
-        /* Para computadoras (Pantallas mayores a 768px) */
-        @media (min-width: 768px) {
-            .contenedor-adaptable {
-                max-height: none; 
-                overflow-y: visible;
-            }
-        }
-
-        /* Estilos para mejorar el modal en dispositivos móviles */
-        /* @media (max-width: 768px) {
-            #requisitosModal .modal-dialog {
-                margin: 10px;
-                max-height: calc(90vh - 20px);
-            }
-            
-            #requisitosModal .modal-content {
-                max-height: calc(90vh - 20px);
-                    }
-            
-            #requisitosModal .modal-body {
-                max-height: 100vh;
-                overflow-y: auto;
-            }
-        } */
-
-            @media (max-width: 768px) {
-            #requisitosModal .modal-dialog {
-                margin: 0;
-                height: 105vh;
-                max-height: 110vh;
-                width: 100%;
-                max-width: 100%;
-            }
-            
-            #requisitosModal .modal-content {
-                height: 105vh;
-                border-radius: 0;
+        </style>
+        
+        <style>
+            .bg-whatsapp-light {
+                background-color: #e8f9ee;
+                width: 45px;
+                height: 45px;
                 display: flex;
-                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+            }
+            .border-left-highlight {
+                transition: transform 0.2s ease;
+            }
+            .border-left-highlight:hover {
+                transform: translateY(-2px);
+            }
+            .support-link:hover {
+                color: #a3004d !important;
+            }
+            .uppercase { text-transform: uppercase; letter-spacing: 0.5px; }
+            
+            @media (min-width: 768px) {
+                .border-right-md { border-right: 1px solid #e3e6f0; }
+            }
+        </style>
+
+
+        <style>
+            html, body {
+            /* Permitir scroll natural */
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: auto !important; /* Permite que el contenido dicte el largo */
+            min-height: 100%;
+            -webkit-overflow-scrolling: touch; /* Hace que el scroll en iPhone sea suave */
+        }
+        
+        /* Ajuste para que el contenedor no se pegue a los bordes en móvil */
+        .container {
+            padding-bottom: 80px !important; /* Espacio extra al final para que el botón de WhatsApp no se corte */
+        }
+        
+        /* Si usas SweetAlert, esto evita que la página "salte" al abrirlo */
+        body.swal2-shown {
+            overflow-y: auto !important;
+            padding-right: 0 !important;
+        }
+            .tooltip-inner {
+            max-width: 350px;
+            /* If max-width does not work, try using width instead */
+            width: 350px; 
+            max-height: 120px;
+            background-color: #2f4fff;
+            text-align: left;
+        }
+        
+        .modal-dialog.modal-fullscreen-height {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-fullscreen-height .modal-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-fullscreen-height .modal-body {
+            flex-grow: 1;
+            overflow-y: auto; /* Permite el scroll si el contenido es muy largo */
+        }
+        
+        .upload-zone {
+                border: 2px dashed #e0e0e0;
+                border-radius: 25px;
+                background-color: #ffffff;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                cursor: pointer;
+            }
+        
+            .upload-zone:hover {
+                border-color: #7b003a;
+                background-color: #fdfafb;
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+            }
+        
+            /* Animación de Pulso para el Icono */
+            .upload-icon-wrapper {
+                position: relative;
+                display: inline-block;
+            }
+        
+            .pulse-animation {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80px;
+                height: 80px;
+                background-color: rgba(123, 0, 58, 0.05);
+                border-radius: 50%;
+                z-index: 1;
+                animation: pulse 2s infinite;
+            }
+        
+            @keyframes pulse {
+                0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+                100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+            }
+        
+            /* Botón Siguiente (Para el final del form) */
+            .btn-verde-modern {
+                background-color: #28a745;
+                color: white;
+                border-radius: 12px;
+                padding: 10px 30px;
+                font-weight: bold;
+                transition: all 0.3s;
             }
             
-            #requisitosModal .modal-header {
-                padding: 1rem 1.5rem;
-                border-bottom: 1px solid rgba(255,255,255,0.2);
+            .btn-verde-modern:hover {
+                background-color: #218838;
+                box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
             }
-            
-            #requisitosModal .modal-body {
-                flex: 1;
-                overflow-y: auto;
-                padding: 1.5rem;
+        
+            .hover-elevate:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+                background-color: #5f5f5fff !important;
+                color: white !important;
+                border-color: #5f5f5fff !important;
             }
-            
-            #requisitosModal .modal-footer {
-                padding: 1rem 1.5rem;
-                border-top: 1px solid #dee2e6;
-                background: #f8f9fa;
+        
+            .icon-acento {
+                color: #7b003a !important;
+            }
+        
+            #sel_archivo_curp {
+                transition: all 0.3s ease; /* Suaviza los cambios de color */
+                cursor: pointer;
+            }
+        
+            /* Efecto al pasar el mouse (Hover) */
+            #sel_archivo_curp:hover {
+                background-color: #ad0051ff !important; /* Un tono más claro del guinda */
+                transform: translateY(-2px); /* Un pequeño salto hacia arriba */
+                shadow: 0 4px 15px rgba(0,0,0,0.3); /* Sombra más profunda */
+            }
+        
+            /* Efecto al hacer click (Active) */
+            #sel_archivo_curp:active {
+                background-color: #5a002a !important; /* Un tono más oscuro */
+                transform: translateY(0); /* Regresa a su posición original */
+                box-shadow: inset 0 3px 5px rgba(0,0,0,0.2); /* Sombra interna para efecto de "hundido" */
+            }
+        </style>
+
+    <style>
+        .btn-dorado {
+          background-color: #706f6f;
+          color: white;
+        }
+      
+        .btn-dorado:hover {
+          background-color: #575757; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+          color: white;
+        }
+    
+        .btn-verde {
+          background-color: #00656c;
+          color: white;
+        }
+      
+        .btn-verde:hover {
+          background-color: #4a826a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+          color: white;
+        }
+    
+        .btn-verde:active {
+            background-color: #356b5d; /* Cambia el color aquí al deseado cuando el botón está activado (clic) */
+            color: white;
+        }
+    
+        .btn-guinda {
+          background-color: #7b003a;
+          color: white;
+        }
+      
+        .btn-guinda:hover {
+          background-color: #932f4a; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+          color: white;
+        }
+    
+        .btn-rojo {
+          background-color: #932f4a;
+          color: white;
+        }
+      
+        .btn-rojo:hover {
+          background-color: #5c2134; /* Cambia el color aquí al deseado cuando el mouse esté encima */
+          color: white;
+        }
+    
+        .text-rojo {
+                color: #932f4a;
+            }
+    
+            .text-rojo:hover {
+                color: #5c2134;
+            }
+    
+            /* --- CONFIGURACIÓN DEL SCROLL EN MÓVIL --- */
+            .scroll-container-pdf {
+                height: 70vh; /* Altura fija para forzar el scroll */
+                overflow-y: auto !important;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+                position: relative;
+            }
+    
+            .pdf-wrapper {
+                padding: 1rem;
+                min-height: calc(70vh + 2px); /* Obliga al scroll a existir */
+                display: flex;
+                justify-content: center;
+            }
+    
+            #pdfCanvas {
+                max-width: 100% !important;
+                height: auto !important;
+                /* IMPORTANTE: pointer-events permite que el scroll funcione 
+                al arrastrar el dedo sobre el canvas en celulares */
+                pointer-events: none; 
+            }
+    
+            /* --- ESTILOS DE BOTONES PERSONALIZADOS --- */
+            .custom-btn-confirm {
+                background-color: #00656c; /* O tu color verde */
+                color: white;
+                border-radius: 20px;
+                font-weight: 600;
+                min-width: 130px;
+                border: none;
+                transition: all 0.3s ease;
+            }
+    
+            .custom-btn-confirm:hover {
+                background-color: #218838;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+    
+            .custom-btn-confirm:active {
+                transform: translateY(0);
+                filter: brightness(0.8);
+            }
+    
+            .custom-btn-discard {
+                border-radius: 20px;
+                font-weight: 600;
+                min-width: 110px;
+                transition: all 0.3s ease;
+            }
+    
+            /* --- AJUSTES PARA PANTALLAS PEQUEÑAS --- */
+            @media (max-width: 576px) {
+                .modal-header {
+                    text-align: center;
+                }
+                
+                .scroll-container-pdf {
+                    height: 60vh; /* Un poco menos de altura en móviles para dejar ver el header */
+                }
+    
+                /* En móvil los botones se reparten el ancho */
+                .w-100.w-md-auto .btn {
+                    flex: 1;
+                }
+            }
+    
+            /* Clase personalizada para el contenedor inteligente */
+            .contenedor-adaptable {
+                overflow-x: hidden; /* Siempre oculto el horizontal */
+            }
+    
+            /* Solo para celulares y tablets (Pantallas menores a 768px) */
+            @media (max-width: 767px) {
+                .contenedor-adaptable {
+                    max-height: 75vh; /* Un poco menos para que se vea el fondo */
+                    overflow-y: auto;
+                    -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
+                    padding-bottom: 20px;
+                    border-bottom: 1px solid #eee; /* Una línea sutil para indicar final */
+                }
+            }
+    
+            /* Para computadoras (Pantallas mayores a 768px) */
+            @media (min-width: 768px) {
+                .contenedor-adaptable {
+                    max-height: none; 
+                    overflow-y: visible;
+                }
+            }
+    
+            /* Estilos para mejorar el modal en dispositivos móviles */
+            /* @media (max-width: 768px) {
+                #requisitosModal .modal-dialog {
+                    margin: 10px;
+                    max-height: calc(90vh - 20px);
+                }
+                
+                #requisitosModal .modal-content {
+                    max-height: calc(90vh - 20px);
+                        }
+                
+                #requisitosModal .modal-body {
+                    max-height: 100vh;
+                    overflow-y: auto;
+                }
+            } */
+    
+                @media (max-width: 768px) {
+                #requisitosModal .modal-dialog {
+                    margin: 0;
+                    height: 105vh;
+                    max-height: 110vh;
+                    width: 100%;
+                    max-width: 100%;
+                }
+                
+                #requisitosModal .modal-content {
+                    height: 105vh;
+                    border-radius: 0;
+                    display: flex;
+                    flex-direction: column;
+                }
+                
+                #requisitosModal .modal-header {
+                    padding: 1rem 1.5rem;
+                    border-bottom: 1px solid rgba(255,255,255,0.2);
+                }
+                
+                #requisitosModal .modal-body {
+                    flex: 1;
+                    overflow-y: auto;
+                    padding: 1.5rem;
+                }
+                
+                #requisitosModal .modal-footer {
+                    padding: 1rem 1.5rem;
+                    border-top: 1px solid #dee2e6;
+                    background: #f8f9fa;
+                }
+            }
+    
+      </style>
+      
+      <style>
+        .hover-elevate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(123, 0, 58, 0.2) !important;
+        }
+        .font-weight-black { font-weight: 900; }
+        .extra-small { line-height: 1.2; }
+    </style>
+    
+    <style>
+        /* Texto para computadora */
+        .swal-text-pc {
+            font-size: 1rem !important;
+            text-align: left;
+        }
+
+        /* Texto para celular */
+        .swal-text-movil {
+            font-size: 0.9rem !important; /* Texto más pequeño */
+            text-align: center!important;
+            max-height: 45vh !important; /* Limita el alto para que no tape el botón */
+            overflow-y: auto !important; /* Si el texto es mucho, permite scroll interno */
+            padding: 0 5px !important;
+        }
+
+        /* Ajuste general del modal */
+        .redondear-modal {
+            border-radius: 20px !important;
+        }
+
+        /* Asegura que el botón no sea gigante en móvil */
+        .redondear-boton {
+            border-radius: 999px !important;
+            padding: 10px 30px !important;
+            font-size: 0.9rem !important;
+        }
+
+        /* Reducir el tamaño del icono de SweetAlert en móvil */
+        .swal2-icon.swal2-error.icon-movil {
+            transform: scale(0.6); /* Reduce el icono al 60% */
+            margin-top: 5px !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Espaciado ultra-compacto para móvil */
+        .swal-text-movil hr {
+            margin: 10px 0 !important; /* Separador más pequeño */
+        }
+
+        .swal-text-movil #mensaje-recomendacion {
+            border-radius: 15px !important; /* Menos redondeado para ganar espacio */
+            padding: 8px !important;
+            font-size: 0.8rem !important;
+            line-height: 1.2 !important;
+        }
+
+        /* Eliminar espacios excesivos en la parte superior del modal en móvil */
+        @media (max-width: 767px) {
+            /* Reduce el espacio entre el icono y el título */
+            .swal2-title {
+                margin-top: -15px !important; /* Sube el título hacia el icono */
+                padding-top: 0 !important;
+            }
+
+            /* Reduce el espacio que el icono empuja hacia abajo */
+            .swal2-icon {
+                margin-top: 10px !important;
+                margin-bottom: 5px !important;
+            }
+
+            /* Reduce el espacio entre el título y el contenido (mensajeHtml) */
+            .swal2-html-container {
+                margin-top: 5px !important;
             }
         }
 
-  </style>
+        /* El estilo del icono que ya teníamos, asegurando que no empuje el título */
+        .swal2-icon.swal2-error.icon-movil {
+            transform: scale(0.6);
+            margin-bottom: 0 !important;
+        }
+    </style>
+    
+    
+    <style>
+    .validation-notice {
+        padding: 12px 16px;
+        background-color: #e7fff8ff; /* Azul clarito para resaltar */
+        border-left: 4px solid #00656c; /* Barra lateral llamativa */
+        color: #00656c;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        display: inline-block;
+        animation: pulse-subtle 2s infinite; /* Un pequeño movimiento para atraer la vista */
+    }
+
+    @keyframes pulse-subtle {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+    </style>
+
 
 
     <!-- Ventana Modal -->
@@ -519,7 +549,7 @@ body.swal2-shown {
             </div>
 
             <div class="d-flex gap-2 justify-content-end align-items-center w-100 w-md-auto">
-                <button type="button" class="btn btn-verde btn-sm px-4 py-2 custom-btn-confirm" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-verde btn-sm px-4 py-2 custom-btn-confirm" data-dismiss="modal">
                     Confirmar
                 </button> 
                 <button type="button" class="btn btn-outline-danger ml-2 btn-sm px-4 py-2 custom-btn-discard" onclick="noQuieroArchivo()">
@@ -672,7 +702,7 @@ body.swal2-shown {
 </div>
 </head>
 <body>
-    <div class="container contenedor-adaptable">
+    <div id="app" class="container contenedor-adaptable">
         <div class="card-body">
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -735,241 +765,106 @@ body.swal2-shown {
                                 </div>
                             </div>
                             <div class="card-body p-3 bg-white rounded-lg">
-                                @if ($convocatoria_abierta)
-          <div class="alert shadow-lg border-0 p-0 overflow-hidden" 
-     style="background: #ffffff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08)!important;">
-    
-    <div class="px-4 py-3 d-flex align-items-center" style="background: linear-gradient(90deg, #7b003a 0%, #a5004d 100%);">
-        <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 35px; height: 35px; opacity: 0.9;">
-            <i class="fas fa-rocket fa-lg" style="color:#7b003a;"></i>
-        </div>
-        <h6 class="font-weight-bold text-uppercase mb-0 text-white" style="letter-spacing: 1.5px; font-size: 1.1rem;">
-            Guía de Postulación Digital
-        </h6>
-    </div>
-
-    <div class="p-4">
-        <div class="row align-items-stretch">
-            <div class="col-md-6 border-right-md pr-md-4">
-                <div class="mb-4">
-                    @if ($convocatoria_abierta)
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="badge badge-pill px-3 py-2 small font-weight-black text-uppercase" style="letter-spacing: 1px; background: #e6fffa; color: #047857; border: 1px solid #34d399;">
-                                <span class="spinner-grow spinner-grow-sm mr-1" role="status" aria-hidden="true"></span>
-                                CONVOCATORIA ACTIVA
-                            </span>
-                        </div>
-                        <div class="d-inline-flex align-items-center px-3 py-2 shadow-sm" 
-                             style="background: #f8fafc; border-radius: 12px; border-left: 4px solid #00656c;">
-                            <i class="far fa-calendar-check mr-2" style="color: #00656c;"></i>
-                            <span class="small font-weight-bold text-dark">
-                                Límite: <span style="color: #00656c;">14 de Febrero, 2026</span>
-                            </span>
-                        </div>
-                    @else
-                        <span class="badge badge-pill badge-danger px-3 py-2 shadow-sm">
-                            <i class="fas fa-clock mr-1"></i> PROCESO FINALIZADO
-                        </span>
-                    @endif
-                </div>
-
-                <div class="rounded-lg p-3" style="background: #f1f5f9; border-radius: 16px;">
-                    <div class="d-flex mb-2">
-                        <i class="fas fa-fingerprint text-primary mr-2 mt-1"></i>
-                        <p class="small mb-0 text-dark">
-                            <strong>Validación de Identidad:</strong> Solo se procesarán archivos <b>PDF originales</b> del CURP.
-                        </p>
-                    </div>
-                    <div class="d-flex border-top pt-2 mt-2" style="border-color: #e2e8f0!important;">
-                        <i class="fas fa-shield-virus text-danger mr-2 mt-1"></i>
-                        <p class="extra-small mb-0 text-muted" style="font-size: 0.75rem;">
-                            Evite digitalizaciones manuales (fotos/escaneos) para no ser rechazado por el sistema.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-             <div class="col-md-6 pl-md-4 text-center mt-6">
-                <div class="d-flex flex-column align-items-center gap-2">
-                    <a href="https://www.concordia.gob.mx/2026/CONVOCATORIA_OTRO_NIVEL_25226_1.pdf"
-                    target="_blank"
-                    class="btn btn-rojo btn-sm px-4 p-2 mb-4"
-                    style="border-radius: 20px; font-weight: 600; border-width: 2px; min-width:230px;">
-                        <i class="fas fa-file-pdf mr-2"></i> Ver Convocatoria
-                    </a>
-
-                    <a href="https://www.gob.mx/curp/"
-                    target="_blank"
-                    class="btn btn-sm border rounded-pill shadow-sm d-inline-flex align-items-center justify-content-center px-3 py-2 hover-elevate btn-curp"
-                    style="background:#ffffff; font-weight:600; font-size:0.85rem; min-width:230px;">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            width="14" height="14"
-                            fill="currentColor"
-                            class="mr-1"
-                            viewBox="0 0 16 16">
-                            <path d="M4 0h6.293A1 1 0 0 1 11 0.293l3.707 3.707A1 1 0 0 1 15 4.707V15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1z"/>
-                            <path d="M9.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H10v2.5a.5.5 0 0 1-1 0V7H6.5a.5.5 0 0 1 0-1H9V3.5a.5.5 0 0 1 .5-.5z"/>
-                        </svg>
-                        Obtener CURP Original
-                    </a>
-                    <small class="text-muted text-center mt-1 mb-3">
-                        Sitio oficial del Gobierno de México
-                    </small>
-                    <button type="button"
-                            class="btn btn-verde btn-sm rounded-pill d-inline-flex align-items-center justify-content-center px-3 py-2"
-                            data-toggle="modal" data-target="#requisitosModal"
-                            style="font-weight:600; font-size:0.8rem; min-width:230px;">
-                        <i class="fas fa-list-check mr-1 p-1"></i>
-                        Ver REQUISITOS de Registro
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-    .hover-elevate:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 15px rgba(123, 0, 58, 0.2) !important;
-    }
-    .font-weight-black { font-weight: 900; }
-    .extra-small { line-height: 1.2; }
-</style>
-                                @endif
-                                @if (session()->has('message') || $errors->any())
-                                <style>
-                                    /* Texto para computadora */
-                                    .swal-text-pc {
-                                        font-size: 1rem !important;
-                                        text-align: left;
-                                    }
-
-                                    /* Texto para celular */
-                                    .swal-text-movil {
-                                        font-size: 0.9rem !important; /* Texto más pequeño */
-                                        text-align: center!important;
-                                        max-height: 45vh !important; /* Limita el alto para que no tape el botón */
-                                        overflow-y: auto !important; /* Si el texto es mucho, permite scroll interno */
-                                        padding: 0 5px !important;
-                                    }
-
-                                    /* Ajuste general del modal */
-                                    .redondear-modal {
-                                        border-radius: 20px !important;
-                                    }
-
-                                    /* Asegura que el botón no sea gigante en móvil */
-                                    .redondear-boton {
-                                        border-radius: 999px !important;
-                                        padding: 10px 30px !important;
-                                        font-size: 0.9rem !important;
-                                    }
-
-                                    /* Reducir el tamaño del icono de SweetAlert en móvil */
-                                    .swal2-icon.swal2-error.icon-movil {
-                                        transform: scale(0.6); /* Reduce el icono al 60% */
-                                        margin-top: 5px !important;
-                                        margin-bottom: 0 !important;
-                                    }
-
-                                    /* Espaciado ultra-compacto para móvil */
-                                    .swal-text-movil hr {
-                                        margin: 10px 0 !important; /* Separador más pequeño */
-                                    }
-
-                                    .swal-text-movil #mensaje-recomendacion {
-                                        border-radius: 15px !important; /* Menos redondeado para ganar espacio */
-                                        padding: 8px !important;
-                                        font-size: 0.8rem !important;
-                                        line-height: 1.2 !important;
-                                    }
-
-                                    /* Eliminar espacios excesivos en la parte superior del modal en móvil */
-                                    @media (max-width: 767px) {
-                                        /* Reduce el espacio entre el icono y el título */
-                                        .swal2-title {
-                                            margin-top: -15px !important; /* Sube el título hacia el icono */
-                                            padding-top: 0 !important;
-                                        }
-
-                                        /* Reduce el espacio que el icono empuja hacia abajo */
-                                        .swal2-icon {
-                                            margin-top: 10px !important;
-                                            margin-bottom: 5px !important;
-                                        }
-
-                                        /* Reduce el espacio entre el título y el contenido (mensajeHtml) */
-                                        .swal2-html-container {
-                                            margin-top: 5px !important;
-                                        }
-                                    }
-
-                                    /* El estilo del icono que ya teníamos, asegurando que no empuje el título */
-                                    .swal2-icon.swal2-error.icon-movil {
-                                        transform: scale(0.6);
-                                        margin-bottom: 0 !important;
-                                    }
-                                </style>
-                                <script>
-                                   $(document).ready(function() {
-                                        const esMovil = window.innerWidth <= 768;
-                                        
-                                        // Ajustamos el padding inicial según el dispositivo
-                                        let mensajeHtml = `<div style="font-size: ${esMovil ? '0.9em' : '1.1em'}; text-align: left; padding: 0 ${esMovil ? '5px' : '10px'};">`;
-
-                                        @if(session()->has('message'))
-                                            mensajeHtml += `<div style="margin-bottom: ${esMovil ? '8px' : '15px'};">{!! html_entity_decode(session()->get('message')) !!}</div>`;
-                                        @endif
-
-                                        @if($errors->any())
-                                            // Reducimos el margen de la lista en móvil
-                                            mensajeHtml += `<ul style="display: inline-block; text-align: left; margin-top: ${esMovil ? '5px' : '10px'}; padding-left: 20px; list-style-position: outside;">`;
-                                            @foreach ($errors->all() as $error)
-                                                mensajeHtml += `<li style="margin-bottom: ${esMovil ? '4px' : '10px'};">{!! $error !!}</li>`;
-                                            @endforeach
-                                            mensajeHtml += '</ul>';
-                                        @endif
-
-                                        mensajeHtml += `
-                                            <hr style="margin: ${esMovil ? '10px' : '20px'} 0; border: 0; border-top: 1px solid #eee;">
-                                            <div id="mensaje-recomendacion" style="color: #666; background: #f9f9f9; padding: 10px; border-radius: ${esMovil ? '15px' : '60px'};">
-                                                <strong>💡 Recomendación:</strong><br>
-                                                - Usa el PDF original de <a href="https://www.gob.mx/curp/" target="_blank" style="color: #3085d6; font-weight: bold;">gob.mx/curp/</a>.
-                                                ${esMovil ? '' : '<br> - Evita fotos o escaneos para que el sistema lo valide correctamente.'} 
+                            @if ($convocatoria_abierta)
+                            <div class="alert shadow-lg border-0 p-0 overflow-hidden" 
+                                 style="background: #ffffff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08)!important;">
+                                
+                                <div class="px-4 py-3 d-flex align-items-center" style="background: linear-gradient(90deg, #7b003a 0%, #a5004d 100%);">
+                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 35px; height: 35px; opacity: 0.9;">
+                                        <i class="fas fa-rocket fa-lg" style="color:#7b003a;"></i>
+                                    </div>
+                                    <h6 class="font-weight-bold text-uppercase mb-0 text-white" style="letter-spacing: 1.5px; font-size: 1.1rem;">
+                                        Guía de Postulación Digital
+                                    </h6>
+                                </div>
+                            
+                                <div class="p-4">
+                                    <div class="row align-items-stretch">
+                                        <div class="col-md-6 border-right-md pr-md-4">
+                                            <div class="mb-4">
+                                                @if ($convocatoria_abierta)
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <span class="badge badge-pill px-3 py-2 small font-weight-black text-uppercase" style="letter-spacing: 1px; background: #e6fffa; color: #047857; border: 1px solid #34d399;">
+                                                            <span class="spinner-grow spinner-grow-sm mr-1" role="status" aria-hidden="true"></span>
+                                                            CONVOCATORIA ACTIVA
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-inline-flex align-items-center px-3 py-2 shadow-sm" 
+                                                         style="background: #f8fafc; border-radius: 12px; border-left: 4px solid #00656c;">
+                                                        <i class="far fa-calendar-check mr-2" style="color: #00656c;"></i>
+                                                        <span class="small font-weight-bold text-dark">
+                                                            Límite: <span style="color: #00656c;">14 de Febrero, 2026</span>
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <span class="badge badge-pill badge-danger px-3 py-2 shadow-sm">
+                                                        <i class="fas fa-clock mr-1"></i> PROCESO FINALIZADO
+                                                    </span>
+                                                @endif
                                             </div>
-                                        </div>`;
-
-                                        Swal.fire({
-                                            title: `<strong style="font-size: ${esMovil ? '1em' : '1.2em'};">¡Atención!</strong>`,
-                                            html: mensajeHtml,
-                                            icon: 'error',
-                                            confirmButtonText: 'Entendido',
-                                            confirmButtonColor: '#7a2525',
-                                            width: esMovil ? '95%' : '550px',
-                                            heightAuto: false,
-                                            customClass: {
-                                                popup: 'redondear-modal',
-                                                confirmButton: 'redondear-boton',
-                                                htmlContainer: esMovil ? 'swal-text-movil' : 'swal-text-pc',
-                                                icon: esMovil ? 'icon-movil' : '' // Aplicamos la clase de tamaño al icono
-                                            },
-                                            showClass: {
-                                                popup: 'animate__animated animate__fadeInDown animate__faster'
-                                            },
-                                            hideClass: {
-                                                popup: 'animate__animated animate__fadeOutUp animate__faster'
-                                            }
-                                        });
-                                    });
-                                </script>
-                                @endif
+                            
+                                            <div class="rounded-lg p-3" style="background: #f1f5f9; border-radius: 16px;">
+                                                <div class="d-flex mb-2">
+                                                    <i class="fas fa-fingerprint text-primary mr-2 mt-1"></i>
+                                                    <p class="small mb-0 text-dark">
+                                                        <strong>Validación de Identidad:</strong> Solo se procesarán archivos <b>PDF originales</b> del CURP.
+                                                    </p>
+                                                </div>
+                                                <div class="d-flex border-top pt-2 mt-2" style="border-color: #e2e8f0!important;">
+                                                    <i class="fas fa-shield-virus text-danger mr-2 mt-1"></i>
+                                                    <p class="extra-small mb-0 text-muted" style="font-size: 0.75rem;">
+                                                        Evite digitalizaciones manuales (fotos/escaneos) para no ser rechazado por el sistema.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                            
+                                         <div class="col-md-6 pl-md-4 text-center mt-6">
+                                            <div class="d-flex flex-column align-items-center gap-2">
+                                                <a href="https://www.concordia.gob.mx/2026/CONVOCATORIA_OTRO_NIVEL_25226_1.pdf"
+                                                target="_blank"
+                                                class="btn btn-rojo btn-sm px-4 p-2 mb-4"
+                                                style="border-radius: 20px; font-weight: 600; border-width: 2px; min-width:230px;">
+                                                    <i class="fas fa-file-pdf mr-2"></i> Ver Convocatoria
+                                                </a>
+                            
+                                                <a href="https://www.gob.mx/curp/"
+                                                target="_blank"
+                                                class="btn btn-sm border rounded-pill shadow-sm d-inline-flex align-items-center justify-content-center px-3 py-2 hover-elevate btn-curp"
+                                                style="background:#ffffff; font-weight:600; font-size:0.85rem; min-width:230px;">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        width="14" height="14"
+                                                        fill="currentColor"
+                                                        class="mr-1"
+                                                        viewBox="0 0 16 16">
+                                                        <path d="M4 0h6.293A1 1 0 0 1 11 0.293l3.707 3.707A1 1 0 0 1 15 4.707V15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1z"/>
+                                                        <path d="M9.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H10v2.5a.5.5 0 0 1-1 0V7H6.5a.5.5 0 0 1 0-1H9V3.5a.5.5 0 0 1 .5-.5z"/>
+                                                    </svg>
+                                                    Obtener CURP Original
+                                                </a>
+                                                <small class="text-muted text-center mt-1 mb-3">
+                                                    Sitio oficial del Gobierno de México
+                                                </small>
+                                                <button type="button"
+                                                        class="btn btn-verde btn-sm rounded-pill d-inline-flex align-items-center justify-content-center px-3 py-2"
+                                                        data-toggle="modal" data-target="#requisitosModal"
+                                                        style="font-weight:600; font-size:0.8rem; min-width:230px;">
+                                                    <i class="fas fa-list-check mr-1 p-1"></i>
+                                                    Ver REQUISITOS de Registro
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                            
                                 <div class="d-flex align-items-center justify-content-between mt-4 mb-4">
                                     <div class="d-flex align-items-center">
                                         <div style="width: 4px; height: 30px; background-color: #7b003a; border-radius: 10px;"></div>
                                         <div class="ml-3">
                                             <h5 class="mb-0 font-weight-bold" style="color: #4a4a4a;">Gestión de Solicitud</h5>
-                                            <normal class="text-muted">Identificación mediante CURP digital</normal>
+                                            <span class="normal text-muted">Identificación mediante CURP digital</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1016,25 +911,6 @@ body.swal2-shown {
                                                 <i class="fas fa-arrow-right mr-1"></i> 
                                                 Selecciona <strong>Siguiente</strong> para continuar
                                             </div>
-
-                                                <style>
-                                                .validation-notice {
-                                                    padding: 12px 16px;
-                                                    background-color: #e7fff8ff; /* Azul clarito para resaltar */
-                                                    border-left: 4px solid #00656c; /* Barra lateral llamativa */
-                                                    color: #00656c;
-                                                    border-radius: 6px;
-                                                    font-size: 0.85rem;
-                                                    display: inline-block;
-                                                    animation: pulse-subtle 2s infinite; /* Un pequeño movimiento para atraer la vista */
-                                                }
-
-                                                @keyframes pulse-subtle {
-                                                    0% { transform: scale(1); }
-                                                    50% { transform: scale(1.02); }
-                                                    100% { transform: scale(1); }
-                                                }
-                                                </style>
 
                                             <input class="file" type="file" style="display: none" name="img_curp" id="img_curp" accept=".pdf, .PDF" onchange="mostrarVistaPreviaPDF(this)">
                                         </div>
@@ -1094,31 +970,7 @@ body.swal2-shown {
                                         </div>
                                     </div>
                                 </div>
-                                <style>
-                                    .bg-whatsapp-light {
-                                        background-color: #e8f9ee;
-                                        width: 45px;
-                                        height: 45px;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        border-radius: 50%;
-                                    }
-                                    .border-left-highlight {
-                                        transition: transform 0.2s ease;
-                                    }
-                                    .border-left-highlight:hover {
-                                        transform: translateY(-2px);
-                                    }
-                                    .support-link:hover {
-                                        color: #a3004d !important;
-                                    }
-                                    .uppercase { text-transform: uppercase; letter-spacing: 0.5px; }
-                                    
-                                    @media (min-width: 768px) {
-                                        .border-right-md { border-right: 1px solid #e3e6f0; }
-                                    }
-                                </style>
+                                
                             </div>
                         </div>                        
                     </form>
@@ -1298,9 +1150,11 @@ body.swal2-shown {
         </div>
     </div>
     <script src="{{ asset('js/jquery.js') }}"></script>
+    
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ mix('js/app.js') }}"></script>
+   
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('js/sb-admin.min.js') }}"></script>
@@ -1315,39 +1169,7 @@ body.swal2-shown {
         }
     </script>
 
-    <style>
-        /* Estilos base (Computadora) */
-        .my-custom-popup-class {
-            border-radius: 20px !important;
-        }
 
-        .my-custom-button-class {
-            border-radius: 50px !important;
-            padding: 10px 24px !important;
-        }
-
-        /* --- AJUSTES PARA CELULAR --- */
-        @media (max-width: 576px) {
-            /* Reduce el tamaño del texto de la ventana completa */
-            .my-custom-popup-class {
-                font-size: 0.85rem !important; /* Texto base más pequeño */
-                width: 95% !important;        /* Opcional: que no pegue a las orillas */
-                border-radius: 15px !important;
-            }
-
-            /* Reduce específicamente el título */
-            .my-custom-popup-class .swal2-title {
-                font-size: 1.25rem !important;
-            }
-
-            /* Reduce el texto del botón */
-            .my-custom-button-class {
-                font-size: 0.9rem !important;
-                border-radius: 20px !important;
-                padding: 8px 18px !important;
-            }
-        }
-    </style>
     
     <script>
         // Variable para almacenar el último archivo seleccionado
@@ -1581,5 +1403,176 @@ body.swal2-shown {
         }
     }
     </script>
+        <!--<script src="{{ asset('js/app.js') }}" defer></script>-->
+        <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!--<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->
+
+        <script>
+        // IMPORTANTE: usa la MISMA versión para el worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js";
+        </script>
+
+        <script language="JavaScript" type="text/javascript">
+            $(document).ready(function(){
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip({
+                    trigger : 'click'
+                    })
+                    $('[data-toggle="tooltip"]').mouseleave(function(){
+                    $(this).tooltip('hide');
+                    });    
+                });
+            });
+        </script>
+
+    <script>
+        // Utilidad: muestra u oculta el ojo según haya archivo
+        function actualizarIconoVistaPrevia(nombreArchivo) {
+            var pdfIcon = document.getElementById('iconPdf');
+            var linkOjo = document.getElementById('vistaPreviaLink');
+            if (!linkOjo) return;
+            if (!pdfIcon) return;
+    
+            const texto = (nombreArchivo || '').trim();
+            const sinArchivo = (texto === '' || texto.toLowerCase().includes('sin archivo'));
+    
+            if (sinArchivo) {
+            linkOjo.classList.add('d-none');
+            pdfIcon.classList.add('d-none');
+            } else {
+            linkOjo.classList.remove('d-none');
+            pdfIcon.classList.remove('d-none');
+            }
+        }
+    
+        function reiniciarFormularioArchivo() {
+            // 1. Limpiamos el input file físicamente
+            $('#img_curp').val(''); 
+            
+            // 2. Restauramos el texto por defecto
+            const defaultText = 'Sin archivo seleccionado';
+            $('#archivo_curp').text(defaultText);
+            
+            // 3. Actualizamos la visibilidad de los iconos
+            actualizarIconoVistaPrevia(defaultText);
+        }
+    
+        $(document).ready(function () {
+            // Abre el selector de archivos al hacer click en el botón proxy
+            $('#sel_archivo_curp').on('click', function () {
+                $('#img_curp').trigger('click');
+            });
+    
+            // Maneja el cambio de archivo UNA SOLA VEZ
+            $('#img_curp').on('change', function (e) {
+                let filename = 'Sin archivo seleccionado';
+    
+                // Si hay archivo seleccionado, toma el nombre real
+                if (e.target.files && e.target.files.length > 0) {
+                    filename = e.target.files[0].name;
+                } else {
+                    // Si no hay archivo, ejecuta tu lógica de descarte
+                    noQuieroArchivo && typeof noQuieroArchivo === 'function' && noQuieroArchivo();
+                }
+    
+                // Asigna el nombre al span
+                $('#archivo_curp').text(filename);
+    
+                // Muestra/oculta el ojo según corresponda
+                actualizarIconoVistaPrevia(filename);
+            });
+    
+            $(window).on('pageshow', function(event) {
+                // Forzamos el reinicio al cargar la página o volver atrás
+                // if ($('.swal2-container').length > 0 || {{ $errors->any() ? 'true' : 'false' }}) {
+                    reiniciarFormularioArchivo(); 
+                // }
+            });
+    
+            // Estado inicial (por si viene desde Blade con valor o vacío)
+            const inicial = ($('#archivo_curp').text() || '').trim();
+            actualizarIconoVistaPrevia(inicial);
+        });
+    </script>
+
+    <script language="JavaScript" type="text/javascript">
+        // A function that disables button
+        function disableButton() {
+            document.getElementById('btnSiguiente').setAttribute("disabled","disabled");
+            document.getElementById('btnSiguiente').innerText = "Cargando...";
+        }
+
+        $(document).ready(function(){
+            var $myForm = $("#my_form");
+            $myForm.submit(function(){
+                disableButton();
+                $myForm.submit(function(){
+                    return false;
+                });
+            });
+        });
+    </script>
+    
+    @if (session()->has('message') || $errors->any())
+    <script>
+       $(document).ready(function() {
+            const esMovil = window.innerWidth <= 768;
+            
+            // Ajustamos el padding inicial según el dispositivo
+            let mensajeHtml = `<div style="font-size: ${esMovil ? '0.9em' : '1.1em'}; text-align: left; padding: 0 ${esMovil ? '5px' : '10px'};">`;
+
+            @if(session()->has('message'))
+                mensajeHtml += `<div style="margin-bottom: ${esMovil ? '8px' : '15px'};">{!! html_entity_decode(session()->get('message')) !!}</div>`;
+            @endif
+
+            @if($errors->any())
+                // Reducimos el margen de la lista en móvil
+                mensajeHtml += `<ul style="display: inline-block; text-align: left; margin-top: ${esMovil ? '5px' : '10px'}; padding-left: 20px; list-style-position: outside;">`;
+                @foreach ($errors->all() as $error)
+                    mensajeHtml += `<li style="margin-bottom: ${esMovil ? '4px' : '10px'};">{!! $error !!}</li>`;
+                @endforeach
+                mensajeHtml += '</ul>';
+            @endif
+
+            mensajeHtml += `
+                <hr style="margin: ${esMovil ? '10px' : '20px'} 0; border: 0; border-top: 1px solid #eee;">
+                <div id="mensaje-recomendacion" style="color: #666; background: #f9f9f9; padding: 10px; border-radius: ${esMovil ? '15px' : '60px'};">
+                    <strong>💡 Recomendación:</strong><br>
+                    - Usa el PDF original de <a href="https://www.gob.mx/curp/" target="_blank" style="color: #3085d6; font-weight: bold;">gob.mx/curp/</a>.
+                    ${esMovil ? '' : '<br> - Evita fotos o escaneos para que el sistema lo valide correctamente.'} 
+                </div>
+            </div>`;
+
+            Swal.fire({
+                title: `<strong style="font-size: ${esMovil ? '1em' : '1.2em'};">¡Atención!</strong>`,
+                html: mensajeHtml,
+                icon: 'error',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#7a2525',
+                width: esMovil ? '95%' : '550px',
+                heightAuto: false,
+                customClass: {
+                    popup: 'redondear-modal',
+                    confirmButton: 'redondear-boton',
+                    htmlContainer: esMovil ? 'swal-text-movil' : 'swal-text-pc',
+                    icon: esMovil ? 'icon-movil' : '' // Aplicamos la clase de tamaño al icono
+                },
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown animate__faster'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp animate__faster'
+                }
+            });
+        });
+    </script>
+    @endif
+
+      
 </body>
 </html>
