@@ -517,6 +517,13 @@
     }
     </style>
 
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
 
 
     <!-- Ventana Modal -->
@@ -978,146 +985,6 @@
             </div>
         </div>
     </div>
-    <!-- <div class="container py-4">
-        <div class="card-body">
-            <div class="row justify-content-center mb-3">
-                <div class="col-md-8">
-                    <a href="{{ route('estudiantes.forget') }}" class="text-center d-block">
-                        <img src="{{ asset('img/Logo_y_Escudo.jpg') }}" class="img-fluid" style="width:85%; max-width: 500px;">
-                    </a>
-                </div>
-            </div>
-
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
-                        <form id="my_form" name="my_form" class="contact-form" method="POST" action="{{ route('estudiantes.formulario-curp.post') }}" enctype="multipart/form-data" novalidate>
-                            @csrf
-                            
-                            <div class="text-center mt-4 mb-3">
-                                <img src="../img/logo_programa.jpg" style="width:180px; max-width:40%;">
-                            </div>
-
-                            <div class="px-4 mb-4">
-                                <div class="card border-0 shadow-sm" style="border-radius: 15px; background: linear-gradient(135deg, #7b003a, #9d0c4f);">
-                                    <div class="card-body p-3 p-md-4 text-white">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-8">
-                                                <h4 class="font-weight-bold mb-1" style="font-size: 1.25rem;">Acceso al Sistema</h4>
-                                                <p class="mb-0 opacity-80 small">Registro y consulta de estatus mediante tu CURP.</p>
-                                            </div>
-                                            <div class="col-md-4 text-md-right mt-3 mt-md-0 d-flex justify-content-md-end gap-3">
-                                                <div class="text-center px-2">
-                                                    <i class="fas fa-user-plus d-block mb-1"></i>
-                                                    <small class="text-uppercase font-weight-bold" style="font-size: 0.6rem;">Registro</small>
-                                                </div>
-                                                <div class="text-center px-2">
-                                                    <i class="fas fa-search d-block mb-1"></i>
-                                                    <small class="text-uppercase font-weight-bold" style="font-size: 0.6rem;">Estatus</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="px-4">
-                                <div class="alert border-0 shadow-sm p-4" style="background: #fdfdfd; border-radius: 15px; border-left: 5px solid #7b003a !important;">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <i class="fas fa-calendar-check fa-lg mr-2" style="color:#7b003a;"></i>
-                                        <h6 class="font-weight-bold text-uppercase mb-0" style="color:#7b003a; letter-spacing: 0.5px;">
-                                            Convocatoria 2026
-                                        </h6>
-                                    </div>
-
-                                    <div class="bg-white rounded p-3 border">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7 border-md-right">
-                                                <p class="mb-2 d-flex align-items-center">
-                                                    <i class="fas fa-clock mr-2 text-muted"></i>
-                                                    @if ($convocatoria_abierta)
-                                                        <span>Estatus: <strong class="text-success">¡Abierta ahora!</strong><br>
-                                                        Del <strong>3 al 14 de Febrero</strong></span>
-                                                    @else
-                                                        <span class="text-danger font-weight-bold">Convocatoria Finalizada</span>
-                                                    @endif
-                                                </p>
-                                                <p class="mb-0 small text-muted">
-                                                    <i class="fas fa-file-pdf mr-2"></i>Requiere PDF original (no fotos).
-                                                </p>
-                                            </div>
-                                            <div class="col-md-5 text-center mt-3 mt-md-0">
-                                                <a href="https://www.gob.mx/curp/" target="_blank" class="btn btn-outline-secondary btn-sm rounded-pill px-3 w-100 mb-2">
-                                                    <i class="fas fa-download mr-1"></i> Descargar CURP
-                                                </a>
-                                                <button type="button" class="btn btn-verde btn-sm rounded-pill px-3 w-100" data-toggle="modal" data-target="#requisitosModal">
-                                                    <i class="fas fa-list-check mr-1"></i> Requisitos
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-body px-4 pt-0">
-                                <div class="text-center mb-4">
-                                    <div class="d-inline-block p-2 px-4 rounded-pill" style="background-color: #fce4ec; color: #7b003a; border: 1px solid #f8bbd0;">
-                                        <i class="fas fa-fingerprint mr-2"></i>
-                                        <span class="font-weight-bold small">Tu CURP es tu llave de acceso</span>
-                                    </div>
-                                </div>
-
-                                <div class="upload-zone p-4 p-md-5 text-center position-relative shadow-sm border" id="drop-area" style="border-style: dashed !important; border-width: 2px !important; border-radius: 20px;">
-                                    <div class="upload-icon-wrapper mb-3">
-                                        <i class="fas fa-cloud-upload-alt fa-3x" style="color: #7b003a;"></i>
-                                    </div>
-                                    <h6 class="font-weight-bold mb-1">Selecciona tu archivo CURP</h6>
-                                    <p class="text-muted small mb-4">Haz clic abajo para buscar el archivo PDF</p>
-
-                                    <button type="button" class="btn px-5 py-2" id="sel_archivo_curp" 
-                                            style="background-color: #7b003a; color: white; border-radius: 30px; font-weight: 600; border: none; transition: 0.3s;">
-                                        EXAMINAR EQUIPO
-                                    </button>
-
-                                    <div id="archivo_curp_container" class="mt-4 p-2 bg-white rounded-pill border d-inline-flex align-items-center px-4 shadow-sm" 
-                                         style="{{ isset($estudiante->img_curp) ? '' : 'display:none;' }}">
-                                        <i class="fas fa-file-pdf text-danger mr-2"></i>
-                                        <span id="archivo_curp" class="small text-truncate font-weight-bold" style="max-width: 150px;">
-                                            {{ $estudiante->img_curp ?? '' }}
-                                        </span>
-                                        <i id="vistaPreviaLink" class="fas fa-eye ml-3 text-primary" style="cursor:pointer;" onclick="mostrarVistaPrevia()"></i>
-                                    </div>
-
-                                    <input class="file" type="file" style="display: none" name="img_curp" id="img_curp" accept=".pdf, .PDF">
-                                </div>
-
-                                <div class="d-flex justify-content-between mt-3 small text-muted">
-                                    <span><i class="fas fa-shield-alt"></i> PDF Original</span>
-                                    <span>Máx: 1MB</span>
-                                </div>
-
-                                <button type="submit" id="btnSiguiente" class="btn btn-verde float-right mt-4 px-5 py-2 shadow-sm" style="border-radius:30px; font-weight:700;">
-                                    Siguiente <i class="fas fa-arrow-right ml-2"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="mt-4 mb-5 p-3 rounded shadow-sm bg-light border-left" style="border-left: 4px solid #7b003a !important;">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <i class="fab fa-whatsapp text-success mr-1"></i> Soporte: 
-                                <a href="javascript:void(0);" onclick="openWhatsApp('526949568140')" class="font-weight-bold text-dark">694 956 8140</a>
-                            </div>
-                            <div class="col-sm-6 text-sm-right mt-2 mt-sm-0 small">
-                                <i class="fas fa-clock mr-1"></i> Lunes a Viernes: 8:30 a.m. a 3:00 p.m.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
     <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
@@ -1172,6 +1039,17 @@
 
     
     <script>
+        function mostrarCargando() {
+            var overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+        }
+
+        // Función para ocultar (por si la necesitas tras una validación fallida)
+        function ocultarCargando() {
+            $('#loading-overlay').hide();
+        }
         // Variable para almacenar el último archivo seleccionado
         var lastSelectedFile = null;
         var renderTask = null;
@@ -1465,11 +1343,14 @@
         $(document).ready(function () {
             // Abre el selector de archivos al hacer click en el botón proxy
             $('#sel_archivo_curp').on('click', function () {
+                mostrarCargando();
                 $('#img_curp').trigger('click');
+                ocultarCargando();
             });
     
             // Maneja el cambio de archivo UNA SOLA VEZ
             $('#img_curp').on('change', function (e) {
+                 mostrarCargando();
                 let filename = 'Sin archivo seleccionado';
     
                 // Si hay archivo seleccionado, toma el nombre real
@@ -1485,6 +1366,7 @@
     
                 // Muestra/oculta el ojo según corresponda
                 actualizarIconoVistaPrevia(filename);
+                ocultarCargando();
             });
     
             $(window).on('pageshow', function(event) {
@@ -1503,6 +1385,7 @@
     <script language="JavaScript" type="text/javascript">
         // A function that disables button
         function disableButton() {
+            mostrarCargando();
             document.getElementById('btnSiguiente').setAttribute("disabled","disabled");
             document.getElementById('btnSiguiente').innerText = "Cargando...";
         }
@@ -1572,6 +1455,15 @@
         });
     </script>
     @endif
+
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; color: white;">
+        <div class="spinner" style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+        <p style="margin-top: 15px; font-weight: bold;">Procesando, por favor espere...</p>
+    </div>
+
+    <style>
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 
       
 </body>
