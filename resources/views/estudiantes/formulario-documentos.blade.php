@@ -20,20 +20,10 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
 
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <!--<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+        <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-        <script>
-        // IMPORTANTE: usa la MISMA versión para el worker
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js";
-        </script>
 
         <!-- Ventana modal -->
         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
@@ -71,7 +61,7 @@
             </div>
         </div>
     <script language="JavaScript" type="text/javascript">
-        $(document).ready(function(){
+        document.addEventListener("DOMContentLoaded",function(){
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip({
                 trigger : 'click'
@@ -92,7 +82,7 @@
     
 
     <script>
-        $(document).ready( function() {
+       document.addEventListener("DOMContentLoaded", function() {
 
             $('#sel_archivo_acta_nac').click(function(){
             $('#img_acta_nac').trigger('click');
@@ -188,7 +178,7 @@
             document.getElementById('btnSiguiente').innerText = "Enviando...";
         }
 
-        $(document).ready(function(){
+        document.addEventListener("DOMContentLoaded", function(){
             var $myForm = $("#my_form");
             $myForm.submit(function(){
                 disableButton();
@@ -419,7 +409,7 @@
             </div>
 
             <div class="d-flex gap-2 justify-content-end align-items-center w-100 w-md-auto">
-                <button type="button" class="btn btn-verde btn-sm px-4 py-2 custom-btn-confirm" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-verde btn-sm px-4 py-2 custom-btn-confirm" data-dismiss="modal">
                     Confirmar
                 </button> 
                 <button type="button" class="btn btn-outline-danger ml-2 btn-sm px-4 py-2 custom-btn-discard" onclick="noQuieroArchivo()">
@@ -1765,6 +1755,18 @@
         }
 
     </script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+        // IMPORTANTE: usa la MISMA versión para el worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js";
+        </script>
 
   
 
