@@ -406,38 +406,40 @@
         <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content shadow-lg border-0">
                 
-                <div class="modal-header bg-light d-flex flex-column flex-md-row align-items-center justify-content-between p-3 gap-3">
+               <div class="modal-header bg-light d-flex flex-column flex-md-row align-items-center justify-content-between p-3" style="gap: 15px;">
+                    <div class="d-flex align-items-center w-100" style="min-width: 0;">
+                        <div class="mr-2 d-flex align-items-center justify-content-center flex-shrink-0" 
+                             style="width: 32px; height: 32px;">
+                            <i class="fa-solid fa-file-pdf" style="color: #7b003a; font-size: 1.2rem;"></i>
+                        </div>
                     
-                <div class="d-flex align-items-center flex-grow-1" style="min-width: 0;">
-                <div class="me-2 d-flex align-items-center justify-content-center flex-shrink-0" 
-                    style="width: 32px; height: 32px;">
-                    <i class="fa-solid fa-file-pdf" style="color: #7b003a; font-size: 1.2rem;"></i>
-                </div>
+                        <div style="min-width: 0; flex: 1; line-height: 1.2;"> 
+                            <h6 class="modal-title font-weight-bold mb-0" id="pdfModalLabel" 
+                                style="color: #2c3e50; letter-spacing: -0.5px; font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                Vista <span class="d-none d-sm-inline">Preliminar</span>:
+                                <label id="lblNombreDoc" style="font-weight: 900; color: #7b003a; margin-left: 5px; margin-bottom: 0;"></label>
+                            </h6>
+                        
+                            <small class="text-muted d-flex align-items-center" 
+                                   style="font-size: 0.75rem; opacity: 0.8; margin-top: 2px;">
+                                <i class="fas fa-shield-alt text-success mr-1" style="font-size: 0.75rem;"></i> 
+                                <span class="d-md-none">Verificado</span>
+                                <span class="d-none d-md-inline">Documento verificado por el sistema</span>
+                            </small>
+                        </div>
+                    </div>
                 
-                <div style="min-width: 0; flex: 1; line-height: 1;"> <h6 class="modal-title fw-bolder mb-0" id="pdfModalLabel" 
-                        style="color: #2c3e50; letter-spacing: -0.5px; white-space: nowrap; font-size: 1rem;">
-                        Vista Preliminar <span class="d-none d-md-inline">del Archivo</span>:
-                        <label id="lblNombreDoc" style="font-weight: 900; color: #7b003a; margin-left: 5px;"></label>
-                    </h6>
-                    
-                    <small class="text-muted d-flex align-items-center" 
-                        style="font-size: 0.8rem; white-space: nowrap; margin-top: -4px; opacity: 0.8;">
-                        <i class="bi bi-shield-check-fill text-success me-1" style="font-size: 0.75rem;"></i> 
-                        <span class="d-md-none">Verificado</span>
-                        <span class="d-none d-md-inline">Documento verificado por el sistema</span>
-                    </small>
+                    <div class="d-flex justify-content-center justify-content-md-end align-items-center w-100 w-md-auto" style="gap: 10px;">
+                        <button type="button" class="btn btn-verde btn-sm px-3 py-2 flex-grow-1 flex-md-grow-0" 
+                                data-dismiss="modal" style="border-radius: 20px; font-weight: 600;">
+                            Confirmar
+                        </button> 
+                        <button type="button" class="btn btn-outline-danger btn-sm px-3 py-2 flex-grow-1 flex-md-grow-0" 
+                                onclick="noQuieroArchivo()" style="border-radius: 20px; font-weight: 600;">
+                            Descartar
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-            <div class="d-flex gap-2 justify-content-end align-items-center w-100 w-md-auto">
-                <button type="button" class="btn btn-verde btn-sm px-4 py-2 custom-btn-confirm" data-dismiss="modal">
-                    Confirmar
-                </button> 
-                <button type="button" class="btn btn-outline-danger ml-2 btn-sm px-4 py-2 custom-btn-discard" onclick="noQuieroArchivo()">
-                    Descartar
-                </button>
-            </div>
-        </div>
 
             <div class="modal-body p-0 bg-dark-subtle scroll-container-pdf">
                 <div class="pdf-wrapper">

@@ -776,33 +776,47 @@
                             <div class="alert shadow-lg border-0 p-0 overflow-hidden" 
                                  style="background: #ffffff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08)!important;">
                                 
-                                <div class="px-4 py-3 d-flex align-items-center" style="background: linear-gradient(90deg, #7b003a 0%, #a5004d 100%);">
-                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 35px; height: 35px; opacity: 0.9;">
-                                        <i class="fas fa-rocket fa-lg" style="color:#7b003a;"></i>
+                                <div class="px-3 px-md-4 py-3 d-flex align-items-center" 
+                                     style="background: linear-gradient(90deg, #7b003a 0%, #a5004d 100%); min-height: 70px;">
+                                    
+                                    <div class="rounded-circle bg-white d-flex align-items-center justify-content-center mr-2 mr-md-3 shadow-sm flex-shrink-0" 
+                                         style="width: clamp(35px, 5vw, 45px); height: clamp(35px, 5vw, 45px); opacity: 0.9;">
+                                        <i class="fas fa-rocket" style="color:#7b003a; font-size: clamp(1rem, 2vw, 1.2rem);"></i>
                                     </div>
-                                    <h6 class="font-weight-bold text-uppercase mb-0 text-white" style="letter-spacing: 1.5px; font-size: 1.1rem;">
+                                
+                                    <h6 class="font-weight-bold text-uppercase mb-0 text-white" 
+                                        style="letter-spacing: 1px; 
+                                               font-size: clamp(0.85rem, 3.5vw, 1.1rem); 
+                                               line-height: 1.2; 
+                                               word-wrap: break-word;">
                                         Guía de Postulación Digital
                                     </h6>
                                 </div>
                             
                                 <div class="p-4">
                                     <div class="row align-items-stretch">
-                                        <div class="col-md-6 border-right-md pr-md-4">
+                                        <div class="col-md-6 border-right-md pr-md-4 mb-3 mb-md-0">
                                             <div class="mb-4">
                                                 @if ($convocatoria_abierta)
-                                                    <div class="d-flex align-items-center mb-2">
-                                                        <span class="badge badge-pill px-3 py-2 small font-weight-black text-uppercase" style="letter-spacing: 1px; background: #e6fffa; color: #047857; border: 1px solid #34d399;">
-                                                            <span class="spinner-grow spinner-grow-sm mr-1" role="status" aria-hidden="true"></span>
-                                                            CONVOCATORIA ACTIVA
+                                                    <div style="max-width: 280px;"> 
+    
+                                                    <div class="d-flex align-items-center justify-content-center mb-2 w-100">
+                                                        <span class="badge badge-pill px-3 py-2 font-weight-black text-uppercase text-wrap w-100 d-flex align-items-center justify-content-center" 
+                                                              style="letter-spacing: 1px; background: #e6fffa; color: #047857; border: 1px solid #34d399; font-size: clamp(0.65rem, 2.5vw, 0.8rem); line-height: 1.4; height: 40px;">
+                                                            <span class="spinner-grow spinner-grow-sm mr-2 flex-shrink-0" role="status" aria-hidden="true"></span>
+                                                            <span>CONVOCATORIA ACTIVA</span>
                                                         </span>
                                                     </div>
-                                                    <div class="d-inline-flex align-items-center px-3 py-2 shadow-sm" 
-                                                         style="background: #f8fafc; border-radius: 12px; border-left: 4px solid #00656c;">
-                                                        <i class="far fa-calendar-check mr-2" style="color: #00656c;"></i>
+                                                
+                                                    <div class="d-flex align-items-center px-3 py-2 shadow-sm w-100" 
+                                                         style="background: #f8fafc; border-radius: 12px; border-left: 4px solid #00656c; height: 40px;">
+                                                        <i class="far fa-calendar-check mr-2 flex-shrink-0" style="color: #00656c;"></i>
                                                         <span class="small font-weight-bold text-dark">
                                                             Límite: <span style="color: #00656c;">14 de Febrero, 2026</span>
                                                         </span>
                                                     </div>
+                                                    
+                                                </div>
                                                 @else
                                                     <span class="badge badge-pill badge-danger px-3 py-2 shadow-sm">
                                                         <i class="fas fa-clock mr-1"></i> PROCESO FINALIZADO
@@ -812,52 +826,85 @@
                             
                                             <div class="rounded-lg p-3" style="background: #f1f5f9; border-radius: 16px;">
                                                 <div class="d-flex mb-2">
+                                                    <i class="fas fa-desktop mr-2 mt-1"></i>
+                                                    <p class="small mb-0 text-dark text-justify">
+                                                        <strong> Sugerencia de Registro: </strong>
+                                                        Para una mejor experiencia al subir tus documentos PDF, <strong>te recomendamos usar una computadora</strong>.
+                                                    </p>
+                                                </div>
+                                                <div class="d-flex border-top pt-2 mb-2" style="border-color: #e2e8f0!important;">
                                                     <i class="fas fa-fingerprint text-primary mr-2 mt-1"></i>
-                                                    <p class="small mb-0 text-dark">
+                                                    <p class="small mb-0 text-dark text-justify">
                                                         <strong>Validación de Identidad:</strong> Solo se procesarán archivos <b>PDF originales</b> del CURP.
                                                     </p>
                                                 </div>
                                                 <div class="d-flex border-top pt-2 mt-2" style="border-color: #e2e8f0!important;">
                                                     <i class="fas fa-shield-virus text-danger mr-2 mt-1"></i>
-                                                    <p class="extra-small mb-0 text-muted" style="font-size: 0.75rem;">
+                                                    <p class="extra-small mb-0 text-muted text-justify" style="font-size: 0.75rem;">
                                                         Evite digitalizaciones manuales (fotos/escaneos) para no ser rechazado por el sistema.
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
                             
-                                         <div class="col-md-6 pl-md-4 text-center mt-6">
-                                            <div class="d-flex flex-column align-items-center gap-2">
+                                        <div class="col-md-6 pl-md-4 text-center mt-0 mt-md-5 px-3">
+                                            <div class="d-flex flex-column align-items-center">
+                                                
                                                 <a href="https://www.concordia.gob.mx/2026/CONVOCATORIA_OTRO_NIVEL_25226_1.pdf"
-                                                target="_blank"
-                                                class="btn btn-rojo btn-sm px-4 p-2 mb-4"
-                                                style="border-radius: 20px; font-weight: 600; border-width: 2px; min-width:230px;">
-                                                    <i class="fas fa-file-pdf mr-2"></i> Ver Convocatoria
+                                                   target="_blank"
+                                                   class="btn btn-rojo btn-sm mb-3 w-100 mw-100 d-flex align-items-center justify-content-center"
+                                                   style="border-radius: 50px; 
+                                                          font-weight: 600; 
+                                                          border-width: 2px; 
+                                                          max-width: 280px; 
+                                                          min-height: 48px; 
+                                                          padding: 0.5rem 1.5rem;
+                                                          line-height: 1;">
+                                                    
+                                                    <i class="fas fa-file-pdf mr-3 d-flex align-items-center" style="font-size: 0.95rem;"></i> 
+                                                    
+                                                    <span class="d-flex align-items-center text-center">
+                                                        Ver Convocatoria
+                                                    </span>
                                                 </a>
-                            
+                                        
                                                 <a href="https://www.gob.mx/curp/"
-                                                target="_blank"
-                                                class="btn btn-sm border rounded-pill shadow-sm d-inline-flex align-items-center justify-content-center px-3 py-2 hover-elevate btn-curp"
-                                                style="background:#ffffff; font-weight:600; font-size:0.85rem; min-width:230px;">
+                                                   target="_blank"
+                                                   class="btn btn-sm border rounded-pill shadow-sm d-flex align-items-center justify-content-center px-3 py-2 hover-elevate btn-curp"
+                                                   style="background:#ffffff; font-weight:600; font-size:0.85rem; width: 100%; max-width: 280px; min-width: auto; min-height: 48px;">
+                                                    
                                                     <svg xmlns="http://www.w3.org/2000/svg"
-                                                        width="14" height="14"
-                                                        fill="currentColor"
-                                                        class="mr-1"
-                                                        viewBox="0 0 16 16">
+                                                         width="14" height="14"
+                                                         fill="currentColor"
+                                                         class="mr-2 flex-shrink-0"
+                                                         viewBox="0 0 16 16">
                                                         <path d="M4 0h6.293A1 1 0 0 1 11 0.293l3.707 3.707A1 1 0 0 1 15 4.707V15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1z"/>
                                                         <path d="M9.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H10v2.5a.5.5 0 0 1-1 0V7H6.5a.5.5 0 0 1 0-1H9V3.5a.5.5 0 0 1 .5-.5z"/>
                                                     </svg>
-                                                    Obtener CURP Original
+                                                
+                                                    <span style="white-space: normal; line-height: 1.1;">Obtener CURP Original</span>
                                                 </a>
-                                                <small class="text-muted text-center mt-1 mb-3">
+                                                                                                
+                                                <small class="text-muted text-center mt-1 mb-2" style="font-size: 0.75rem;">
                                                     Sitio oficial del Gobierno de México
                                                 </small>
+                                        
                                                 <button type="button"
-                                                        class="btn btn-verde btn-sm rounded-pill d-inline-flex align-items-center justify-content-center px-3 py-2"
-                                                        data-toggle="modal" data-target="#requisitosModal"
-                                                        style="font-weight:600; font-size:0.8rem; min-width:230px;">
-                                                    <i class="fas fa-list-check mr-1 p-1"></i>
-                                                    Ver REQUISITOS de Registro
+                                                    class="btn btn-verde btn-sm w-100 mw-100 d-flex align-items-center justify-content-center shadow-sm"
+                                                    data-toggle="modal" data-target="#requisitosModal"
+                                                    style="border-radius: 50px; 
+                                                        font-weight: 600; 
+                                                        font-size: 0.8rem; 
+                                                        max-width: 280px; 
+                                                        min-height: 48px; 
+                                                        padding: 0.5rem 1.5rem;
+                                                        line-height: 1.2;">
+                                                
+                                                    <i class="fas fa-list-check mr-3 flex-shrink-0" style="font-size: 1rem;"></i>
+                                                    
+                                                    <span style="white-space: normal;">
+                                                        Ver REQUISITOS<span class="d-none d-md-inline"> de Registro</span>
+                                                    </span>
                                                 </button>
                                             </div>
                                         </div>
@@ -883,7 +930,7 @@
                                 </div>
                                 <div class="row justify-content-center mt-4 mb-2">
                                     <div class="col-md-10 col-lg-8">
-                                        <div class="upload-zone p-5 text-center position-relative shadow-sm" id="drop-area">
+                                        <div class="upload-zone p-4 p-md-5 text-center position-relative shadow-sm" id="drop-area">
                                             <i class="fas fa-file-pdf position-absolute" style="right: 20px; bottom: 10px; font-size: 5rem; color: rgba(0,0,0,0.03);"></i>
 
                                             <div class="upload-icon-wrapper mb-4">
@@ -894,12 +941,13 @@
                                             <h6 class="font-weight-bold mb-2">Selecciona tu archivo CURP</h6>
                                             <p class="text-muted small mb-4">Arrastra el archivo aquí o haz clic en el botón</p>
 
-                                            <button type="button" class="btn px-5 py-2 shadow" id="sel_archivo_curp" 
-                                                    style="background-color: #7b003a; color: white; border-radius: 30px; font-weight: 600; border: none; font-size: 0.9rem;">
-                                                EXAMINAR EQUIPO
+                                            <button type="button" class="btn w-100 w-md-auto py-2 shadow d-inline-flex align-items-center justify-content-center" id="sel_archivo_curp" 
+                                                    style="background-color: #7b003a; color: white; border-radius: 30px; font-weight: 600; border: none; font-size: 0.9rem; max-width: 260px; min-height: 45px;">
+                                                <i class="far fa-folder-open mr-2" style="font-size: 1.1rem;"></i>
+                                                <span>EXAMINAR EQUIPO</span>
                                             </button>
 
-                                            <div id="archivo_curp_container" class="mt-4 p-2 bg-white rounded-pill border d-inline-flex align-items-center px-4 mx-auto shadow-sm" 
+                                            <div id="archivo_curp_container" class="w-100 w-md-auto mt-4 p-2 bg-white rounded-pill border d-flex align-items-center justify-content-center px-4 mx-auto shadow-sm" 
                                                 style="max-width: 90%; {{ isset($estudiante->img_curp) ? '' : 'display:none;' }}">
                                                 <i id="iconPdf" class="fas fa-file-pdf text-danger mr-2" onclick="mostrarVistaPrevia()"></i>
                                                 <span id="archivo_curp" class="small text-truncate font-weight-bold" style="max-width: 200px;">
@@ -908,7 +956,7 @@
                                                 <span id="vistaPreviaLink"
                                                     onclick="mostrarVistaPrevia()"
                                                     class="ml-3 text-primary small"
-                                                    style="cursor:pointer;"
+                                                    style="cursor:pointer; display:none"
                                                     title="Previsualizar">
                                                     <i class="fas fa-eye"></i>
                                                 </span>
@@ -941,36 +989,41 @@
                                     </div>
                                 </div>
                                 <div class="support-container mt-2">
-                                    <div class="p-3 rounded shadow-sm border-left-highlight" 
+                                    <div class="py-3 px-2 rounded shadow-sm border-left-highlight" 
                                         style="background: #ffffff; border: 1px solid #e3e6f0; border-left: 5px solid #7b003a; font-size: 0.9rem;">
-                                        
                                         <div class="row align-items-center">
-                                            <div class="col-md-6 mb-3 mb-md-0 border-right-md">
+                                            <div class="col-12 col-md-6 mb-1 mb-md-0 border-right-md pb-3 pb-md-0" style="border-color: #e3e6f0 !important;">
                                                 <div class="d-flex align-items-center">
-                                                    <div class="icon-circle bg-whatsapp-light mr-3">
-                                                        <i class="fab fa-whatsapp" style="color: #25D366; font-size: 1.4rem;"></i>
+                                                    <div class="d-flex justify-content-center align-items-center flex-shrink-0 mr-3" style="width: 40px;">
+                                                        <div class="icon-circle bg-whatsapp-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; background: #e6fffa;">
+                                                            <i class="fab fa-whatsapp" style="color: #25D366; font-size: 1.2rem;"></i>
+                                                        </div>
                                                     </div>
                                                     <div>
-                                                        <span class="text-muted d-block small uppercase font-weight-bold">¿Necesitas ayuda?</span>
+                                                        <span class="text-muted d-block small uppercase font-weight-bold" style="line-height: 1;">¿Necesitas ayuda?</span>
                                                         <a href="javascript:void(0);" onclick="openWhatsApp('526949568140')" 
-                                                        class="support-link" style="color: #7b003a; font-size: 1.1rem; font-weight: 700; text-decoration: none;">
-                                                        694 956 8140
+                                                           class="support-link" style="color: #7b003a; font-size: 1.1rem; font-weight: 700; text-decoration: none;">
+                                                            6949568140
                                                         </a>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div class="col-md-6">
-                                                <div class="d-flex align-items-start">
-                                                    <i class="fas fa-university mr-3 mt-1 text-muted" style="font-size: 1.1rem;"></i>
+                                        
+                                            <div class="col-12 col-md-6 pt-2 pt-md-0 pl-md-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="d-flex justify-content-center flex-shrink-0 mr-3" style="width: 40px;">
+                                                        <i class="fas fa-university text-muted" style="font-size: 1.2rem;"></i>
+                                                    </div>
                                                     <div>
-                                                        <span class="text-muted d-block small uppercase font-weight-bold">Atención Presencial</span>
-                                                        <span class="text-dark">
-                                                            Presidencia Municipal <br>
-                                                            <small class="text-secondary">
-                                                                <i class="far fa-clock mr-1"></i> Lunes a Viernes • 8:30 a.m. a 3:00 p.m.
-                                                            </small>
+                                                        <span class="text-muted d-block small uppercase font-weight-bold" style="line-height: 1;">Atención Presencial</span>
+                                                        
+                                                        <span class="text-dark font-weight-bold d-block" style="line-height: 1.2;">
+                                                            Presidencia Municipal
                                                         </span>
+                                            
+                                                        <small class="text-secondary d-block mt-1" style="font-weight: 400; line-height: 1.2;">
+                                                            <i class="far fa-clock mr-1"></i> Lunes a Viernes • 8:30 a.m. a 3:00 p.m.
+                                                        </small>
                                                     </div>
                                                 </div>
                                             </div>

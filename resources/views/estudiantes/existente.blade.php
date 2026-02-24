@@ -158,16 +158,20 @@
         <div class="col-lg-10 col-xl-9">
             
             <div class="main-card">
-                <div class="logo-header">
-                    <div class="row align-items-center no-gutters">
-                        <div class="col-6 text-center">
-                            <img src="{{ url('img/Logo_y_Escudo.jpg') }}" style="max-height: 80px; width: auto;">
-                        </div>
-                        <div class="col-6 text-center">
-                            <img src="{{ url('img/logo_programa.jpg') }}" style="max-height: 60px; width: auto;">
-                        </div>
+                <div class="logo-header px-3 py-3">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-6 text-center mb-3 mb-md-0">
+                        <img src="{{ url('img/Logo_y_Escudo.jpg') }}" 
+                             class="img-fluid" 
+                             style="max-height: 80px; width: auto; object-fit: contain;">
+                    </div>
+                    <div class="col-12 col-md-6 text-center">
+                        <img src="{{ url('img/logo_programa.jpg') }}" 
+                             class="img-fluid" 
+                             style="max-height: 60px; width: auto; object-fit: contain;">
                     </div>
                 </div>
+                
 
                 <div class="card-body p-4 p-md-5">                    
                     @if ($estudiante->cve_status != 4)

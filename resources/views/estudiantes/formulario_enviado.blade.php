@@ -80,14 +80,19 @@
         <div class="row justify-content-center">
             <div class="col-xl-9 col-lg-10">
                 <div class="main-card">
-                    <div class="logo-section text-center">
-                        <div class="row align-items-center">
-                            <div class="col-6 col-md-6 text-right">
-                                <img src="../img/Logo_y_Escudo.jpg" style="max-width: 90%; height: auto;">
+                    <div class="logo-section py-3">
+                        <div class="row align-items-center no-gutters">
+                            
+                            <div class="col-12 col-md-6 text-center text-md-right mb-3 mb-md-0">
+                                <img src="../img/Logo_y_Escudo.jpg" 
+                                     style="max-width: 220px; width: 80%; height: auto; object-fit: contain;">
                             </div>
-                            <div class="col-6 col-md-6 text-left">
-                                <img src="../img/logo_programa.jpg" style="max-width: 80%; height: auto;">
+                    
+                            <div class="col-12 col-md-6 text-center text-md-left">
+                                <img src="../img/logo_programa.jpg" 
+                                     style="max-width: 180px; width: 70%; height: auto; object-fit: contain;">
                             </div>
+                            
                         </div>
                     </div>
 

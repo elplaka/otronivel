@@ -1039,7 +1039,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group-tech">
                                                     <label class="label-tech"><i class="fas fa-graduation-cap"></i> Carrera</label>
-                                                    <input type="search" name="searchCarrera" class="form-control input-tech" value="{{ old('searchCarrera', $carreraR) }}" placeholder="Ej. Ingeniería...">
+                                                    <input type="search" name="searchCarrera" class="form-control input-tech" value="{{ old('searchCarrera', $carreraR) }}" placeholder="Ej. Lic...">
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
