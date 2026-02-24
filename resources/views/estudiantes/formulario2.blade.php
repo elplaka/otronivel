@@ -18,22 +18,6 @@
         <!-- Custom styles for this template-->
         <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet"> 
         <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
-
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
-<script language="JavaScript" type="text/javascript">
-    $(document).ready(function(){
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip({
-            trigger : 'click'
-            })
-            $('[data-toggle="tooltip"]').mouseleave(function(){
-            $(this).tooltip('hide');
-            });    
-        });
-    });
-</script>
-
 <style>
     .tooltip-inner {
     max-width: 350px;
@@ -440,6 +424,7 @@
         </div>
     </div>
 </div>
+
     <script>
         function openWhatsApp(phoneNumber) {
             //var phoneNumber = "526692295855"; // Coloca el número de teléfono sin el signo "+"
@@ -450,15 +435,73 @@
         }
     </script>
 
-    {{-- <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a> --}}
     <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+    <script language="JavaScript" type="text/javascript">
+         document.addEventListener("DOMContentLoaded", function(){
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                trigger : 'click'
+                })
+                $('[data-toggle="tooltip"]').mouseleave(function(){
+                $(this).tooltip('hide');
+                });    
+            });
+        });
+    </script>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ mix('js/app.js') }}"></script>
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('js/sb-admin.min.js') }}"></script>
+
+    <script>
+        function mostrarCargando() {
+            var overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+        }
+
+        // Función para ocultar (por si la necesitas tras una validación fallida)
+        function ocultarCargando() {
+            $('#loading-overlay').hide();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+        // Buscamos el formulario por su clase
+        var formulario = document.querySelector('.contact-form');
+        
+        if (formulario) {
+            formulario.addEventListener('submit', function(e) {
+                // 1. Validar si el formulario es válido (HTML5 validation)
+                if (formulario.checkValidity()) {
+                    // 2. Mostrar la pantalla de carga
+                    mostrarCargando();
+                    
+                    // 3. Deshabilitar el botón para evitar doble clic
+                    var btn = formulario.querySelector('.btn-final');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.innerHTML = 'Enviando... <i class="fas fa-spinner fa-spin"></i>';
+                    }
+                }
+            });
+        }
+    });
+    </script>
+
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; color: white;">
+        <div class="spinner" style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+        <p style="margin-top: 15px; font-weight: bold;">Procesando, por favor espere...</p>
+    </div>
+
+    <style>
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </body>
 </html>

@@ -324,6 +324,7 @@
                                 </p>
                                 
                                 <a href="{{ route('estudiantes.registro_pdf') }}" 
+                                id="btnDescargarPDF"
                                 class="btn btn-action btn-rojo shadow-sm px-5 py-2" 
                                 style="max-width: 400px; border-radius: 50px; font-weight: 600;">
                                     <i class="fa-solid fa-file-pdf mr-2"></i> Descargar Hoja de Registro
@@ -338,20 +339,68 @@
                         </a>
                     </div>
 
-                </div> </div> </div>
+                </div> 
+            </div> 
+        </div>
     </div>
 </div>
 
-<script src="{{ asset('js/jquery.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    function openWhatsApp() {
-        var phoneNumber = "526692295855";
-        var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
-        window.open(url + phoneNumber, "_blank");
-    }
-</script>
+    <script>
+        function openWhatsApp() {
+            var phoneNumber = "526692295855";
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            var url = isMobile ? "https://api.whatsapp.com/send?phone=" : "https://web.whatsapp.com/send?phone=";
+            window.open(url + phoneNumber, "_blank");
+        }
+
+        function mostrarCargando() {
+            var overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+        }
+
+        // Función para ocultar (por si la necesitas tras una validación fallida)
+        function ocultarCargando() {
+            $('#loading-overlay').hide();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var btnPDF = document.getElementById('btnDescargarPDF');
+
+            if (btnPDF) {
+                btnPDF.addEventListener('click', function(e) {
+                    // 1. Mostrar la pantalla de carga
+                    mostrarCargando();
+
+                    // 2. Cambiar el texto del botón opcionalmente
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generando PDF...';
+                    this.style.pointerEvents = 'none'; // Evitar múltiples clics
+
+                    // 3. UX Crucial: Ocultar el cargando tras unos segundos
+                    // Ya que la descarga no refresca la página, debemos quitar el bloqueo manualmente
+                    setTimeout(function() {
+                        ocultarCargando();
+                        // Restauramos el botón original
+                        if (btnPDF) {
+                            btnPDF.innerHTML = '<i class="fa-solid fa-file-pdf mr-2"></i> Descargar Hoja de Registro';
+                            btnPDF.style.pointerEvents = 'auto';
+                        }
+                    }, 20000); // 4 segundos suele ser suficiente para iniciar la descarga
+                });
+            }
+        });
+    </script>
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; color: white;">
+        <div class="spinner" style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+        <p style="margin-top: 15px; font-weight: bold;">Procesando, por favor espere...</p>
+    </div>
+
+    <style>
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </body>
 </html>

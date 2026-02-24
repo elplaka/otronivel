@@ -23,38 +23,48 @@
         <!--<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->
 
         <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
-
+        <style>
+            /* Efecto de sombra roja suave para el botón danger */
+            .shadow-danger {
+                box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+                transition: all 0.2s ease;
+            }
+            .shadow-danger:hover {
+                box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
+                transform: translateY(-1px);
+            }
+        </style>
 
         <!-- Ventana modal -->
         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content shadow-lg border-0">
-                    <div class="modal-header border-0 pt-4 px-4">
-                        <div class="d-flex align-items-center">
-                            <div class="icon-box-warning mr-3">
-                                <i class="fas fa-exclamation-triangle text-warning" style="font-size: 1.5rem;"></i>
-                            </div>
-                            <h5 class="modal-title font-weight-bold" id="confirmModalLabel" style="color: #344767;">
-                                ¿Deseas regresar?
-                            </h5>
-                        </div>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
+                <div class="modal-content border-0" style="border-radius: 16px; overflow: hidden; box-shadow: 0 15px 35px rgba(255,0,0,0.1);">
+                    
+                    <div style="height: 6px; background: linear-gradient(90deg, #dc3545, #ff4d5a);"></div>
 
-                    <div class="modal-body px-4 pb-0">
-                        <p class="text-secondary" style="font-size: 1.05rem; line-height: 1.5;">
-                            Si regresas a la sección anterior y si tienes archivos seleccionados <span class="text-danger font-weight-bold">se borrarán permanentemente</span> de este formulario.
+                    <div class="modal-body p-5 text-center">
+                        <div class="mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-light-danger" style="width: 80px; height: 80px; background-color: #fff5f5; border-radius: 50%;">
+                                <i class="fas fa-exclamation-circle text-danger" style="font-size: 3rem;"></i>
+                            </div>
+                        </div>
+
+                        <h3 class="font-weight-bold mb-3" style="color: #1e293b; letter-spacing: -0.5px;">
+                            ¿Estás seguro de regresar?
+                        </h3>
+                        
+                        <p class="text-muted mb-0" style="font-size: 1.1rem; line-height: 1.6;">
+                            Al salir de esta sección, los archivos que hayas seleccionado <span class="text-danger font-weight-bolder" style="text-decoration: underline;">se perderán definitivamente</span>.
                         </p>
                     </div>
 
-                    <div class="modal-footer border-0 pb-4 px-4">
-                        <button type="button" class="btn btn-link text-secondary font-weight-bold" data-dismiss="modal" style="text-decoration: none;">
-                            No, quedarme aquí
+                    <div class="modal-footer border-0 px-4 pb-4 pt-0 justify-content-center">
+                        <button type="button" class="btn btn-light py-2 px-4 mr-2" data-dismiss="modal" style="border-radius: 10px; font-weight: 600; color: #64748b; border: 1px solid #e2e8f0;">
+                            No, continuar aquí
                         </button>
-                        <a href="{{ route('estudiantes.formulario4') }}" id="btnSalir" class="btn btn-danger px-4 shadow-sm" style="border-radius: 8px; font-weight: 600;">
-                            Sí, salir y borrar
+                        
+                        <a href="{{ route('estudiantes.formulario4') }}" id="btnSalir" class="btn btn-danger py-2 px-4 shadow-danger" style="border-radius: 10px; font-weight: 600; background-color: #dc3545; border: none;">
+                            Sí, deseo salir <i class="fas fa-sign-out-alt ml-2"></i>
                         </a>
                     </div>
                 </div>
@@ -75,6 +85,7 @@
     document.getElementById('btnSalir').addEventListener('click', function(e) {
         // 1. Buscamos el modal y lo ocultamos inmediatamente
         $('#confirmModal').modal('hide');
+        mostrarCargando();
     });
         
         // El enlace seguirá su curso natural hacia el href después de ocultar el modal
@@ -85,62 +96,69 @@
        document.addEventListener("DOMContentLoaded", function() {
 
             $('#sel_archivo_acta_nac').click(function(){
-            $('#img_acta_nac').trigger('click');
-            $('#img_acta_nac').change(function() {
-                var filename = $('#img_acta_nac').val();
-                if (filename.substring(3,11) == 'fakepath')
-                {
-                    filename = filename.substring(12);
-                } // Remove c:\fake at beginning from localhost chrome
-                else
-                {
-                    filename = "Sin archivo seleccionado";
-                    noQuieroArchivo();
-                }
-                $('#archivo_acta_nac').html(filename);
+                mostrarCargando();
+                $('#img_acta_nac').trigger('click');
+                $('#img_acta_nac').change(function() {
+                    var filename = $('#img_acta_nac').val();
+                    if (filename.substring(3,11) == 'fakepath')
+                    {
+                        filename = filename.substring(12);
+                    } // Remove c:\fake at beginning from localhost chrome
+                    else
+                    {
+                        filename = "Sin archivo seleccionado";
+                        noQuieroArchivo();
+                    }
+                    $('#archivo_acta_nac').html(filename);
                 });
+                setTimeout(ocultarCargando, 500);
             });
 
             $('#sel_archivo_comprobante_dom').click(function(){
-            $('#img_comprobante_dom').trigger('click');
-            $('#img_comprobante_dom').change(function() {
-                var filename = $('#img_comprobante_dom').val();
-                if (filename.substring(3,11) == 'fakepath')
-                {
-                    filename = filename.substring(12);
-                } // Remove c:\fake at beginning from localhost chrome
-                else
-                {
-                    filename = "Sin archivo seleccionado";
-                    noQuieroArchivo();
-                }
-                $('#archivo_comprobante_dom').html(filename);
+                mostrarCargando();
+                $('#img_comprobante_dom').trigger('click');
+                $('#img_comprobante_dom').change(function() {
+                    var filename = $('#img_comprobante_dom').val();
+                    if (filename.substring(3,11) == 'fakepath')
+                    {
+                        filename = filename.substring(12);
+                    } // Remove c:\fake at beginning from localhost chrome
+                    else
+                    {
+                        filename = "Sin archivo seleccionado";
+                        noQuieroArchivo();
+                    }
+                    $('#archivo_comprobante_dom').html(filename);
                 });
+                setTimeout(ocultarCargando, 500);
             });
 
             $('#sel_archivo_identificacion').click(function(){
-            $('#img_identificacion').trigger('click');
-            $('#img_identificacion').change(function() {
-                var filename = $('#img_identificacion').val();
-                if (filename.substring(3,11) == 'fakepath')
-                {
-                    filename = filename.substring(12);
-                } // Remove c:\fake at beginning from localhost chrome
-                else
-                {
-                    filename = "Sin archivo seleccionado";
-                    noQuieroArchivo();
-                }
-                $('#archivo_identificacion').html(filename);
+                mostrarCargando();
+                $('#img_identificacion').trigger('click');
+                $('#img_identificacion').change(function() {
+                    var filename = $('#img_identificacion').val();
+                    if (filename.substring(3,11) == 'fakepath')
+                    {
+                        filename = filename.substring(12);
+                    } // Remove c:\fake at beginning from localhost chrome
+                    else
+                    {
+                        filename = "Sin archivo seleccionado";
+                        noQuieroArchivo();
+                    }
+                    $('#archivo_identificacion').html(filename);
                 });
+                setTimeout(ocultarCargando, 500);
             });
 
             $('#sel_archivo_kardex').click(function(){
-            $('#img_kardex').trigger('click');
-            $('#img_kardex').change(function() {
-                var filename = $('#img_kardex').val();
-                if (filename.substring(3,11) == 'fakepath')
-                {
+                mostrarCargando();
+                $('#img_kardex').trigger('click');
+                $('#img_kardex').change(function() {
+                    var filename = $('#img_kardex').val();
+                    if (filename.substring(3,11) == 'fakepath')
+                    {
                     filename = filename.substring(12);
                 } // Remove c:\fake at beginning from localhost chrome
                 else
@@ -150,23 +168,26 @@
                 }
                 $('#archivo_kardex').html(filename);
                 });
+                setTimeout(ocultarCargando, 500);
             });
 
             $('#sel_archivo_constancia').click(function(){
-            $('#img_constancia').trigger('click');
-            $('#img_constancia').change(function() {
-                var filename = $('#img_constancia').val();
-                if (filename.substring(3,11) == 'fakepath')
-                {
-                    filename = filename.substring(12);
-                } // Remove c:\fake at beginning from localhost chrome
-                else
-                {
-                    filename = "Sin archivo seleccionado";
-                    noQuieroArchivo();
-                }
-                $('#archivo_constancia').html(filename);
+                mostrarCargando();
+                $('#img_constancia').trigger('click');
+                $('#img_constancia').change(function() {
+                    var filename = $('#img_constancia').val();
+                    if (filename.substring(3,11) == 'fakepath')
+                    {
+                        filename = filename.substring(12);
+                    } // Remove c:\fake at beginning from localhost chrome
+                    else
+                    {
+                        filename = "Sin archivo seleccionado";
+                        noQuieroArchivo();
+                    }
+                    $('#archivo_constancia').html(filename);
                 });
+                setTimeout(ocultarCargando, 500);
             });
     });
     </script>
@@ -1208,55 +1229,6 @@
 
     
 <script>
-    // function validacion() {
-    //     var archivosCargados = 0;
-    //     var archivosValidos = true;
-    //     var mensajeError = '';
-
-    //     // Obtener la respuesta del usuario sobre la constancia
-    //     const tieneConstancia = true;
-        
-    //     // Establecer el número de archivos requeridos
-    //     const archivosRequeridos = tieneConstancia ? 5 : 4;
-
-    //     $(".archivo-input").each(function() {
-    //         var archivo = $(this).prop("files")[0];
-
-    //         // Verificar si el archivo pertenece a la constancia y si el usuario no la tiene
-    //         // Si el usuario marcó 'No', se ignora el archivo de constancia
-    //         if (!tieneConstancia && this.id === 'img_constancia') {
-    //             return; // Salta la iteración para este archivo
-    //         }
-
-    //         if (archivo) {
-    //             archivosCargados++;
-    //             if (archivo.size > 1024 * 1024) { // Tamaño máximo de 1 MB (en bytes)
-    //                 archivosValidos = false;
-    //                 mensajeError = mensajeError + 'El archivo <b>"' + archivo.name + '"</b> excede 1MB. <br>';
-    //             }
-    //         }
-    //     });
-
-    //     console.log("Archivos válidos: " + archivosValidos);
-    //     console.log("Archivos cargados: " + archivosCargados);
-    //     console.log("Archivos requeridos: " + archivosRequeridos);
-
-    //     if (archivosValidos && archivosCargados === archivosRequeridos) {
-    //         document.getElementById('btnSiguiente').removeAttribute("disabled");
-    //         $("#mensajeError").hide();
-    //     } else {
-    //         document.getElementById('btnSiguiente').setAttribute("disabled", "disabled");           
-
-    //         $("#mensajeError").html(mensajeError);
-
-    //         if (mensajeError) {
-    //             $("#mensajeError").show();
-    //         } else {
-    //             $("#mensajeError").hide();
-    //         }
-    //     }
-    // }
-
     function validacion() {
     var archivosCargados = 0;
     var archivosValidos = true;
@@ -1421,6 +1393,42 @@
     }
 </style>
 
+<script>
+    function mostrarCargando() {
+        var overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+        }
+    }
+
+    // Función para ocultar (por si la necesitas tras una validación fallida)
+    function ocultarCargando() {
+        $('#loading-overlay').hide();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Lógica para el botón "Siguiente" usando el ID del formulario
+        var formulario = document.getElementById('my_form');
+        
+        if (formulario) {
+            formulario.addEventListener('submit', function() {
+                // checkValidity valida los campos "required", "min", "max", etc.
+                if (this.checkValidity()) {
+                    mostrarCargando();
+                    
+                    // Opcional: Deshabilitar el botón para evitar clics extra
+                    var btn = document.getElementById('btnSiguiente');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.innerHTML = 'Cargando... <i class="fas fa-spinner fa-spin"></i>';
+                    }
+                }
+            });
+        }
+       
+    });
+</script>
+
     <script>
         var lastSelectedFile = null;
         var renderTask = null;
@@ -1524,6 +1532,8 @@
                 return;
             }
 
+            mostrarCargando();
+
              // Validar si el archivo seleccionado es un PDF
             if (!input.files[0].type.includes('pdf')) {
                 var currentInput = input.name;
@@ -1537,6 +1547,8 @@
                 archivoElement.innerText = "Sin archivo seleccionado";
                 currentInputId = input.id;
                 noQuieroArchivo();
+                ocultarCargando();
+
 
                 // Mostrar un mensaje de error o alerta al usuario
                 alert('Por favor, selecciona un archivo PDF.');
@@ -1590,6 +1602,8 @@
                     // Asignamos el nombre. Si no existe en el mapa, ponemos un texto por defecto.
                     label.innerText = nombresDocumentos[nombreDoc] || 'Documento no identificado';
 
+                    ocultarCargando();
+
                     // Mostrar la ventana modal después de cargar el PDF
                     $("#pdfModal").modal("show");
 
@@ -1603,69 +1617,7 @@
                 reader.readAsArrayBuffer(input.files[0]);
             }
         }
-
-        // function mostrarVistaPreviaPDF(input) {
-        //     // 1. Verificamos que exista un archivo
-        //     if (!input.files || !input.files[0]) return;
-
-        //     const archivo = input.files[0];
-        //     const limiteBytes = 1024 * 1024; // 1 MB
-
-        //     // 2. VALIDACIÓN DE TAMAÑO (BLOQUEO)
-        //     if (archivo.size > limiteBytes) {
-        //         Swal.fire({
-        //             icon: 'error',
-        //             title: 'Archivo muy pesado',
-        //             text: 'El archivo excede el límite de 1MB y no se puede cargar.',
-        //             confirmButtonColor: '#d33'
-        //         });
-
-        //         // Limpiamos el input y actualizamos el texto
-        //         input.value = ""; 
-        //         var idTexto = "archivo_" + input.id.replace('img_', '');
-        //         if(document.getElementById(idTexto)) {
-        //             document.getElementById(idTexto).innerText = "Sin archivo seleccionado";
-        //         }
-
-        //         // IMPORTANTE: Detenemos la función aquí para que NO se abra el modal
-        //         return; 
-        //     }
-
-        //     // 3. Validar tipo de archivo
-        //     if (!archivo.type.includes('pdf')) {
-        //         Swal.fire('Error', 'Por favor, selecciona un archivo PDF.', 'error');
-        //         input.value = "";
-        //         return;
-        //     }
-
-        //     // --- Si pasa las validaciones, procedemos a mostrar el modal ---
-        //     var reader = new FileReader();
-        //     reader.onload = function (e) {
-        //         var pdfData = e.target.result;
-
-        //         pdfjsLib.getDocument({ data: pdfData }).promise.then(function (pdf) {
-        //             pdf.getPage(1).then(function (page) {
-        //                 var canvas = document.getElementById("pdfCanvas");
-        //                 var context = canvas.getContext("2d");
-        //                 var viewport = page.getViewport({ scale: 1 });
-        //                 canvas.width = viewport.width;
-        //                 canvas.height = viewport.height;
-
-        //                 if (renderTask) { renderTask.cancel(); }
-        //                 renderTask = page.render({ canvasContext: context, viewport: viewport });
-
-        //                 renderTask.promise.then(function() {
-        //                     // Solo abrimos el modal si el renderizado fue exitoso
-        //                     $("#pdfModal").modal("show"); 
-        //                 });
-
-        //                 currentInputId = input.id;
-        //                 lastSelectedFile = archivo;
-        //             });
-        //         });
-        //     };
-        //     reader.readAsArrayBuffer(archivo);
-        // }
+       
     
         function cerrarVistaPreviaPDF() {
             $("#pdfModal").modal("hide");
@@ -1768,7 +1720,13 @@
             "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js";
         </script>
 
-  
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; color: white;">
+        <div class="spinner" style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+        <p style="margin-top: 15px; font-weight: bold;">Procesando, por favor espere...</p>
+    </div>
 
+    <style>
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </body>
 </html>

@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
 
     
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
 
     <style>
         :root {
@@ -293,6 +293,53 @@
     </div>
 </div>
 
+<script src="{{ asset('js/jquery.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script>
+    function mostrarCargando() {
+        var overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+        }
+    }
+
+    // Función para ocultar (por si la necesitas tras una validación fallida)
+    function ocultarCargando() {
+        $('#loading-overlay').hide();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Lógica para el botón "Siguiente" usando el ID del formulario
+        var formulario = document.getElementById('my_form');
+        
+        if (formulario) {
+            formulario.addEventListener('submit', function() {
+                // checkValidity valida los campos "required", "min", "max", etc.
+                if (this.checkValidity()) {
+                    mostrarCargando();
+                    
+                    // Opcional: Deshabilitar el botón para evitar clics extra
+                    var btn = document.getElementById('btnSiguiente');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.innerHTML = 'Cargando... <i class="fas fa-spinner fa-spin"></i>';
+                    }
+                }
+            });
+        }
+
+        // 2. Lógica para el botón "Anterior"
+        var btnAnterior = document.querySelector('.btn-anterior');
+        if (btnAnterior) {
+            btnAnterior.addEventListener('click', function() {
+                mostrarCargando();
+            });
+        }
+    });
+</script>
+
 <script>
     $(document).ready(function() {
         // Lógica mostrar/ocultar empleo
@@ -319,6 +366,15 @@
         window.open(url + phoneNumber, "_blank");
     }
 </script>
+
+<div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; color: white;">
+    <div class="spinner" style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+    <p style="margin-top: 15px; font-weight: bold;">Procesando, por favor espere...</p>
+</div>
+
+<style>
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
 
 </body>
 </html> 

@@ -11,7 +11,7 @@
     <link href="{{ asset('css/sb-admin.min.css')}}" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
     
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
 
     <style>
         :root {
@@ -181,7 +181,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label-custom">{{ __('Carrera*') }}</label>
-                                <input type="text" name="carrera" class="form-control @error('carrera') is-invalid @enderror" value="{{ old('carrera', $estudiante->carrera) }}" placeholder="Ej. Ingeniería Civil" required>
+                                <input type="text" name="carrera" class="form-control @error('carrera') is-invalid @enderror" value="{{ old('carrera', $estudiante->carrera) }}" placeholder="Ej. Ing. Civil" required>
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -305,6 +305,11 @@
     </div>
 </div>
 
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+<script src="{{ asset('js/jquery.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -318,7 +323,51 @@
     }
 </script>
 
+<script>
+    function mostrarCargando() {
+        var overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+        }
+    }
+
+    // Función para ocultar (por si la necesitas tras una validación fallida)
+    function ocultarCargando() {
+        $('#loading-overlay').hide();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Lógica para el botón "Siguiente" (Formulario)
+        var formulario = document.querySelector('.contact-form');
+        if (formulario) {
+            formulario.addEventListener('submit', function() {
+                // Solo mostrar si los campos requeridos están llenos
+                if (this.checkValidity()) {
+                    mostrarCargando();
+                }
+            });
+        }
+
+        // 2. Lógica para el botón "Anterior" (Enlace)
+        var btnAnterior = document.querySelector('.btn-anterior');
+        if (btnAnterior) {
+            btnAnterior.addEventListener('click', function(e) {
+                // Como es un link, mostramos el overlay y dejamos que siga su ruta
+                mostrarCargando();
+            });
+        }
+    });
+</script>
+
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="{{ asset('js/sb-admin.min.js') }}"></script>
+<div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; color: white;">
+    <div class="spinner" style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+    <p style="margin-top: 15px; font-weight: bold;">Procesando, por favor espere...</p>
+</div>
+
+<style>
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
 </body>
 </html>
